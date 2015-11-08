@@ -1,0 +1,357 @@
+package com.doctordark.hcf.faction;
+
+import com.doctordark.hcf.ConfigurationService;
+import com.doctordark.hcf.HCF;
+import com.doctordark.hcf.faction.claim.Claim;
+import com.doctordark.hcf.faction.event.FactionClaimChangedEvent;
+import com.doctordark.hcf.faction.event.FactionCreateEvent;
+import com.doctordark.hcf.faction.event.FactionRemoveEvent;
+import com.doctordark.hcf.faction.event.FactionRenameEvent;
+import com.doctordark.hcf.faction.event.PlayerJoinedFactionEvent;
+import com.doctordark.hcf.faction.event.PlayerLeftFactionEvent;
+import com.doctordark.hcf.faction.event.cause.ClaimChangeCause;
+import com.doctordark.hcf.faction.struct.ChatChannel;
+import com.doctordark.hcf.faction.struct.Role;
+import com.doctordark.hcf.faction.type.ClaimableFaction;
+import com.doctordark.hcf.faction.type.EndPortalFaction;
+import com.doctordark.hcf.faction.type.Faction;
+import com.doctordark.hcf.faction.type.PlayerFaction;
+import com.doctordark.hcf.faction.type.RoadFaction;
+import com.doctordark.hcf.faction.type.SpawnFaction;
+import com.doctordark.hcf.faction.type.WarzoneFaction;
+import com.doctordark.hcf.faction.type.WildernessFaction;
+import com.doctordark.util.Config;
+import com.doctordark.util.JavaUtils;
+import com.doctordark.util.cuboid.CoordinatePair;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
+import org.apache.commons.collections4.map.CaseInsensitiveMap;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.MemorySection;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
+public class FlatFileFactionManager implements Listener, FactionManager {
+
+    // The default claimless factions.
+    private final WarzoneFaction warzone;
+    private final WildernessFaction wilderness;
+
+    // Cached for faster lookup for factions. Potentially usage Guava Cache for
+    // future implementations (database).
+    private final Map<CoordinatePair, Claim> claimPositionMap = new HashMap<>();
+    private final ConcurrentMap<UUID, UUID> factionPlayerUuidMap = new ConcurrentHashMap<>();
+    private final ConcurrentMap<UUID, Faction> factionUUIDMap = new ConcurrentHashMap<>();
+    private final Map<String, UUID> factionNameMap = new CaseInsensitiveMap<>();
+
+    private Config config;
+    private final HCF plugin;
+
+    public FlatFileFactionManager(HCF plugin) {
+        (this.plugin = plugin).getServer().getPluginManager().registerEvents(this, plugin);
+        this.warzone = new WarzoneFaction();
+        this.wilderness = new WildernessFaction();
+        this.reloadFactionData();
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onPlayerJoinedFaction(PlayerJoinedFactionEvent event) {
+        factionPlayerUuidMap.put(event.getUniqueID(), event.getFaction().getUniqueID());
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onPlayerLeftFaction(PlayerLeftFactionEvent event) {
+        factionPlayerUuidMap.remove(event.getUniqueID());
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onFactionRename(FactionRenameEvent event) {
+        factionNameMap.remove(event.getOriginalName());
+        factionNameMap.put(event.getNewName(), event.getFaction().getUniqueID());
+    }
+
+    // Cache the claimed land locations
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onFactionClaim(FactionClaimChangedEvent event) {
+        for (Claim claim : event.getAffectedClaims()) {
+            this.cacheClaim(claim, event.getCause());
+        }
+    }
+
+    @Override
+    @Deprecated
+    public Map<String, UUID> getFactionNameMap() {
+        return factionNameMap;
+    }
+
+    @Override
+    public ImmutableList<Faction> getFactions() {
+        return ImmutableList.copyOf(factionUUIDMap.values());
+    }
+
+    @Override
+    public Claim getClaimAt(World world, int x, int z) {
+        return claimPositionMap.get(new CoordinatePair(world, x, z));
+    }
+
+    @Override
+    public Claim getClaimAt(Location location) {
+        return getClaimAt(location.getWorld(), location.getBlockX(), location.getBlockZ());
+    }
+
+    @Override
+    public Faction getFactionAt(World world, int x, int z) {
+        World.Environment environment = world.getEnvironment();
+
+        Claim claim = getClaimAt(world, x, z);
+        if (claim != null) {
+            Faction faction = claim.getFaction();
+            if (faction != null) return faction;
+        }
+
+        if (environment == World.Environment.THE_END) { // the End doesn't have a Warzone.
+            return warzone;
+        }
+
+        // Nether Warzone should be 8 times smaller allowing for Gold Farms to actually be efficient.
+        int warzoneRadius = ConfigurationService.WARZONE_RADIUS;
+        if (environment == World.Environment.NETHER) {
+            warzoneRadius /= 8;
+        }
+
+        return Math.abs(x) > warzoneRadius || Math.abs(z) > warzoneRadius ? wilderness : warzone;
+    }
+
+    @Override
+    public Faction getFactionAt(Location location) {
+        return getFactionAt(location.getWorld(), location.getBlockX(), location.getBlockZ());
+    }
+
+    @Override
+    public Faction getFactionAt(Block block) {
+        return getFactionAt(block.getLocation());
+    }
+
+    @Override
+    public Faction getFaction(String factionName) {
+        UUID uuid = factionNameMap.get(factionName);
+        return uuid == null ? null : factionUUIDMap.get(uuid);
+    }
+
+    @Override
+    public Faction getFaction(UUID factionUUID) {
+        return factionUUIDMap.get(factionUUID);
+    }
+
+    @Override
+    public PlayerFaction getPlayerFaction(UUID playerUUID) {
+        UUID uuid = factionPlayerUuidMap.get(playerUUID);
+        Faction faction = uuid == null ? null : factionUUIDMap.get(uuid);
+        return faction instanceof PlayerFaction ? (PlayerFaction) faction : null;
+    }
+
+    @Override
+    public PlayerFaction getPlayerFaction(Player player) {
+        return getPlayerFaction(player.getUniqueId());
+    }
+
+    @Override
+    public PlayerFaction getContainingPlayerFaction(String search) {
+        OfflinePlayer target = JavaUtils.isUUID(search) ? Bukkit.getOfflinePlayer(UUID.fromString(search)) : Bukkit.getOfflinePlayer(search); //TODO: breaking
+        return target.hasPlayedBefore() || target.isOnline() ? getPlayerFaction(target.getUniqueId()) : null;
+    }
+
+    @Override
+    public Faction getContainingFaction(String search) {
+        Faction faction = getFaction(search);
+        if (faction != null) return faction;
+
+        UUID playerUUID = Bukkit.getOfflinePlayer(search).getUniqueId(); //TODO: breaking
+        if (playerUUID != null) return getPlayerFaction(playerUUID);
+
+        return null;
+    }
+
+    @Override
+    public boolean containsFaction(Faction faction) {
+        return factionNameMap.containsKey(faction.getName());
+    }
+
+    @Override
+    public boolean createFaction(Faction faction) {
+        return createFaction(faction, Bukkit.getConsoleSender());
+    }
+
+    @Override
+    public boolean createFaction(Faction faction, CommandSender sender) {
+        // Automatically attempt to make the sender as the leader.
+        if (faction instanceof PlayerFaction && sender instanceof Player) {
+            Player player = (Player) sender;
+            PlayerFaction playerFaction = (PlayerFaction) faction;
+            if (!playerFaction.setMember(player, new FactionMember(player, ChatChannel.PUBLIC, Role.LEADER))) {
+                return false;
+            }
+        }
+
+        if (factionUUIDMap.putIfAbsent(faction.getUniqueID(), faction) != null) {
+            return false;  // faction already exists.
+        }
+
+        factionNameMap.put(faction.getName(), faction.getUniqueID());
+
+        // Automatically attempt to make the sender as the leader.
+        if (faction instanceof PlayerFaction && sender instanceof Player) {
+            Player player = (Player) sender;
+            PlayerFaction playerFaction = (PlayerFaction) faction;
+            if (!playerFaction.setMember(player, new FactionMember(player, ChatChannel.PUBLIC, Role.LEADER))) {
+                return false;
+            }
+        }
+
+        FactionCreateEvent createEvent = new FactionCreateEvent(faction, sender);
+        Bukkit.getPluginManager().callEvent(createEvent);
+        return !createEvent.isCancelled();
+    }
+
+    @Override
+    public boolean removeFaction(Faction faction, CommandSender sender) {
+        if (factionUUIDMap.remove(faction.getUniqueID()) == null) return false; // faction does not exist
+        factionNameMap.remove(faction.getName());
+
+        FactionRemoveEvent removeEvent = new FactionRemoveEvent(faction, sender);
+        Bukkit.getPluginManager().callEvent(removeEvent);
+        if (removeEvent.isCancelled()) return false;
+
+        // Let the plugin know the claims should be lost.
+        if (faction instanceof ClaimableFaction) {
+            Bukkit.getPluginManager().callEvent(new FactionClaimChangedEvent(sender, ClaimChangeCause.UNCLAIM, ((ClaimableFaction) faction).getClaims()));
+        }
+
+        // Let the plugin know these players should have left.
+        if (faction instanceof PlayerFaction) {
+            PlayerFaction playerFaction = (PlayerFaction) faction;
+            for (PlayerFaction ally : playerFaction.getAlliedFactions()) {
+                ally.getRelations().remove(faction.getUniqueID());
+            }
+
+            for (UUID uuid : playerFaction.getMembers().keySet()) {
+                playerFaction.setMember(uuid, null, true);
+            }
+        }
+
+        return true;
+    }
+
+    private void cacheClaim(Claim claim, ClaimChangeCause cause) {
+        Preconditions.checkNotNull(claim, "Claim cannot be null");
+        Preconditions.checkNotNull(cause, "Cause cannot be null");
+        Preconditions.checkArgument(cause != ClaimChangeCause.RESIZE, "Cannot cache claims of resize type");
+
+        World world = claim.getWorld();
+        if (world == null) return; // safe-guard if Nether or End is disabled for example
+
+        int minX = Math.min(claim.getX1(), claim.getX2());
+        int maxX = Math.max(claim.getX1(), claim.getX2());
+        int minZ = Math.min(claim.getZ1(), claim.getZ2());
+        int maxZ = Math.max(claim.getZ1(), claim.getZ2());
+        for (int x = minX; x <= maxX; x++) {
+            for (int z = minZ; z <= maxZ; z++) {
+                CoordinatePair coordinatePair = new CoordinatePair(world, x, z);
+                if (cause == ClaimChangeCause.CLAIM) {
+                    claimPositionMap.put(coordinatePair, claim);
+                } else if (cause == ClaimChangeCause.UNCLAIM) {
+                    claimPositionMap.remove(coordinatePair);
+                }
+            }
+        }
+    }
+
+    private void cacheFaction(Faction faction) {
+        factionNameMap.put(faction.getName(), faction.getUniqueID());
+        factionUUIDMap.put(faction.getUniqueID(), faction);
+
+        // Put the claims in the cache.
+        if (faction instanceof ClaimableFaction) {
+            for (Claim claim : ((ClaimableFaction) faction).getClaims()) {
+                this.cacheClaim(claim, ClaimChangeCause.CLAIM);
+            }
+        }
+
+        // Put the members in the cache too.
+        if (faction instanceof PlayerFaction) {
+            for (FactionMember factionMember : ((PlayerFaction) faction).getMembers().values()) {
+                this.factionPlayerUuidMap.put(factionMember.getUniqueId(), faction.getUniqueID());
+            }
+        }
+    }
+
+    @Override
+    public void reloadFactionData() {
+        this.factionNameMap.clear();
+        this.config = new Config(plugin, "factions");
+
+        Object object = config.get("factions");
+        if (object instanceof MemorySection) {
+            MemorySection section = (MemorySection) object;
+            for (String factionName : section.getKeys(false)) {
+                Object next = config.get(section.getCurrentPath() + '.' + factionName);
+                if (next instanceof Faction) {
+                    cacheFaction((Faction) next);
+                }
+            }
+        } else if (object instanceof List<?>) {
+            List<?> list = (List<?>) object;
+            for (Object next : list) {
+                if (next instanceof Faction) {
+                    cacheFaction((Faction) next);
+                }
+            }
+        }
+
+        Set<Faction> adding = new HashSet<>();
+        if (!factionNameMap.containsKey("NorthRoad")) { //TODO: more reliable
+            adding.add(new RoadFaction.NorthRoadFaction());
+            adding.add(new RoadFaction.EastRoadFaction());
+            adding.add(new RoadFaction.SouthRoadFaction());
+            adding.add(new RoadFaction.WestRoadFaction());
+        }
+
+        if (!factionNameMap.containsKey("Spawn")) { //TODO: more reliable
+            adding.add(new SpawnFaction());
+        }
+
+        if (!factionNameMap.containsKey("EndPortal")) { //TODO: more reliable
+            adding.add(new EndPortalFaction());
+        }
+
+        // Now load the Spawn, etc factions.
+        for (Faction added : adding) {
+            cacheFaction(added);
+            Bukkit.getConsoleSender().sendMessage(ChatColor.BLUE + "Faction " + added.getName() + " not found, created.");
+        }
+    }
+
+    @Override
+    public void saveFactionData() {
+        config.set("factions", new ArrayList<>(factionUUIDMap.values()));
+        config.save();
+    }
+}
