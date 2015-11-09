@@ -63,6 +63,7 @@ commands:
   timer:
     description: Command to manage timers.
   togglebroadcasts:
+    aliases: [tb]
     description: Toggle found diamond ore notifications.
   togglecapzoneentry:
     aliases: [togglecapentry]

@@ -43,7 +43,7 @@ public final class ConfigurationService {
     public static final Map<PotionType, Integer> POTION_LIMITS = new EnumMap<>(PotionType.class);
     public static final Map<World.Environment, Integer> ROAD_LENGTHS = new EnumMap<>(World.Environment.class);
     public static final Map<World.Environment, Integer> SPAWN_RADIUS_MAP = new EnumMap<>(World.Environment.class);
-    public static boolean DIAMOND_ORE_ALERTS = true;
+    public static boolean DIAMOND_ORE_ALERTS = false;
 
     static {
         POTION_LIMITS.put(PotionType.STRENGTH, 0);

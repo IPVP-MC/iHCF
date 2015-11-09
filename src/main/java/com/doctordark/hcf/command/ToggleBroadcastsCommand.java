@@ -1,6 +1,7 @@
 package com.doctordark.hcf.command;
 
 import com.doctordark.hcf.ConfigurationService;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -16,7 +17,7 @@ public class ToggleBroadcastsCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         boolean newStatus = !ConfigurationService.DIAMOND_ORE_ALERTS;
         ConfigurationService.DIAMOND_ORE_ALERTS = newStatus;
-        sender.sendMessage(ChatColor.LIGHT_PURPLE + sender.getName() + " has " + (newStatus ? "enabled" : "disabled") + " found diamond ore notifications");
+        Bukkit.broadcastMessage(ChatColor.LIGHT_PURPLE + sender.getName() + " has " + (newStatus ? "enabled" : "disabled") + " found diamond ore notifications.");
         return true;
     }
 
