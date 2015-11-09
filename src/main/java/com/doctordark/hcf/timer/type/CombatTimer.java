@@ -87,8 +87,15 @@ public class CombatTimer extends PlayerTimer implements Listener {
             long remaining = this.getRemaining(player);
             if (remaining > 0L) {
                 event.setCancelled(true);
-                event.getSender().sendMessage(ChatColor.RED + "You cannot leave factions whilst your " + getDisplayName() + ChatColor.RED + " timer is active [" +
-                        ChatColor.BOLD + DurationFormatter.getRemaining(remaining, true, false) + ChatColor.RED + " remaining]");
+
+                CommandSender sender = event.getSender();
+                if (sender == player) {
+                    sender.sendMessage(ChatColor.RED + "Cannot kick " + player.getName() + " as their " + getDisplayName() + ChatColor.RED + " timer is active [" +
+                            ChatColor.BOLD + DurationFormatter.getRemaining(remaining, true, false) + ChatColor.RED + " remaining]");
+                } else {
+                    sender.sendMessage(ChatColor.RED + "You cannot leave factions whilst your " + getDisplayName() + ChatColor.RED + " timer is active [" +
+                            ChatColor.BOLD + DurationFormatter.getRemaining(remaining, true, false) + ChatColor.RED + " remaining]");
+                }
             }
         }
     }
