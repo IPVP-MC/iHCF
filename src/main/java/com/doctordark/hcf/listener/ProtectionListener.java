@@ -656,9 +656,9 @@ public class ProtectionListener implements Listener {
 
         if (result) {
             // Show this message last as the other messages look cleaner.
-            if (!isInteraction && Math.abs(location.getBlockX()) <= ConfigurationService.SPAWN_BUFFER && Math.abs(location.getBlockZ()) <= ConfigurationService.SPAWN_BUFFER) {
+            if (!isInteraction && factionAt instanceof WarzoneFaction) {
                 if (denyMessage != null && player != null) {
-                    player.sendMessage(ChatColor.YELLOW + "You cannot build within " + ChatColor.WHITE + ConfigurationService.SPAWN_BUFFER + ChatColor.YELLOW + " blocks from spawn.");
+                    player.sendMessage(ChatColor.YELLOW + "You cannot build in the " + factionAt.getDisplayName(player) + ChatColor.YELLOW + ".");
                 }
 
                 return false;
