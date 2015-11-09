@@ -446,9 +446,11 @@ public class ProtectionListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (!event.hasBlock()) return;
-        Block block = event.getClickedBlock();
+        if (!event.hasBlock()) {
+            return;
+        }
 
+        Block block = event.getClickedBlock();
         Action action = event.getAction();
         if (action == Action.PHYSICAL) { // Prevent players from trampling on crops or pressure plates, etc.
             if (!attemptBuild(event.getPlayer(), block.getLocation(), null)) {
@@ -461,7 +463,9 @@ public class ProtectionListener implements Listener {
             if (canBuild) {
                 Material itemType = event.hasItem() ? event.getItem().getType() : null;
                 if (itemType != null && ITEM_BLOCK_INTERACTABLES.containsKey(itemType) && ITEM_BLOCK_INTERACTABLES.get(itemType).contains(event.getClickedBlock().getType())) {
-                    canBuild = false;
+                    if (block.getType() != Material.WORKBENCH || !plugin.getFactionManager().getFactionAt(block).isSafezone()) {
+                        canBuild = false;
+                    }
                 } else {
                     MaterialData materialData = block.getState().getData();
                     if (materialData instanceof Cauldron) {
