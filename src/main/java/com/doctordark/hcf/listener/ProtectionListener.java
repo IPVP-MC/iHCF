@@ -355,7 +355,12 @@ public class ProtectionListener implements Listener {
                         attacker.sendMessage(ConfigurationService.TEAMMATE_COLOUR + hiddenAstrixedName + ChatColor.YELLOW + " is in your faction.");
                         event.setCancelled(true);
                     } else if (attackerFaction.getAllied().contains(playerFaction.getUniqueID())) {
-                        attacker.sendMessage(ChatColor.YELLOW + "Careful! " + ConfigurationService.ALLY_COLOUR + hiddenAstrixedName + ChatColor.YELLOW + " is an ally.");
+                        if (true) { //TODO: prevent ally damage.
+                            event.setCancelled(true);
+                            attacker.sendMessage(ConfigurationService.ALLY_COLOUR + hiddenAstrixedName + ChatColor.YELLOW + " is an ally.");
+                        } else {
+                            attacker.sendMessage(ChatColor.YELLOW + "Careful! " + ConfigurationService.ALLY_COLOUR + hiddenAstrixedName + ChatColor.YELLOW + " is an ally.");
+                        }
                     }
                 }
             }

@@ -3,6 +3,7 @@ diamond-ore-notifications: true
 death-lightning: true
 map-number: 1
 kit-map: false
+prevent-ally-damage: true
 exp-multiplier:
   global: 2.0
   fishing: 2.0
