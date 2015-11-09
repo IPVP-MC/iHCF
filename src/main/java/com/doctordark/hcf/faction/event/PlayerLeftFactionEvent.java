@@ -3,10 +3,14 @@ package com.doctordark.hcf.faction.event;
 import com.doctordark.hcf.faction.event.cause.FactionLeaveCause;
 import com.doctordark.hcf.faction.type.PlayerFaction;
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
+import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 /**
@@ -16,57 +20,48 @@ public class PlayerLeftFactionEvent extends FactionEvent {
 
     private static final HandlerList handlers = new HandlerList();
 
-    private Optional<Player> player; // lazy-load
+    private Optional<Player> player;
+
+    @Getter
     private final UUID uniqueID;
+
+    @Getter
     private final FactionLeaveCause cause;
 
-    public PlayerLeftFactionEvent(Player player, PlayerFaction playerFaction, FactionLeaveCause cause) {
-        super(playerFaction);
-        this.player = Optional.of(player);
-        this.uniqueID = player.getUniqueId();
-        this.cause = cause;
-    }
+    @Getter
+    private final CommandSender sender;
 
-    public PlayerLeftFactionEvent(UUID playerUUID, PlayerFaction playerFaction, FactionLeaveCause cause) {
+    @Getter
+    private final boolean isKick;
+
+    @Getter
+    private final boolean force;
+
+    public PlayerLeftFactionEvent(CommandSender sender, @Nullable Player player, UUID playerUUID, PlayerFaction playerFaction, FactionLeaveCause cause, boolean isKick, boolean force) {
         super(playerFaction);
+
+        Preconditions.checkNotNull(sender, "Sender cannot be null");
+        Preconditions.checkNotNull(playerUUID, "Player UUID cannot be null");
+        Preconditions.checkNotNull(playerFaction, "Player faction cannot be null");
+        Preconditions.checkNotNull(cause, "Cause cannot be null");
+
+        this.sender = sender;
+        if (player != null) {
+            this.player = Optional.of(player);
+        }
+
         this.uniqueID = playerUUID;
         this.cause = cause;
+        this.isKick = isKick;
+        this.force = force;
     }
 
-    @Override
-    public PlayerFaction getFaction() {
-        return (PlayerFaction) super.getFaction();
-    }
-
-    /**
-     * Gets the optional {@link Player} leaving.
-     *
-     * @return the {@link Player} or {@link Optional#absent()} or if offline
-     */
     public Optional<Player> getPlayer() {
         if (this.player == null) {
             this.player = Optional.fromNullable(Bukkit.getPlayer(uniqueID));
         }
 
         return player;
-    }
-
-    /**
-     * Gets the {@link UUID} of the {@link Player} leaving.
-     *
-     * @return the {@link UUID}
-     */
-    public UUID getUniqueID() {
-        return uniqueID;
-    }
-
-    /**
-     * Gets the cause of leaving the faction.
-     *
-     * @return the leave cause
-     */
-    public FactionLeaveCause getCause() {
-        return cause;
     }
 
     public static HandlerList getHandlerList() {
@@ -76,6 +71,11 @@ public class PlayerLeftFactionEvent extends FactionEvent {
     @Override
     public HandlerList getHandlers() {
         return handlers;
+    }
+
+    @Override
+    public PlayerFaction getFaction() {
+        return (PlayerFaction) super.getFaction();
     }
 }
 

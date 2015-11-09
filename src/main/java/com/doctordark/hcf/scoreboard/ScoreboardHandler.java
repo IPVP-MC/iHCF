@@ -63,7 +63,7 @@ public class ScoreboardHandler implements Listener {
             Player player = optional.get();
 
             Collection<Player> players = event.getFaction().getOnlinePlayers();
-            this.getPlayerBoard(event.getUniqueID()).addUpdates(players);
+            this.getPlayerBoard(event.getPlayerUUID()).addUpdates(players);
             for (Player target : players) {
                 this.getPlayerBoard(target.getUniqueId()).addUpdate(player);
             }

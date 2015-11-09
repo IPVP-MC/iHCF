@@ -49,11 +49,11 @@ public class FactionForceKickArgument extends CommandArgument {
         }
 
         if (factionMember.getRole() == Role.LEADER) {
-            sender.sendMessage(ChatColor.RED + "You cannot forcefully kick faction leaders.");
+            sender.sendMessage(ChatColor.RED + "You cannot forcefully kick faction leaders. Use /f forceremove instead.");
             return true;
         }
 
-        if (playerFaction.setMember(factionMember.getUniqueId(), null, true)) {
+        if (playerFaction.removeMember(sender, null, factionMember.getUniqueId(), true, true)) {
             playerFaction.broadcast(ChatColor.GOLD.toString() + ChatColor.BOLD + factionMember.getName() + " has been forcefully kicked by " + sender.getName() + '.');
         }
 

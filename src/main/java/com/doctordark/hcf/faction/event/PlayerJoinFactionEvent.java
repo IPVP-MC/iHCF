@@ -4,11 +4,14 @@ import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 /**
@@ -20,41 +23,34 @@ public class PlayerJoinFactionEvent extends FactionEvent implements Cancellable 
 
     private boolean cancelled;
     private Optional<Player> player; // lazy-load
-    private final UUID uniqueID;
 
-    public PlayerJoinFactionEvent(Player player, PlayerFaction playerFaction) {
-        super(playerFaction);
-        Preconditions.checkNotNull(player, "Player cannot be null");
-        this.player = Optional.of(player);
-        this.uniqueID = player.getUniqueId();
-    }
+    @Getter
+    private final CommandSender sender;
 
-    public PlayerJoinFactionEvent(UUID playerUUID, PlayerFaction playerFaction) {
+    @Getter
+    private final UUID playerUUID;
+
+    public PlayerJoinFactionEvent(CommandSender sender, @Nullable Player player, UUID playerUUID, PlayerFaction playerFaction) {
         super(playerFaction);
+
+        Preconditions.checkNotNull(sender, "Sender cannot be null");
         Preconditions.checkNotNull(playerUUID, "Player UUID cannot be null");
-        this.uniqueID = playerUUID;
-    }
+        Preconditions.checkNotNull(playerFaction, "Player faction cannot be null");
 
-    /**
-     * Gets the optional {@link Player} joining.
-     *
-     * @return the {@link Player} or {@link Optional#absent()} or if offline
-     */
-    public Optional<Player> getPlayer() {
-        if (player == null) {
-            player = Optional.fromNullable(Bukkit.getPlayer(uniqueID));
+        this.sender = sender;
+        if (player != null) {
+            this.player = Optional.of(player);
         }
 
-        return player;
+        this.playerUUID = playerUUID;
     }
 
-    /**
-     * Gets the {@link UUID} of the {@link Player} joining.
-     *
-     * @return the {@link UUID}
-     */
-    public UUID getUniqueID() {
-        return uniqueID;
+    public Optional<Player> getPlayer() {
+        if (this.player == null) {
+            this.player = Optional.fromNullable(Bukkit.getPlayer(this.playerUUID));
+        }
+
+        return this.player;
     }
 
     @Override
@@ -74,5 +70,10 @@ public class PlayerJoinFactionEvent extends FactionEvent implements Cancellable 
     @Override
     public HandlerList getHandlers() {
         return handlers;
+    }
+
+    @Override
+    public PlayerFaction getFaction() {
+        return (PlayerFaction) super.getFaction();
     }
 }

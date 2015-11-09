@@ -14,6 +14,7 @@ import com.google.common.base.Optional;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -76,13 +77,18 @@ public class CombatTimer extends PlayerTimer implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onFactionLeave(PlayerLeaveFactionEvent event) {
+        if (event.isForce()) {
+            return;
+        }
+
         Optional<Player> optional = event.getPlayer();
         if (optional.isPresent()) {
             Player player = optional.get();
-            if (getRemaining(player) > 0L) {
+            long remaining = this.getRemaining(player);
+            if (remaining > 0L) {
                 event.setCancelled(true);
-                player.sendMessage(ChatColor.RED + "You cannot join factions whilst your " + getDisplayName() + ChatColor.RED + " timer is active [" +
-                        ChatColor.BOLD + DurationFormatter.getRemaining(getRemaining(player), true, false) + ChatColor.RED + " remaining]");
+                event.getSender().sendMessage(ChatColor.RED + "You cannot leave factions whilst your " + getDisplayName() + ChatColor.RED + " timer is active [" +
+                        ChatColor.BOLD + DurationFormatter.getRemaining(remaining, true, false) + ChatColor.RED + " remaining]");
             }
         }
     }

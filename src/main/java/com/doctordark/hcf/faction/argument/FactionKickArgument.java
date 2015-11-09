@@ -84,8 +84,8 @@ public class FactionKickArgument extends CommandArgument {
             return true;
         }
 
-        if (playerFaction.setMember(targetMember.getUniqueId(), null, true)) {
-            Player onlineTarget = targetMember.toOnlinePlayer();
+        Player onlineTarget = targetMember.toOnlinePlayer();
+        if (playerFaction.removeMember(sender, onlineTarget, targetMember.getUniqueId(), true, true)) {
             if (onlineTarget != null) {
                 onlineTarget.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD + "You were kicked from the faction by " + sender.getName() + '.');
             }

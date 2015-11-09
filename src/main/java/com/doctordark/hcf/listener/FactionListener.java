@@ -196,6 +196,10 @@ public class FactionListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onFactionLeave(PlayerLeaveFactionEvent event) {
+        if (event.isForce() || event.isKick()) {
+            return;
+        }
+
         Faction faction = event.getFaction();
         if (faction instanceof PlayerFaction) {
             Optional<Player> optional = event.getPlayer();

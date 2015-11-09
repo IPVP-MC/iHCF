@@ -49,7 +49,7 @@ public class FactionLeaveArgument extends CommandArgument {
             return true;
         }
 
-        if (playerFaction.setMember(player, null)) {
+        if (playerFaction.removeMember(player, player, player.getUniqueId(), false, false)) {
             sender.sendMessage(ChatColor.YELLOW + "Successfully left the faction.");
             playerFaction.broadcast(Relation.ENEMY.toChatColour() + sender.getName() + ChatColor.YELLOW + " has left the faction.");
         }

@@ -138,60 +138,47 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
         return map;
     }
 
-    public boolean setMember(UUID playerUUID, FactionMember factionMember) {
-        return this.setMember(null, playerUUID, factionMember, false);
+    public boolean addMember(CommandSender sender, @Nullable Player player, UUID playerUUID, FactionMember factionMember) {
+        if (members.containsKey(playerUUID)) {
+            return false;
+        }
+
+        PlayerJoinFactionEvent eventPre = new PlayerJoinFactionEvent(sender, player, playerUUID, this);
+        Bukkit.getPluginManager().callEvent(eventPre);
+        if (eventPre.isCancelled()) {
+            return false;
+        }
+
+        // Set the player as a member before calling the
+        // event so we can change the scoreboard.
+        lastDtrUpdateTimestamp = System.currentTimeMillis();
+        invitedPlayerNames.remove(factionMember.getName());
+        members.put(playerUUID, factionMember);
+        Bukkit.getPluginManager().callEvent(new PlayerJoinedFactionEvent(sender, player, playerUUID, this));
+
+        return true;
     }
 
-    public boolean setMember(UUID playerUUID, FactionMember factionMember, boolean force) {
-        return this.setMember(null, playerUUID, factionMember, force);
-    }
-
-    public boolean setMember(Player player, FactionMember factionMember) {
-        return this.setMember(player, player.getUniqueId(), factionMember, false);
-    }
-
-    public boolean setMember(Player player, FactionMember factionMember, boolean force) {
-        return this.setMember(player, player.getUniqueId(), factionMember, force);
-    }
-
-    private boolean setMember(@Nullable Player player, UUID playerUUID, FactionMember factionMember, boolean force) {
-        if (factionMember == null) {
-            if (!force) {
-                PlayerLeaveFactionEvent event = player == null ?
-                        new PlayerLeaveFactionEvent(playerUUID, this, FactionLeaveCause.LEAVE) :
-                        new PlayerLeaveFactionEvent(player, this, FactionLeaveCause.LEAVE);
-                Bukkit.getPluginManager().callEvent(event);
-                if (event.isCancelled()) return false;
-            }
-
-            this.members.remove(playerUUID);
-            this.setDeathsUntilRaidable(Math.min(this.deathsUntilRaidable, this.getMaximumDeathsUntilRaidable()));
-
-            PlayerLeftFactionEvent event = player == null ?
-                    new PlayerLeftFactionEvent(playerUUID, this, FactionLeaveCause.LEAVE) :
-                    new PlayerLeftFactionEvent(player, this, FactionLeaveCause.LEAVE);
-            Bukkit.getPluginManager().callEvent(event);
-            return true;
-        } else {
-            if (!force) {
-                PlayerJoinFactionEvent eventPre = player == null ?
-                        new PlayerJoinFactionEvent(playerUUID, this) :
-                        new PlayerJoinFactionEvent(player, this);
-                Bukkit.getPluginManager().callEvent(eventPre);
-                if (eventPre.isCancelled()) return false;
-            }
-
-            // Set the player as a member before calling the
-            // event so we can change the scoreboard.
-            lastDtrUpdateTimestamp = System.currentTimeMillis();
-            invitedPlayerNames.remove(factionMember.getName());
-            members.put(playerUUID, factionMember);
-            Bukkit.getPluginManager().callEvent(player == null ?
-                    new PlayerJoinedFactionEvent(playerUUID, this) :
-                    new PlayerJoinedFactionEvent(player, this));
-
+    public boolean removeMember(CommandSender sender, @Nullable Player player, UUID playerUUID, boolean kick, boolean force) {
+        if (!this.members.containsKey(playerUUID)) {
             return true;
         }
+
+        // Call pre event.
+        PlayerLeaveFactionEvent preEvent = new PlayerLeaveFactionEvent(sender, player, playerUUID, this, FactionLeaveCause.LEAVE, kick, false);
+        Bukkit.getPluginManager().callEvent(preEvent);
+        if (preEvent.isCancelled()) {
+            return false;
+        }
+
+        this.members.remove(playerUUID);
+        this.setDeathsUntilRaidable(Math.min(this.deathsUntilRaidable, this.getMaximumDeathsUntilRaidable()));
+
+        // Call after event.
+        PlayerLeftFactionEvent event = new PlayerLeftFactionEvent(sender, player, playerUUID, this, FactionLeaveCause.LEAVE, kick, false);
+        Bukkit.getPluginManager().callEvent(event);
+
+        return true;
     }
 
     /**

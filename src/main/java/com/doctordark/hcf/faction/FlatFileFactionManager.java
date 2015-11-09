@@ -74,18 +74,18 @@ public class FlatFileFactionManager implements Listener, FactionManager {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerJoinedFaction(PlayerJoinedFactionEvent event) {
-        factionPlayerUuidMap.put(event.getUniqueID(), event.getFaction().getUniqueID());
+        this.factionPlayerUuidMap.put(event.getPlayerUUID(), event.getFaction().getUniqueID());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerLeftFaction(PlayerLeftFactionEvent event) {
-        factionPlayerUuidMap.remove(event.getUniqueID());
+        this.factionPlayerUuidMap.remove(event.getUniqueID());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onFactionRename(FactionRenameEvent event) {
-        factionNameMap.remove(event.getOriginalName());
-        factionNameMap.put(event.getNewName(), event.getFaction().getUniqueID());
+        this.factionNameMap.remove(event.getOriginalName());
+        this.factionNameMap.put(event.getNewName(), event.getFaction().getUniqueID());
     }
 
     // Cache the claimed land locations
@@ -99,36 +99,38 @@ public class FlatFileFactionManager implements Listener, FactionManager {
     @Override
     @Deprecated
     public Map<String, UUID> getFactionNameMap() {
-        return factionNameMap;
+        return this.factionNameMap;
     }
 
     @Override
     public ImmutableList<Faction> getFactions() {
-        return ImmutableList.copyOf(factionUUIDMap.values());
+        return ImmutableList.copyOf(this.factionUUIDMap.values());
     }
 
     @Override
     public Claim getClaimAt(World world, int x, int z) {
-        return claimPositionMap.get(new CoordinatePair(world, x, z));
+        return this.claimPositionMap.get(new CoordinatePair(world, x, z));
     }
 
     @Override
     public Claim getClaimAt(Location location) {
-        return getClaimAt(location.getWorld(), location.getBlockX(), location.getBlockZ());
+        return this.getClaimAt(location.getWorld(), location.getBlockX(), location.getBlockZ());
     }
 
     @Override
     public Faction getFactionAt(World world, int x, int z) {
         World.Environment environment = world.getEnvironment();
 
-        Claim claim = getClaimAt(world, x, z);
+        Claim claim = this.getClaimAt(world, x, z);
         if (claim != null) {
             Faction faction = claim.getFaction();
-            if (faction != null) return faction;
+            if (faction != null) {
+                return faction;
+            }
         }
 
         if (environment == World.Environment.THE_END) { // the End doesn't have a Warzone.
-            return warzone;
+            return this.warzone;
         }
 
         // Nether Warzone should be 8 times smaller allowing for Gold Farms to actually be efficient.
@@ -137,7 +139,7 @@ public class FlatFileFactionManager implements Listener, FactionManager {
             warzoneRadius /= 8;
         }
 
-        return Math.abs(x) > warzoneRadius || Math.abs(z) > warzoneRadius ? wilderness : warzone;
+        return Math.abs(x) > warzoneRadius || Math.abs(z) > warzoneRadius ? this.wilderness : this.warzone;
     }
 
     @Override
@@ -206,25 +208,16 @@ public class FlatFileFactionManager implements Listener, FactionManager {
         if (faction instanceof PlayerFaction && sender instanceof Player) {
             Player player = (Player) sender;
             PlayerFaction playerFaction = (PlayerFaction) faction;
-            if (!playerFaction.setMember(player, new FactionMember(player, ChatChannel.PUBLIC, Role.LEADER))) {
+            if (!playerFaction.addMember(sender, player, player.getUniqueId(), new FactionMember(player, ChatChannel.PUBLIC, Role.LEADER))) {
                 return false;
             }
         }
 
-        if (factionUUIDMap.putIfAbsent(faction.getUniqueID(), faction) != null) {
+        if (this.factionUUIDMap.putIfAbsent(faction.getUniqueID(), faction) != null) {
             return false;  // faction already exists.
         }
 
-        factionNameMap.put(faction.getName(), faction.getUniqueID());
-
-        // Automatically attempt to make the sender as the leader.
-        if (faction instanceof PlayerFaction && sender instanceof Player) {
-            Player player = (Player) sender;
-            PlayerFaction playerFaction = (PlayerFaction) faction;
-            if (!playerFaction.setMember(player, new FactionMember(player, ChatChannel.PUBLIC, Role.LEADER))) {
-                return false;
-            }
-        }
+        this.factionNameMap.put(faction.getName(), faction.getUniqueID());
 
         FactionCreateEvent createEvent = new FactionCreateEvent(faction, sender);
         Bukkit.getPluginManager().callEvent(createEvent);
@@ -233,12 +226,18 @@ public class FlatFileFactionManager implements Listener, FactionManager {
 
     @Override
     public boolean removeFaction(Faction faction, CommandSender sender) {
-        if (factionUUIDMap.remove(faction.getUniqueID()) == null) return false; // faction does not exist
-        factionNameMap.remove(faction.getName());
+        if (!this.factionUUIDMap.containsKey(faction.getUniqueID())) {
+            return false;
+        }
 
         FactionRemoveEvent removeEvent = new FactionRemoveEvent(faction, sender);
         Bukkit.getPluginManager().callEvent(removeEvent);
-        if (removeEvent.isCancelled()) return false;
+        if (removeEvent.isCancelled()) {
+            return false;
+        }
+
+        this.factionUUIDMap.remove(faction.getUniqueID());
+        this.factionNameMap.remove(faction.getName());
 
         // Let the plugin know the claims should be lost.
         if (faction instanceof ClaimableFaction) {
@@ -253,7 +252,7 @@ public class FlatFileFactionManager implements Listener, FactionManager {
             }
 
             for (UUID uuid : playerFaction.getMembers().keySet()) {
-                playerFaction.setMember(uuid, null, true);
+                playerFaction.removeMember(sender, null, uuid, true, true);
             }
         }
 

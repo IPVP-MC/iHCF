@@ -68,7 +68,7 @@ public class FactionForceJoinArgument extends CommandArgument {
         }
 
         playerFaction = (PlayerFaction) faction;
-        if (playerFaction.setMember(player, new FactionMember(player, ChatChannel.PUBLIC, Role.MEMBER), true)) {
+        if (playerFaction.addMember(player, player, player.getUniqueId(), new FactionMember(player, ChatChannel.PUBLIC, Role.MEMBER))) {
             playerFaction.broadcast(ChatColor.GOLD.toString() + ChatColor.BOLD + sender.getName() + " has forcefully joined the faction.");
         }
 
