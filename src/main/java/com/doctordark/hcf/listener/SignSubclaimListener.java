@@ -265,6 +265,7 @@ public class SignSubclaimListener implements Listener {
             return true;
         }
 
+        boolean hasLooped = false;
         String search = this.getShortenedName(player.getName());
         for (Sign attachedSign : attachedSigns) {
             String[] lines = attachedSign.getLines();
@@ -272,8 +273,9 @@ public class SignSubclaimListener implements Listener {
                 continue; // It is not a Subclaim sign, ignore
             }
 
+            hasLooped = true;
             if (Role.LEADER.getAstrix().equals(lines[1])) {
-                return false; // This is a leader only subclaim, and the player is not a leader.
+                continue; // This is a leader only subclaim, and the player is not a leader.
             }
 
             if (role == Role.CAPTAIN) {
@@ -287,7 +289,7 @@ public class SignSubclaimListener implements Listener {
             }
         }
 
-        return false;
+        return !hasLooped;
     }
 
     /**
