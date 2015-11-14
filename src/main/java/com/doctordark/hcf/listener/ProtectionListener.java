@@ -238,8 +238,9 @@ public class ProtectionListener implements Listener {
             }
         }
 
-        if (toBlock.getType() == Material.WATER || toBlock.getType() == Material.STATIONARY_WATER || toBlock.getType() == Material.LAVA || toBlock.getType() == Material.STATIONARY_LAVA) {
-            if (!canBuildAt(fromBlock.getLocation(), toBlock.getLocation())) {
+        Material fromType = fromBlock.getType();
+        if (fromType == Material.WATER || fromType == Material.STATIONARY_WATER || fromType == Material.LAVA || fromType == Material.STATIONARY_LAVA) {
+            if (!ProtectionListener.canBuildAt(fromBlock.getLocation(), toBlock.getLocation())) {
                 event.setCancelled(true);
             }
         }
@@ -683,13 +684,6 @@ public class ProtectionListener implements Listener {
      */
     public static boolean canBuildAt(Location from, Location to) {
         Faction toFactionAt = HCF.getPlugin().getFactionManager().getFactionAt(to);
-        if (toFactionAt instanceof Raidable && !((Raidable) toFactionAt).isRaidable()) {
-            Faction fromFactionAt = HCF.getPlugin().getFactionManager().getFactionAt(from);
-            if (toFactionAt != fromFactionAt) {
-                return false;
-            }
-        }
-
-        return true;
+        return !(toFactionAt instanceof Raidable && !((Raidable) toFactionAt).isRaidable() && toFactionAt != HCF.getPlugin().getFactionManager().getFactionAt(from));
     }
 }
