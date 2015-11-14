@@ -44,6 +44,10 @@ public class DeathbanListener implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onPlayerLogin(PlayerLoginEvent event) {
         Player player = event.getPlayer();
+        if (player.hasPermission(DeathbanListener.DEATH_BAN_BYPASS_PERMISSION)) {
+            return;
+        }
+
         FactionUser user = this.plugin.getUserManager().getUser(player.getUniqueId());
         Deathban deathban = user.getDeathban();
         if (deathban == null || !deathban.isActive()) {
@@ -99,7 +103,7 @@ public class DeathbanListener implements Listener {
         Player player = event.getEntity();
         Deathban deathban = plugin.getDeathbanManager().applyDeathBan(player, event.getDeathMessage());
         long remaining = deathban.getRemaining();
-        if (remaining <= 0L) {
+        if (remaining <= 0L || player.hasPermission(DeathbanListener.DEATH_BAN_BYPASS_PERMISSION)) {
             return;
         }
 
