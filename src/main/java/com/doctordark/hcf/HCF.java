@@ -1,7 +1,6 @@
 package com.doctordark.hcf;
 
 import com.doctordark.hcf.combatlog.CombatLogListener;
-import com.doctordark.hcf.combatlog.CustomEntityRegistration;
 import com.doctordark.hcf.command.AngleCommand;
 import com.doctordark.hcf.command.GoppleCommand;
 import com.doctordark.hcf.command.LocationCommand;
@@ -123,6 +122,9 @@ public class HCF extends JavaPlugin {
     private ClaimHandler claimHandler;
 
     @Getter
+    private CombatLogListener combatLogListener;
+
+    @Getter
     private DeathbanManager deathbanManager;
 
     @Getter
@@ -167,7 +169,6 @@ public class HCF extends JavaPlugin {
     @Override
     public void onEnable() {
         HCF.plugin = this;
-        CustomEntityRegistration.registerCustomEntities();
         ProtocolLibHook.hook(this);
 
         Plugin wep = getServer().getPluginManager().getPlugin("WorldEdit");
@@ -198,9 +199,7 @@ public class HCF extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        CustomEntityRegistration.unregisterCustomEntities();
-        CombatLogListener.removeCombatLoggers();
-
+        this.combatLogListener.removeCombatLoggers();
         this.pvpClassManager.onDisable();
         this.scoreboardHandler.clearBoards();
         this.foundDiamondsListener.saveConfig(); // temporary
@@ -242,7 +241,7 @@ public class HCF extends JavaPlugin {
         manager.registerEvents(new BottledExpListener(), this);
         manager.registerEvents(new ChatListener(this), this);
         manager.registerEvents(new ClaimWandListener(this), this);
-        manager.registerEvents(new CombatLogListener(this), this);
+        manager.registerEvents(this.combatLogListener = new CombatLogListener(this), this);
         manager.registerEvents(new CoreListener(this), this);
         //manager.registerEvents(new CreativeClickListener(), this);
         manager.registerEvents(new CrowbarListener(this), this);

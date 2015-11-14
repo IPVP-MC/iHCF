@@ -1,7 +1,7 @@
 package com.doctordark.hcf.timer.type;
 
 import com.doctordark.hcf.DurationFormatter;
-import com.doctordark.hcf.combatlog.CombatLogListener;
+import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.timer.PlayerTimer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -84,7 +84,7 @@ public class LogoutTimer extends PlayerTimer implements Listener {
         Player player = Bukkit.getPlayer(userUUID);
         if (player == null) return;
 
-        CombatLogListener.safelyDisconnect(player, ChatColor.GOLD + "You have been safely logged out.");
+        HCF.getPlugin().getCombatLogListener().safelyDisconnect(player, ChatColor.GOLD + "You have been safely logged out.");
     }
 
     public void run(Player player) {

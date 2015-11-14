@@ -1,28 +1,21 @@
-package com.doctordark.hcf.combatlog;
+package com.doctordark.hcf.combatlog.event;
 
+import com.doctordark.hcf.combatlog.type.LoggerEntity;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-/**
- * Event called when an {@link LoggerEntity} spawns.
- */
-public class LoggerSpawnEvent extends Event {
+public class LoggerRemovedEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
 
     private final LoggerEntity loggerEntity;
 
-    public LoggerSpawnEvent(LoggerEntity loggerEntity) {
+    public LoggerRemovedEvent(LoggerEntity loggerEntity) {
         this.loggerEntity = loggerEntity;
     }
 
-    /**
-     * Gets the {@link LoggerEntity} spawning.
-     *
-     * @return the spawning {@link LoggerEntity}
-     */
     public LoggerEntity getLoggerEntity() {
-        return loggerEntity;
+        return this.loggerEntity;
     }
 
     public static HandlerList getHandlerList() {
