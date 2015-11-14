@@ -2,6 +2,7 @@ package com.doctordark.hcf.eventgame;
 
 import com.doctordark.hcf.DateTimeFormats;
 import com.doctordark.hcf.HCF;
+import com.doctordark.hcf.eventgame.crate.EventKey;
 import com.doctordark.hcf.eventgame.faction.ConquestFaction;
 import com.doctordark.hcf.eventgame.faction.EventFaction;
 import com.doctordark.hcf.eventgame.faction.KothFaction;
@@ -10,6 +11,7 @@ import com.doctordark.hcf.faction.event.CaptureZoneLeaveEvent;
 import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
 import com.doctordark.hcf.timer.GlobalTimer;
+import com.doctordark.hcfold.EventSignListener;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
@@ -26,6 +28,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.time.LocalDateTime;
@@ -139,11 +143,15 @@ public class EventTimer extends GlobalTimer implements Listener {
                 ChatColor.DARK_AQUA + DurationFormatUtils.formatDurationWords(getUptime(), true, true) + " of up-time" + ChatColor.BLUE + '.');
 
         EventType eventType = this.eventFaction.getEventType();
-
-        // Add the reward to the inventory, dropping the excess.
         World world = winner.getWorld();
         Location location = winner.getLocation();
-
+        EventKey eventKey = plugin.getKeyManager().getEventKey();
+        Collection<Inventory> inventories = eventKey.getInventories(eventType);
+        ItemStack keyStack = eventKey.getItemStack(new EventKey.EventKeyData(eventType, inventories.isEmpty() ? 1 : plugin.getRandom().nextInt(inventories.size()) + 1));
+        Map<Integer, ItemStack> excess = winner.getInventory().addItem(keyStack, EventSignListener.getEventSign(eventFaction.getName(), winner.getName()));
+        for (ItemStack entry : excess.values()) {
+            world.dropItemNaturally(location, entry);
+        }
 
         this.clearCooldown(); // must always be cooled last as this nulls some variables.
     }

@@ -28,6 +28,8 @@ import com.doctordark.hcf.eventgame.CaptureZone;
 import com.doctordark.hcf.eventgame.EventExecutor;
 import com.doctordark.hcf.eventgame.EventScheduler;
 import com.doctordark.hcf.eventgame.conquest.ConquestExecutor;
+import com.doctordark.hcf.eventgame.crate.KeyListener;
+import com.doctordark.hcf.eventgame.crate.KeyManager;
 import com.doctordark.hcf.eventgame.eotw.EotwCommand;
 import com.doctordark.hcf.eventgame.eotw.EotwHandler;
 import com.doctordark.hcf.eventgame.eotw.EotwListener;
@@ -146,6 +148,9 @@ public class HCF extends JavaPlugin {
     private FoundDiamondsListener foundDiamondsListener;
 
     @Getter
+    private KeyManager keyManager;
+
+    @Getter
     private PvpClassManager pvpClassManager;
 
     @Getter
@@ -193,6 +198,7 @@ public class HCF extends JavaPlugin {
         this.deathbanManager.saveDeathbanData();
         this.economyManager.saveEconomyData();
         this.factionManager.saveFactionData();
+        this.keyManager.saveKeyData();
         this.timerManager.saveTimerData();
         this.userManager.saveUserData();
     }
@@ -260,6 +266,7 @@ public class HCF extends JavaPlugin {
         manager.registerEvents(this.foundDiamondsListener = new FoundDiamondsListener(this), this);
         manager.registerEvents(new FurnaceSmeltSpeederListener(), this);
         manager.registerEvents(new InfinityArrowFixListener(), this);
+        manager.registerEvents(new KeyListener(this), this);
         manager.registerEvents(new KitMapListener(this), this);
         manager.registerEvents(new PearlGlitchListener(this), this);
         manager.registerEvents(new PortalListener(this), this);
@@ -317,6 +324,7 @@ public class HCF extends JavaPlugin {
         this.eotwHandler = new EotwHandler(this);
         this.eventScheduler = new EventScheduler(this);
         this.factionManager = new FlatFileFactionManager(this);
+        this.keyManager = new KeyManager(this);
         this.pvpClassManager = new PvpClassManager(this);
         this.sotwTimer = new SotwTimer();
         this.timerManager = new TimerManager(this); // needs to be registered before ScoreboardHandler
