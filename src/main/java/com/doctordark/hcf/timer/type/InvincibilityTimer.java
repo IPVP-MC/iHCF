@@ -315,13 +315,8 @@ public class InvincibilityTimer extends PlayerTimer implements Listener {
     }
 
     @Override
-    public long getRemaining(UUID playerUUID) {
-        return canApply() ? 0L : super.getRemaining(playerUUID);
-    }
-
-    @Override
     public boolean setCooldown(@Nullable Player player, UUID playerUUID, long duration, boolean overwrite, @Nullable Predicate<Long> callback) {
-        return canApply() && super.setCooldown(player, playerUUID, duration, overwrite, callback);
+        return this.canApply() && super.setCooldown(player, playerUUID, duration, overwrite, callback);
     }
 
     private boolean canApply() {
