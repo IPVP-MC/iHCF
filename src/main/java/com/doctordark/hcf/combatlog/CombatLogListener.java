@@ -56,11 +56,6 @@ public class CombatLogListener implements Listener {
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onPlayerQuitSafe(PlayerQuitEvent event) {
-        SAFE_DISCONNECTS.remove(event.getPlayer().getUniqueId());
-    }
-
     /**
      * Removes all the {@link LoggerEntity} instances from the server.
      */
@@ -121,12 +116,15 @@ public class CombatLogListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
     public void onPlayerQuit(PlayerQuitEvent event) {
-        if (!ConfigurationService.COMBAT_LOG_PREVENTION_ENABLED) return;
-
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
+        boolean result = SAFE_DISCONNECTS.remove(uuid);
+        if (!ConfigurationService.COMBAT_LOG_PREVENTION_ENABLED) {
+            return;
+        }
+
         PlayerInventory inventory = player.getInventory();
-        if (player.getGameMode() != GameMode.CREATIVE && !player.isDead() && !SAFE_DISCONNECTS.contains(uuid)) {
+        if (player.getGameMode() != GameMode.CREATIVE && !player.isDead() && !result) {
             // If the player has an empty inventory or PVP protection, don't spawn a logger
             if (InventoryUtils.isEmpty(inventory) || plugin.getTimerManager().getInvincibilityTimer().getRemaining(uuid) > 0L) {
                 return;
