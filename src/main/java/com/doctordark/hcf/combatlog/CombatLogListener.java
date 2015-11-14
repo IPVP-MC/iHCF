@@ -7,13 +7,18 @@ import com.doctordark.hcf.combatlog.event.LoggerSpawnEvent;
 import com.doctordark.hcf.combatlog.type.LoggerEntity;
 import com.doctordark.hcf.combatlog.type.LoggerEntityHuman;
 import net.minecraft.server.v1_7_R4.EntityPlayer;
+import net.minecraft.server.v1_7_R4.MinecraftServer;
+import net.minecraft.server.v1_7_R4.PlayerList;
+import net.minecraft.server.v1_7_R4.WorldServer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftWolf;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -22,6 +27,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 import java.util.HashMap;
@@ -92,10 +98,10 @@ public class CombatLogListener implements Listener {
     public void onPlayerSpawnLocation(PlayerSpawnLocationEvent event) {
         LoggerEntity currentLogger = this.loggers.remove(event.getPlayer().getUniqueId());
         if (currentLogger != null) {
+            CraftLivingEntity loggerEntity = currentLogger.getBukkitEntity();
             currentLogger.destroy();
 
             Player player = event.getPlayer();
-            CraftLivingEntity loggerEntity = currentLogger.getBukkitEntity();
 
             // Apply some attributes back to the player.
             event.setSpawnLocation(loggerEntity.getLocation());
@@ -106,8 +112,15 @@ public class CombatLogListener implements Listener {
                 player.setTicksLived(loggerEntity.getTicksLived());
             }
 
-            // And then, remove the previous entity.
-            loggerEntity.remove();
+            PlayerList playerList = MinecraftServer.getServer().getPlayerList();
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    WorldServer worldServer = (WorldServer) loggerEntity.getHandle().world;
+                    worldServer.getTracker().untrackEntity(((CraftPlayer) player).getHandle());
+                    worldServer.getTracker().track(((CraftPlayer) player).getHandle());
+                }
+            }.runTaskLater(plugin, 1L);
         }
     }
 
