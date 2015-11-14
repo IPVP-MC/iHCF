@@ -128,7 +128,7 @@ public class CombatLogListener implements Listener {
         PlayerInventory inventory = player.getInventory();
         if (player.getGameMode() != GameMode.CREATIVE && !player.isDead() && !SAFE_DISCONNECTS.contains(uuid)) {
             // If the player has an empty inventory or PVP protection, don't spawn a logger
-            if (InventoryUtils.isEmpty(inventory) || plugin.getTimerManager().getCombatTimer().getRemaining(uuid) > 0L) {
+            if (InventoryUtils.isEmpty(inventory) || plugin.getTimerManager().getInvincibilityTimer().getRemaining(uuid) > 0L) {
                 return;
             }
 
