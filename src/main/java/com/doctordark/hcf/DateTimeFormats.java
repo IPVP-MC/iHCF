@@ -12,7 +12,7 @@ public final class DateTimeFormats {
     private DateTimeFormats() {
     }
 
-    public static final TimeZone SERVER_TIME_ZONE = TimeZone.getTimeZone("GMT+1");
+    public static final TimeZone SERVER_TIME_ZONE = TimeZone.getTimeZone("EST");
     public static final ZoneId SERVER_ZONE_ID = SERVER_TIME_ZONE.toZoneId();
     public static final FastDateFormat DAY_MTH_HR_MIN_SECS = FastDateFormat.getInstance("dd/MM HH:mm:ss", SERVER_TIME_ZONE, Locale.ENGLISH);
     public static final FastDateFormat DAY_MTH_YR_HR_MIN_AMPM = FastDateFormat.getInstance("dd/MM/yy hh:mma", SERVER_TIME_ZONE, Locale.ENGLISH);
