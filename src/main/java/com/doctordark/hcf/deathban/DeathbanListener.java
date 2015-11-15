@@ -66,8 +66,7 @@ public class DeathbanListener implements Listener {
 
         if (lives <= 0) {  // If the user has no lives, inform that they need some.
             event.disallow(PlayerLoginEvent.Result.KICK_OTHER,
-                    ChatColor.RED + "You are still deathbanned for " + formattedRemaining + ": " + ChatColor.YELLOW + deathban.getReason() + ChatColor.RED + ".\n" +
-                            "You can purchase lives at " + ConfigurationService.DONATE_URL + " to bypass this.");
+                    ChatColor.RED + "You are still deathbanned for " + formattedRemaining + ": " + ChatColor.YELLOW + deathban.getReason() + ChatColor.RED + ".");
 
             return;
         }
