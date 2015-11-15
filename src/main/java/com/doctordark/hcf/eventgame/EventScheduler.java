@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class EventScheduler {
 
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy,MM,dd,HH,mm", Locale.ENGLISH);
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy,MM,dd,hh,mm,a", Locale.ENGLISH);
     private static final String FILE_NAME = "event-schedules.txt";
     private static final long QUERY_DELAY = TimeUnit.SECONDS.toMillis(60L);
 
