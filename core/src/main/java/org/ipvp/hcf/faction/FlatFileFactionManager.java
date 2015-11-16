@@ -1,5 +1,8 @@
 package org.ipvp.hcf.faction;
 
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
+import org.bukkit.craftbukkit.v1_7_R4.util.LongHash;
 import org.ipvp.hcf.ConfigurationService;
 import org.ipvp.hcf.HCF;
 import org.ipvp.hcf.faction.claim.Claim;
@@ -22,7 +25,6 @@ import org.ipvp.hcf.faction.type.WarzoneFaction;
 import org.ipvp.hcf.faction.type.WildernessFaction;
 import com.doctordark.util.Config;
 import com.doctordark.util.JavaUtils;
-import com.doctordark.util.cuboid.CoordinatePair;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
@@ -40,7 +42,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +58,7 @@ public class FlatFileFactionManager implements Listener, FactionManager {
 
     // Cached for faster lookup for factions. Potentially usage Guava Cache for
     // future implementations (database).
-    private final Map<CoordinatePair, Claim> claimPositionMap = new HashMap<>();
+    private final Table<String, Long, Claim> claimPositionMap = HashBasedTable.create();
     private final ConcurrentMap<UUID, UUID> factionPlayerUuidMap = new ConcurrentHashMap<>();
     private final ConcurrentMap<UUID, Faction> factionUUIDMap = new ConcurrentHashMap<>();
     private final Map<String, UUID> factionNameMap = new CaseInsensitiveMap<>();
@@ -109,7 +110,7 @@ public class FlatFileFactionManager implements Listener, FactionManager {
 
     @Override
     public Claim getClaimAt(World world, int x, int z) {
-        return this.claimPositionMap.get(new CoordinatePair(world, x, z));
+        return this.claimPositionMap.get(world.getName(), LongHash.toLong(x, z));
     }
 
     @Override
@@ -265,7 +266,9 @@ public class FlatFileFactionManager implements Listener, FactionManager {
         Preconditions.checkArgument(cause != ClaimChangeCause.RESIZE, "Cannot cache claims of resize type");
 
         World world = claim.getWorld();
-        if (world == null) return; // safe-guard if Nether or End is disabled for example
+        if (world == null) {
+            return; // safe-guard if Nether or End is disabled for example
+        }
 
         int minX = Math.min(claim.getX1(), claim.getX2());
         int maxX = Math.max(claim.getX1(), claim.getX2());
@@ -273,11 +276,10 @@ public class FlatFileFactionManager implements Listener, FactionManager {
         int maxZ = Math.max(claim.getZ1(), claim.getZ2());
         for (int x = minX; x <= maxX; x++) {
             for (int z = minZ; z <= maxZ; z++) {
-                CoordinatePair coordinatePair = new CoordinatePair(world, x, z);
                 if (cause == ClaimChangeCause.CLAIM) {
-                    claimPositionMap.put(coordinatePair, claim);
+                    this.claimPositionMap.put(world.getName(), LongHash.toLong(x, z), claim);
                 } else if (cause == ClaimChangeCause.UNCLAIM) {
-                    claimPositionMap.remove(coordinatePair);
+                    this.claimPositionMap.remove(world.getName(), LongHash.toLong(x, z));
                 }
             }
         }
@@ -337,20 +339,20 @@ public class FlatFileFactionManager implements Listener, FactionManager {
             adding.add(new SpawnFaction());
         }
 
-        if (!factionNameMap.containsKey("EndPortal")) { //TODO: more reliable
+        if (!this.factionNameMap.containsKey("EndPortal")) { //TODO: more reliable
             adding.add(new EndPortalFaction());
         }
 
         // Now load the Spawn, etc factions.
         for (Faction added : adding) {
-            cacheFaction(added);
+            this.cacheFaction(added);
             Bukkit.getConsoleSender().sendMessage(ChatColor.BLUE + "Faction " + added.getName() + " not found, created.");
         }
     }
 
     @Override
     public void saveFactionData() {
-        config.set("factions", new ArrayList<>(factionUUIDMap.values()));
-        config.save();
+        this.config.set("factions", new ArrayList<>(factionUUIDMap.values()));
+        this.config.save();
     }
 }
