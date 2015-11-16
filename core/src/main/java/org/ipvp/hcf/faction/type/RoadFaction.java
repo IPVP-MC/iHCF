@@ -1,7 +1,5 @@
 package org.ipvp.hcf.faction.type;
 
-import org.ipvp.hcf.ConfigurationService;
-import org.ipvp.hcf.faction.claim.Claim;
 import com.doctordark.util.BukkitUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -9,12 +7,14 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.ipvp.hcf.ConfigurationService;
+import org.ipvp.hcf.faction.claim.Claim;
 
 import java.util.Map;
 
 /**
  * Represents the {@link RoadFaction}.
- * <p/>
+ * <p>
  * TODO: Needs cleanup
  */
 public class RoadFaction extends ClaimableFaction implements ConfigurationSerializable {

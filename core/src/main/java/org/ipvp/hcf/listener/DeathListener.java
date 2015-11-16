@@ -1,11 +1,5 @@
 package org.ipvp.hcf.listener;
 
-import org.ipvp.hcf.ConfigurationService;
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.faction.struct.Role;
-import org.ipvp.hcf.faction.type.Faction;
-import org.ipvp.hcf.faction.type.PlayerFaction;
-import org.ipvp.hcf.user.FactionUser;
 import com.doctordark.util.JavaUtils;
 import net.minecraft.server.v1_7_R4.EntityLightning;
 import net.minecraft.server.v1_7_R4.PacketPlayOutSpawnEntityWeather;
@@ -21,6 +15,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.ipvp.hcf.ConfigurationService;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.faction.struct.Role;
+import org.ipvp.hcf.faction.type.Faction;
+import org.ipvp.hcf.faction.type.PlayerFaction;
+import org.ipvp.hcf.user.FactionUser;
 
 import java.util.concurrent.TimeUnit;
 

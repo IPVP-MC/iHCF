@@ -1,11 +1,11 @@
 package org.ipvp.hcf.eventgame;
 
+import com.google.common.collect.ImmutableBiMap;
+import com.google.common.collect.ImmutableMap;
 import org.ipvp.hcf.HCF;
 import org.ipvp.hcf.eventgame.tracker.ConquestTracker;
 import org.ipvp.hcf.eventgame.tracker.EventTracker;
 import org.ipvp.hcf.eventgame.tracker.KothTracker;
-import com.google.common.collect.ImmutableBiMap;
-import com.google.common.collect.ImmutableMap;
 
 public enum EventType {
 

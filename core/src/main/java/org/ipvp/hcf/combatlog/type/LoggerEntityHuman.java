@@ -1,8 +1,5 @@
 package org.ipvp.hcf.combatlog.type;
 
-import org.ipvp.hcf.ConfigurationService;
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.combatlog.event.LoggerRemovedEvent;
 import net.minecraft.server.v1_7_R4.Entity;
 import net.minecraft.server.v1_7_R4.EntityHuman;
 import net.minecraft.server.v1_7_R4.EntityPlayer;
@@ -24,6 +21,9 @@ import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.ipvp.hcf.ConfigurationService;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.combatlog.event.LoggerRemovedEvent;
 
 import java.util.UUID;
 

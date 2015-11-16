@@ -1,6 +1,5 @@
 package org.ipvp.hcf.sotw;
 
-import org.ipvp.hcf.HCF;
 import com.doctordark.util.BukkitUtils;
 import com.doctordark.util.JavaUtils;
 import com.google.common.collect.ImmutableList;
@@ -10,6 +9,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.ipvp.hcf.HCF;
 
 import java.util.Collections;
 import java.util.List;

@@ -1,5 +1,14 @@
 package org.ipvp.hcf;
 
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import lombok.Getter;
+import org.bukkit.ChatColor;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.ipvp.hcf.combatlog.CombatLogListener;
 import org.ipvp.hcf.command.AngleCommand;
 import org.ipvp.hcf.command.GoppleCommand;
@@ -98,15 +107,6 @@ import org.ipvp.hcf.visualise.WallBorderListener;
 import org.ipvp.hcfold.EndListener;
 import org.ipvp.hcfold.EventSignListener;
 import org.ipvp.hcfold.MapKitCommand;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import lombok.Getter;
-import org.bukkit.ChatColor;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Map;
 import java.util.Random;

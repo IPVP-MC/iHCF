@@ -1,10 +1,5 @@
 package org.ipvp.hcf.listener;
 
-import org.ipvp.hcf.ConfigurationService;
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.faction.event.FactionClaimChangeEvent;
-import org.ipvp.hcf.faction.event.cause.ClaimChangeCause;
-import org.ipvp.hcf.faction.type.PlayerFaction;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -12,6 +7,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.ipvp.hcf.ConfigurationService;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.faction.event.FactionClaimChangeEvent;
+import org.ipvp.hcf.faction.event.cause.ClaimChangeCause;
+import org.ipvp.hcf.faction.type.PlayerFaction;
 
 public class KitMapListener implements Listener {
 

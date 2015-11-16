@@ -1,6 +1,5 @@
 package org.ipvp.hcf.listener.fixes;
 
-import org.ipvp.hcf.ConfigurationService;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.server.v1_7_R4.EnumArmorMaterial;
 import net.minecraft.server.v1_7_R4.EnumToolMaterial;
@@ -23,6 +22,7 @@ import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.ipvp.hcf.ConfigurationService;
 
 import java.util.Iterator;
 import java.util.Map;

@@ -1,10 +1,10 @@
 package org.ipvp.hcf.faction.struct;
 
-import org.ipvp.hcf.ConfigurationService;
 import com.doctordark.util.BukkitUtils;
-import org.ipvp.hcf.faction.type.Faction;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
+import org.ipvp.hcf.ConfigurationService;
+import org.ipvp.hcf.faction.type.Faction;
 
 /**
  * Represents a relation between {@link Faction}s and {@link org.bukkit.entity.Player}s.

@@ -1,6 +1,5 @@
 package org.ipvp.hcf.listener;
 
-import org.ipvp.hcf.HCF;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -24,6 +23,7 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.material.EnderChest;
+import org.ipvp.hcf.HCF;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 /**

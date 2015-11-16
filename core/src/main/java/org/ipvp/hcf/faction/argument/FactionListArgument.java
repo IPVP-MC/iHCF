@@ -1,7 +1,5 @@
 package org.ipvp.hcf.faction.argument;
 
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.faction.type.PlayerFaction;
 import com.doctordark.util.BukkitUtils;
 import com.doctordark.util.JavaUtils;
 import com.doctordark.util.MapSorting;
@@ -17,6 +15,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.faction.type.PlayerFaction;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -1,12 +1,12 @@
 package org.ipvp.hcf.faction.event;
 
-import org.ipvp.hcf.faction.claim.Claim;
-import org.ipvp.hcf.faction.type.Faction;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.ipvp.hcf.faction.claim.Claim;
+import org.ipvp.hcf.faction.type.Faction;
 
 /**
  * Faction event called when a {@link Player} enters a different {@link Claim}.

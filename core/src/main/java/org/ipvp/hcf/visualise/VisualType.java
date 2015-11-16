@@ -1,12 +1,12 @@
 package org.ipvp.hcf.visualise;
 
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.faction.struct.Relation;
-import org.ipvp.hcf.faction.type.Faction;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.faction.struct.Relation;
+import org.ipvp.hcf.faction.type.Faction;
 
 import java.util.ArrayList;
 

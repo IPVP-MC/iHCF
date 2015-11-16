@@ -1,5 +1,10 @@
 package org.ipvp.hcf.timer;
 
+import com.doctordark.util.Config;
+import lombok.Data;
+import lombok.Getter;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.ipvp.hcf.HCF;
 import org.ipvp.hcf.eventgame.EventTimer;
 import org.ipvp.hcf.timer.type.CombatTimer;
@@ -10,11 +15,6 @@ import org.ipvp.hcf.timer.type.LogoutTimer;
 import org.ipvp.hcf.timer.type.PvpClassWarmupTimer;
 import org.ipvp.hcf.timer.type.StuckTimer;
 import org.ipvp.hcf.timer.type.TeleportTimer;
-import com.doctordark.util.Config;
-import lombok.Data;
-import lombok.Getter;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.LinkedHashSet;
 import java.util.Set;

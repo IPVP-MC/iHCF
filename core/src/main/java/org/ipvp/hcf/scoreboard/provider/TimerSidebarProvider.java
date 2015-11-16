@@ -1,5 +1,9 @@
 package org.ipvp.hcf.scoreboard.provider;
 
+import com.google.common.collect.Ordering;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.ipvp.hcf.ConfigurationService;
 import org.ipvp.hcf.DateTimeFormats;
 import org.ipvp.hcf.DurationFormatter;
@@ -20,10 +24,6 @@ import org.ipvp.hcf.scoreboard.SidebarProvider;
 import org.ipvp.hcf.sotw.SotwTimer;
 import org.ipvp.hcf.timer.PlayerTimer;
 import org.ipvp.hcf.timer.Timer;
-import com.google.common.collect.Ordering;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

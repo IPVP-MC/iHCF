@@ -1,11 +1,5 @@
 package org.ipvp.hcf.scoreboard;
 
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.faction.event.FactionRelationCreateEvent;
-import org.ipvp.hcf.faction.event.FactionRelationRemoveEvent;
-import org.ipvp.hcf.faction.event.PlayerJoinedFactionEvent;
-import org.ipvp.hcf.faction.event.PlayerLeftFactionEvent;
-import org.ipvp.hcf.scoreboard.provider.TimerSidebarProvider;
 import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 import org.bukkit.Bukkit;
@@ -15,6 +9,12 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.faction.event.FactionRelationCreateEvent;
+import org.ipvp.hcf.faction.event.FactionRelationRemoveEvent;
+import org.ipvp.hcf.faction.event.PlayerJoinedFactionEvent;
+import org.ipvp.hcf.faction.event.PlayerLeftFactionEvent;
+import org.ipvp.hcf.scoreboard.provider.TimerSidebarProvider;
 
 import java.util.Collection;
 import java.util.HashMap;

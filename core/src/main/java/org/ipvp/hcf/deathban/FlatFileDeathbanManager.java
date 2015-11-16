@@ -1,8 +1,5 @@
 package org.ipvp.hcf.deathban;
 
-import org.ipvp.hcf.ConfigurationService;
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.faction.type.Faction;
 import com.doctordark.util.Config;
 import com.doctordark.util.PersistableLocation;
 import gnu.trove.impl.Constants;
@@ -12,6 +9,9 @@ import gnu.trove.procedure.TObjectIntProcedure;
 import org.bukkit.Location;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
+import org.ipvp.hcf.ConfigurationService;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.faction.type.Faction;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

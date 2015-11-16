@@ -1,11 +1,5 @@
 package org.ipvp.hcf.visualise;
 
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.faction.claim.Claim;
-import org.ipvp.hcf.faction.type.ClaimableFaction;
-import org.ipvp.hcf.faction.type.Faction;
-import org.ipvp.hcf.faction.type.RoadFaction;
-import org.ipvp.hcf.timer.Timer;
 import com.doctordark.util.cuboid.Cuboid;
 import com.google.common.base.Predicate;
 import org.bukkit.ChatColor;
@@ -22,6 +16,12 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.faction.claim.Claim;
+import org.ipvp.hcf.faction.type.ClaimableFaction;
+import org.ipvp.hcf.faction.type.Faction;
+import org.ipvp.hcf.faction.type.RoadFaction;
+import org.ipvp.hcf.timer.Timer;
 
 import java.util.Collection;
 import java.util.HashMap;

@@ -1,11 +1,5 @@
 package org.ipvp.hcf.faction.type;
 
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.economy.EconomyManager;
-import org.ipvp.hcf.faction.claim.Claim;
-import org.ipvp.hcf.faction.event.FactionClaimChangeEvent;
-import org.ipvp.hcf.faction.event.FactionClaimChangedEvent;
-import org.ipvp.hcf.faction.event.cause.ClaimChangeCause;
 import com.doctordark.util.BukkitUtils;
 import com.doctordark.util.GenericUtils;
 import com.google.common.collect.ImmutableMap;
@@ -15,6 +9,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.economy.EconomyManager;
+import org.ipvp.hcf.faction.claim.Claim;
+import org.ipvp.hcf.faction.event.FactionClaimChangeEvent;
+import org.ipvp.hcf.faction.event.FactionClaimChangedEvent;
+import org.ipvp.hcf.faction.event.cause.ClaimChangeCause;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;

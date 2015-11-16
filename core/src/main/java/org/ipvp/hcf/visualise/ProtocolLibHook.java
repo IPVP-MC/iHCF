@@ -9,7 +9,6 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.FieldAccessException;
 import com.comphenix.protocol.reflect.StructureModifier;
-import org.ipvp.hcf.HCF;
 import net.minecraft.server.v1_7_R4.EntityPlayer;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -17,6 +16,7 @@ import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.ipvp.hcf.HCF;
 
 /**
  * Reference http://wiki.vg/Protocol

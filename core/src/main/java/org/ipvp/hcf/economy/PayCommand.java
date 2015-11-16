@@ -1,6 +1,5 @@
 package org.ipvp.hcf.economy;
 
-import org.ipvp.hcf.HCF;
 import com.doctordark.util.JavaUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -10,6 +9,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.ipvp.hcf.HCF;
 
 import java.util.Collections;
 import java.util.List;

@@ -1,8 +1,5 @@
 package org.ipvp.hcf.faction.claim;
 
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.visualise.VisualBlock;
-import org.ipvp.hcf.visualise.VisualType;
 import com.google.common.base.Predicate;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -26,6 +23,9 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.visualise.VisualBlock;
+import org.ipvp.hcf.visualise.VisualType;
 
 import java.util.ArrayList;
 import java.util.List;

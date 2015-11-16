@@ -1,11 +1,5 @@
 package org.ipvp.hcf.combatlog;
 
-import org.ipvp.hcf.ConfigurationService;
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.combatlog.event.LoggerRemovedEvent;
-import org.ipvp.hcf.combatlog.event.LoggerSpawnEvent;
-import org.ipvp.hcf.combatlog.type.LoggerEntity;
-import org.ipvp.hcf.combatlog.type.LoggerEntityHuman;
 import net.minecraft.server.v1_7_R4.EntityPlayer;
 import net.minecraft.server.v1_7_R4.MinecraftServer;
 import net.minecraft.server.v1_7_R4.PlayerList;
@@ -26,6 +20,12 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.ipvp.hcf.ConfigurationService;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.combatlog.event.LoggerRemovedEvent;
+import org.ipvp.hcf.combatlog.event.LoggerSpawnEvent;
+import org.ipvp.hcf.combatlog.type.LoggerEntity;
+import org.ipvp.hcf.combatlog.type.LoggerEntityHuman;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 import java.util.HashMap;

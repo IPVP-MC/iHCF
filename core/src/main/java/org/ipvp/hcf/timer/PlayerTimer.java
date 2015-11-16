@@ -1,10 +1,5 @@
 package org.ipvp.hcf.timer;
 
-import org.ipvp.hcf.timer.event.TimerClearEvent;
-import org.ipvp.hcf.timer.event.TimerExpireEvent;
-import org.ipvp.hcf.timer.event.TimerExtendEvent;
-import org.ipvp.hcf.timer.event.TimerPauseEvent;
-import org.ipvp.hcf.timer.event.TimerStartEvent;
 import com.doctordark.util.Config;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
@@ -13,6 +8,11 @@ import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.ipvp.hcf.timer.event.TimerClearEvent;
+import org.ipvp.hcf.timer.event.TimerExpireEvent;
+import org.ipvp.hcf.timer.event.TimerExtendEvent;
+import org.ipvp.hcf.timer.event.TimerPauseEvent;
+import org.ipvp.hcf.timer.event.TimerStartEvent;
 
 import javax.annotation.Nullable;
 import java.util.LinkedHashMap;

@@ -1,9 +1,5 @@
 package org.ipvp.hcf.deathban.lives.argument;
 
-import org.ipvp.hcf.DateTimeFormats;
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.deathban.Deathban;
-import org.ipvp.hcf.user.FactionUser;
 import com.doctordark.util.command.CommandArgument;
 import com.google.common.base.Strings;
 import org.apache.commons.lang3.time.DurationFormatUtils;
@@ -14,6 +10,10 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.ipvp.hcf.DateTimeFormats;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.deathban.Deathban;
+import org.ipvp.hcf.user.FactionUser;
 
 import java.util.ArrayList;
 import java.util.Collections;

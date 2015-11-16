@@ -1,9 +1,5 @@
 package org.ipvp.hcf.eventgame.koth.argument;
 
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.eventgame.CaptureZone;
-import org.ipvp.hcf.eventgame.faction.KothFaction;
-import org.ipvp.hcf.faction.type.Faction;
 import com.doctordark.util.JavaUtils;
 import com.doctordark.util.command.CommandArgument;
 import org.apache.commons.lang3.StringUtils;
@@ -11,6 +7,10 @@ import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.eventgame.CaptureZone;
+import org.ipvp.hcf.eventgame.faction.KothFaction;
+import org.ipvp.hcf.faction.type.Faction;
 
 import java.util.Collections;
 import java.util.List;

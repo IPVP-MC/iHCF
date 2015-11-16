@@ -1,8 +1,5 @@
 package org.ipvp.hcf.eventgame.argument;
 
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.eventgame.faction.EventFaction;
-import org.ipvp.hcf.faction.type.Faction;
 import com.doctordark.util.command.CommandArgument;
 import com.doctordark.util.cuboid.Cuboid;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
@@ -11,6 +8,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.eventgame.faction.EventFaction;
+import org.ipvp.hcf.faction.type.Faction;
 
 import java.util.Collections;
 import java.util.List;

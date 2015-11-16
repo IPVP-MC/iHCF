@@ -1,10 +1,10 @@
 package org.ipvp.hcf.eventgame.tracker;
 
+import org.bukkit.entity.Player;
 import org.ipvp.hcf.eventgame.CaptureZone;
 import org.ipvp.hcf.eventgame.EventTimer;
 import org.ipvp.hcf.eventgame.EventType;
 import org.ipvp.hcf.eventgame.faction.EventFaction;
-import org.bukkit.entity.Player;
 
 /**
  * Tracker for handling event mini-games.

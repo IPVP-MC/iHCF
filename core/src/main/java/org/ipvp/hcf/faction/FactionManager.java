@@ -1,8 +1,5 @@
 package org.ipvp.hcf.faction;
 
-import org.ipvp.hcf.faction.claim.Claim;
-import org.ipvp.hcf.faction.type.Faction;
-import org.ipvp.hcf.faction.type.PlayerFaction;
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.Location;
@@ -10,6 +7,9 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.ipvp.hcf.faction.claim.Claim;
+import org.ipvp.hcf.faction.type.Faction;
+import org.ipvp.hcf.faction.type.PlayerFaction;
 
 import java.util.Map;
 import java.util.UUID;

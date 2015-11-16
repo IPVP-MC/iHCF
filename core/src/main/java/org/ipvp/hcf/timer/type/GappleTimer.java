@@ -1,7 +1,5 @@
 package org.ipvp.hcf.timer.type;
 
-import org.ipvp.hcf.DurationFormatter;
-import org.ipvp.hcf.timer.PlayerTimer;
 import com.doctordark.util.imagemessage.ImageChar;
 import com.doctordark.util.imagemessage.ImageMessage;
 import com.google.common.base.Predicate;
@@ -15,6 +13,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.ipvp.hcf.DurationFormatter;
+import org.ipvp.hcf.timer.PlayerTimer;
 
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;

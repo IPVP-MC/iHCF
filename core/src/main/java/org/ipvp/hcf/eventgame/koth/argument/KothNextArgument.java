@@ -1,12 +1,12 @@
 package org.ipvp.hcf.eventgame.koth.argument;
 
-import org.ipvp.hcf.DateTimeFormats;
-import org.ipvp.hcf.HCF;
 import com.doctordark.util.command.CommandArgument;
 import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.ipvp.hcf.DateTimeFormats;
+import org.ipvp.hcf.HCF;
 
 import java.time.LocalDateTime;
 import java.time.format.TextStyle;

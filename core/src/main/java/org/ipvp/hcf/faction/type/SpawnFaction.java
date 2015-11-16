@@ -1,11 +1,11 @@
 package org.ipvp.hcf.faction.type;
 
-import org.ipvp.hcf.ConfigurationService;
-import org.ipvp.hcf.faction.claim.Claim;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.ipvp.hcf.ConfigurationService;
+import org.ipvp.hcf.faction.claim.Claim;
 
 import java.util.Map;
 

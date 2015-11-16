@@ -1,17 +1,17 @@
 package org.ipvp.hcf.pvpclass;
 
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.pvpclass.archer.ArcherClass;
-import org.ipvp.hcf.pvpclass.bard.BardClass;
-import org.ipvp.hcf.pvpclass.event.PvpClassEquipEvent;
-import org.ipvp.hcf.pvpclass.event.PvpClassUnequipEvent;
-import org.ipvp.hcf.pvpclass.type.MinerClass;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.pvpclass.archer.ArcherClass;
+import org.ipvp.hcf.pvpclass.bard.BardClass;
+import org.ipvp.hcf.pvpclass.event.PvpClassEquipEvent;
+import org.ipvp.hcf.pvpclass.event.PvpClassUnequipEvent;
+import org.ipvp.hcf.pvpclass.type.MinerClass;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;

@@ -1,6 +1,5 @@
 package org.ipvp.hcf.listener;
 
-import org.ipvp.hcf.ConfigurationService;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -14,6 +13,7 @@ import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
+import org.ipvp.hcf.ConfigurationService;
 
 /**
  * Listener that applies an Exp Multiplier for Fortune or Looting levels, etc.

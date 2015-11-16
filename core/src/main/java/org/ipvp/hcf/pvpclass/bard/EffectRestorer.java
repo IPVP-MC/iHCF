@@ -1,7 +1,5 @@
 package org.ipvp.hcf.pvpclass.bard;
 
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.pvpclass.event.PvpClassUnequipEvent;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import org.bukkit.entity.LivingEntity;
@@ -12,6 +10,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PotionEffectExpireEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.pvpclass.event.PvpClassUnequipEvent;
 
 import java.util.Collection;
 import java.util.UUID;

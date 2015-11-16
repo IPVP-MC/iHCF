@@ -1,7 +1,5 @@
 package org.ipvp.hcf.pvpclass.type;
 
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.pvpclass.PvpClass;
 import gnu.trove.map.TObjectLongMap;
 import gnu.trove.map.hash.TObjectLongHashMap;
 import net.md_5.bungee.api.ChatColor;
@@ -16,6 +14,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.pvpclass.PvpClass;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;

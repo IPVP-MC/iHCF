@@ -1,13 +1,13 @@
 package org.ipvp.hcf.faction.event;
 
-import org.ipvp.hcf.faction.claim.Claim;
-import org.ipvp.hcf.faction.event.cause.ClaimChangeCause;
-import org.ipvp.hcf.faction.type.ClaimableFaction;
 import com.google.common.base.Preconditions;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.ipvp.hcf.faction.claim.Claim;
+import org.ipvp.hcf.faction.event.cause.ClaimChangeCause;
+import org.ipvp.hcf.faction.type.ClaimableFaction;
 
 import java.util.Collection;
 

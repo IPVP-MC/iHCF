@@ -1,7 +1,5 @@
 package org.ipvp.hcfold;
 
-import org.ipvp.hcf.ConfigurationService;
-import org.ipvp.hcf.HCF;
 import com.doctordark.util.InventoryUtils;
 import com.doctordark.util.ItemBuilder;
 import com.doctordark.util.chat.Lang;
@@ -25,6 +23,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionType;
+import org.ipvp.hcf.ConfigurationService;
+import org.ipvp.hcf.HCF;
 
 import java.util.ArrayList;
 import java.util.Collection;

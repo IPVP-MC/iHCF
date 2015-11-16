@@ -1,10 +1,10 @@
 package org.ipvp.hcf.faction.event;
 
-import org.ipvp.hcf.faction.struct.Raidable;
-import org.ipvp.hcf.faction.type.Faction;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.ipvp.hcf.faction.struct.Raidable;
+import org.ipvp.hcf.faction.type.Faction;
 
 /**
  * Event called when the DTR of a {@link Faction} is changed.

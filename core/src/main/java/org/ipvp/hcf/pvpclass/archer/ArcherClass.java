@@ -1,9 +1,5 @@
 package org.ipvp.hcf.pvpclass.archer;
 
-import org.ipvp.hcf.ConfigurationService;
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.pvpclass.PvpClass;
-import org.ipvp.hcf.pvpclass.event.PvpClassUnequipEvent;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import gnu.trove.map.TObjectLongMap;
@@ -33,6 +29,10 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.ipvp.hcf.ConfigurationService;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.pvpclass.PvpClass;
+import org.ipvp.hcf.pvpclass.event.PvpClassUnequipEvent;
 
 import java.util.Map;
 import java.util.UUID;

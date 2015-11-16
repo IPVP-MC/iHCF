@@ -1,9 +1,5 @@
 package org.ipvp.hcf.timer.type;
 
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.pvpclass.PvpClass;
-import org.ipvp.hcf.timer.PlayerTimer;
-import org.ipvp.hcf.timer.TimerCooldown;
 import com.doctordark.util.Config;
 import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
@@ -17,6 +13,10 @@ import org.bukkit.event.inventory.EquipmentSetEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.pvpclass.PvpClass;
+import org.ipvp.hcf.timer.PlayerTimer;
+import org.ipvp.hcf.timer.TimerCooldown;
 
 import java.util.Collection;
 import java.util.HashMap;

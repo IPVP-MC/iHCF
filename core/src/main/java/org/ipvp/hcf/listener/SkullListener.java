@@ -1,6 +1,5 @@
 package org.ipvp.hcf.listener;
 
-import org.ipvp.hcf.ConfigurationService;
 import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -16,6 +15,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.ipvp.hcf.ConfigurationService;
 
 public class SkullListener implements Listener {
 

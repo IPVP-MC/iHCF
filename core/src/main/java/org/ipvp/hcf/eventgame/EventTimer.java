@@ -1,17 +1,5 @@
 package org.ipvp.hcf.eventgame;
 
-import org.ipvp.hcf.DateTimeFormats;
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.eventgame.crate.EventKey;
-import org.ipvp.hcf.eventgame.faction.ConquestFaction;
-import org.ipvp.hcf.eventgame.faction.EventFaction;
-import org.ipvp.hcf.eventgame.faction.KothFaction;
-import org.ipvp.hcf.faction.event.CaptureZoneEnterEvent;
-import org.ipvp.hcf.faction.event.CaptureZoneLeaveEvent;
-import org.ipvp.hcf.faction.type.Faction;
-import org.ipvp.hcf.faction.type.PlayerFaction;
-import org.ipvp.hcf.timer.GlobalTimer;
-import org.ipvp.hcfold.EventSignListener;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
@@ -31,6 +19,18 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.ipvp.hcf.DateTimeFormats;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.eventgame.crate.EventKey;
+import org.ipvp.hcf.eventgame.faction.ConquestFaction;
+import org.ipvp.hcf.eventgame.faction.EventFaction;
+import org.ipvp.hcf.eventgame.faction.KothFaction;
+import org.ipvp.hcf.faction.event.CaptureZoneEnterEvent;
+import org.ipvp.hcf.faction.event.CaptureZoneLeaveEvent;
+import org.ipvp.hcf.faction.type.Faction;
+import org.ipvp.hcf.faction.type.PlayerFaction;
+import org.ipvp.hcf.timer.GlobalTimer;
+import org.ipvp.hcfold.EventSignListener;
 
 import java.time.LocalDateTime;
 import java.util.Collection;

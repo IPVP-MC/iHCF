@@ -1,10 +1,5 @@
 package org.ipvp.hcf.timer.type;
 
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.faction.FactionManager;
-import org.ipvp.hcf.faction.type.Faction;
-import org.ipvp.hcf.timer.PlayerTimer;
-import org.ipvp.hcf.timer.TimerCooldown;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -16,6 +11,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.faction.FactionManager;
+import org.ipvp.hcf.faction.type.Faction;
+import org.ipvp.hcf.timer.PlayerTimer;
+import org.ipvp.hcf.timer.TimerCooldown;
 
 import java.util.Collection;
 import java.util.HashMap;

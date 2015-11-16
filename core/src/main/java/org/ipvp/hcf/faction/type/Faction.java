@@ -1,9 +1,5 @@
 package org.ipvp.hcf.faction.type;
 
-import org.ipvp.hcf.ConfigurationService;
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.faction.event.FactionRenameEvent;
-import org.ipvp.hcf.faction.struct.Relation;
 import com.doctordark.util.BukkitUtils;
 import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
@@ -11,6 +7,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
+import org.ipvp.hcf.ConfigurationService;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.faction.event.FactionRenameEvent;
+import org.ipvp.hcf.faction.struct.Relation;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

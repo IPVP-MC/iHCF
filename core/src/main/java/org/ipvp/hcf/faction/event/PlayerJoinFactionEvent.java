@@ -1,7 +1,5 @@
 package org.ipvp.hcf.faction.event;
 
-import org.ipvp.hcf.faction.type.Faction;
-import org.ipvp.hcf.faction.type.PlayerFaction;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import lombok.Getter;
@@ -10,6 +8,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
+import org.ipvp.hcf.faction.type.Faction;
+import org.ipvp.hcf.faction.type.PlayerFaction;
 
 import javax.annotation.Nullable;
 import java.util.UUID;

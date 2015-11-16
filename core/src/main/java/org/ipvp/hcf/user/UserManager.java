@@ -1,13 +1,13 @@
 package org.ipvp.hcf.user;
 
 import com.doctordark.base.GuavaCompat;
-import org.ipvp.hcf.HCF;
 import com.doctordark.util.Config;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.ipvp.hcf.HCF;
 
 import java.util.Collection;
 import java.util.HashMap;

@@ -1,7 +1,7 @@
 package org.ipvp.hcf.eventgame.conquest;
 
-import org.ipvp.hcf.HCF;
 import com.doctordark.util.command.ArgumentExecutor;
+import org.ipvp.hcf.HCF;
 
 public class ConquestExecutor extends ArgumentExecutor {
 

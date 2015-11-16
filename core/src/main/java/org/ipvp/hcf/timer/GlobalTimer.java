@@ -1,9 +1,9 @@
 package org.ipvp.hcf.timer;
 
+import org.bukkit.Bukkit;
 import org.ipvp.hcf.timer.event.TimerExtendEvent;
 import org.ipvp.hcf.timer.event.TimerPauseEvent;
 import org.ipvp.hcf.timer.event.TimerStartEvent;
-import org.bukkit.Bukkit;
 
 /**
  * Represents a global {@link Timer}.

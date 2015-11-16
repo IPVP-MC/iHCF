@@ -1,7 +1,5 @@
 package org.ipvp.hcf.listener;
 
-import org.ipvp.hcf.ConfigurationService;
-import org.ipvp.hcf.HCF;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -17,6 +15,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.permissions.Permissible;
+import org.ipvp.hcf.ConfigurationService;
+import org.ipvp.hcf.HCF;
 
 import java.util.ArrayList;
 import java.util.HashSet;

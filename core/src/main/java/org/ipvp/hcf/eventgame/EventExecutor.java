@@ -1,5 +1,6 @@
 package org.ipvp.hcf.eventgame;
 
+import com.doctordark.util.command.ArgumentExecutor;
 import org.ipvp.hcf.HCF;
 import org.ipvp.hcf.eventgame.argument.EventAddLootTableArgument;
 import org.ipvp.hcf.eventgame.argument.EventCancelArgument;
@@ -12,7 +13,6 @@ import org.ipvp.hcf.eventgame.argument.EventSetCapzoneArgument;
 import org.ipvp.hcf.eventgame.argument.EventSetLootArgument;
 import org.ipvp.hcf.eventgame.argument.EventStartArgument;
 import org.ipvp.hcf.eventgame.argument.EventUptimeArgument;
-import com.doctordark.util.command.ArgumentExecutor;
 
 /**
  * Handles the execution and tab completion of the event command.

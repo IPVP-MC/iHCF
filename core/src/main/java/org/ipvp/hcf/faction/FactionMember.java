@@ -1,14 +1,14 @@
 package org.ipvp.hcf.faction;
 
 import com.doctordark.base.GuavaCompat;
-import org.ipvp.hcf.faction.struct.ChatChannel;
-import org.ipvp.hcf.faction.struct.Role;
 import com.google.common.base.Preconditions;
-import org.ipvp.hcf.faction.type.Faction;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
+import org.ipvp.hcf.faction.struct.ChatChannel;
+import org.ipvp.hcf.faction.struct.Role;
+import org.ipvp.hcf.faction.type.Faction;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

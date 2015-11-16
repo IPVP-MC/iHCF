@@ -1,6 +1,5 @@
 package org.ipvp.hcf.eventgame.eotw;
 
-import org.ipvp.hcf.HCF;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,6 +11,7 @@ import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
+import org.ipvp.hcf.HCF;
 
 import java.util.Collections;
 import java.util.List;

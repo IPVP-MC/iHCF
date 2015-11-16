@@ -1,8 +1,5 @@
 package org.ipvp.hcf.timer.argument;
 
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.timer.PlayerTimer;
-import org.ipvp.hcf.timer.Timer;
 import com.doctordark.util.JavaUtils;
 import com.doctordark.util.command.CommandArgument;
 import com.google.common.base.Function;
@@ -15,6 +12,9 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.timer.PlayerTimer;
+import org.ipvp.hcf.timer.Timer;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;

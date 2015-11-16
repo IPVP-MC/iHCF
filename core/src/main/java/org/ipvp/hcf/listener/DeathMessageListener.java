@@ -1,6 +1,5 @@
 package org.ipvp.hcf.listener;
 
-import org.ipvp.hcf.HCF;
 import com.google.common.base.Preconditions;
 import net.minecraft.server.v1_7_R4.EntityLiving;
 import org.apache.commons.lang3.text.WordUtils;
@@ -13,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.ipvp.hcf.HCF;
 
 /**
  * Listener that customises the death-messages to show kills besides name.

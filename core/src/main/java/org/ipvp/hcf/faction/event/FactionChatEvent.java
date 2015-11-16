@@ -1,12 +1,12 @@
 package org.ipvp.hcf.faction.event;
 
-import org.ipvp.hcf.faction.FactionMember;
-import org.ipvp.hcf.faction.struct.ChatChannel;
-import org.ipvp.hcf.faction.type.PlayerFaction;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
+import org.ipvp.hcf.faction.FactionMember;
+import org.ipvp.hcf.faction.struct.ChatChannel;
+import org.ipvp.hcf.faction.type.PlayerFaction;
 
 import java.util.Collection;
 

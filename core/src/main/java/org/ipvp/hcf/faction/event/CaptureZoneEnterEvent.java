@@ -1,11 +1,11 @@
 package org.ipvp.hcf.faction.event;
 
-import org.ipvp.hcf.eventgame.CaptureZone;
-import org.ipvp.hcf.eventgame.faction.CapturableFaction;
 import com.google.common.base.Preconditions;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
+import org.ipvp.hcf.eventgame.CaptureZone;
+import org.ipvp.hcf.eventgame.faction.CapturableFaction;
 
 /**
  * Faction event called when a player enters an event capture zone.

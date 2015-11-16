@@ -1,8 +1,5 @@
 package org.ipvp.hcf.eventgame.faction;
 
-import org.ipvp.hcf.eventgame.CaptureZone;
-import org.ipvp.hcf.eventgame.EventType;
-import org.ipvp.hcf.faction.claim.Claim;
 import com.doctordark.util.BukkitUtils;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -11,6 +8,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.ipvp.hcf.eventgame.CaptureZone;
+import org.ipvp.hcf.eventgame.EventType;
+import org.ipvp.hcf.faction.claim.Claim;
 
 import java.util.ArrayList;
 import java.util.Collection;

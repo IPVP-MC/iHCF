@@ -1,6 +1,5 @@
 package org.ipvp.hcf.listener;
 
-import org.ipvp.hcf.HCF;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.World;
 import org.bukkit.block.CreatureSpawner;
@@ -14,6 +13,7 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.ipvp.hcf.HCF;
 
 public class CoreListener implements Listener {
 

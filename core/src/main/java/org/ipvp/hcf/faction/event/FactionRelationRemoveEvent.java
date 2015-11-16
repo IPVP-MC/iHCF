@@ -1,11 +1,11 @@
 package org.ipvp.hcf.faction.event;
 
-import org.ipvp.hcf.faction.struct.Relation;
-import org.ipvp.hcf.faction.type.Faction;
-import org.ipvp.hcf.faction.type.PlayerFaction;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.ipvp.hcf.faction.struct.Relation;
+import org.ipvp.hcf.faction.type.Faction;
+import org.ipvp.hcf.faction.type.PlayerFaction;
 
 /**
  * Faction event called a {@link PlayerFaction} has removed a {@link Relation}

@@ -1,10 +1,5 @@
 package org.ipvp.hcf.listener;
 
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.faction.event.FactionChatEvent;
-import org.ipvp.hcf.faction.struct.ChatChannel;
-import org.ipvp.hcf.faction.type.Faction;
-import org.ipvp.hcf.faction.type.PlayerFaction;
 import com.earth2me.essentials.Essentials;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.MapMaker;
@@ -18,6 +13,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.faction.event.FactionChatEvent;
+import org.ipvp.hcf.faction.struct.ChatChannel;
+import org.ipvp.hcf.faction.type.Faction;
+import org.ipvp.hcf.faction.type.PlayerFaction;
 
 import java.util.Collection;
 import java.util.Locale;

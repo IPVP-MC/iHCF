@@ -1,9 +1,5 @@
 package org.ipvp.hcf.faction.argument.staff;
 
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.faction.claim.ClaimSelection;
-import org.ipvp.hcf.faction.type.ClaimableFaction;
-import org.ipvp.hcf.faction.type.Faction;
 import com.doctordark.util.command.CommandArgument;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -12,6 +8,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.faction.claim.ClaimSelection;
+import org.ipvp.hcf.faction.type.ClaimableFaction;
+import org.ipvp.hcf.faction.type.Faction;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,12 +1,5 @@
 package org.ipvp.hcf.faction.argument;
 
-import org.ipvp.hcf.DurationFormatter;
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.eventgame.faction.EventFaction;
-import org.ipvp.hcf.faction.FactionExecutor;
-import org.ipvp.hcf.faction.type.Faction;
-import org.ipvp.hcf.faction.type.PlayerFaction;
-import org.ipvp.hcf.timer.PlayerTimer;
 import com.doctordark.util.command.CommandArgument;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -14,6 +7,13 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.ipvp.hcf.DurationFormatter;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.eventgame.faction.EventFaction;
+import org.ipvp.hcf.faction.FactionExecutor;
+import org.ipvp.hcf.faction.type.Faction;
+import org.ipvp.hcf.faction.type.PlayerFaction;
+import org.ipvp.hcf.timer.PlayerTimer;
 
 import java.util.UUID;
 

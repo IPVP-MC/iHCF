@@ -1,5 +1,8 @@
 package org.ipvp.hcf.eventgame.tracker;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.ipvp.hcf.DateTimeFormats;
 import org.ipvp.hcf.HCF;
 import org.ipvp.hcf.eventgame.CaptureZone;
@@ -7,9 +10,6 @@ import org.ipvp.hcf.eventgame.EventTimer;
 import org.ipvp.hcf.eventgame.EventType;
 import org.ipvp.hcf.eventgame.faction.EventFaction;
 import org.ipvp.hcf.eventgame.faction.KothFaction;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 
 import java.util.concurrent.TimeUnit;
 

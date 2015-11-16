@@ -1,12 +1,12 @@
 package org.ipvp.hcf.eventgame.crate;
 
-import org.ipvp.hcf.HCF;
 import com.doctordark.util.Config;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Table;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.inventory.ItemStack;
+import org.ipvp.hcf.HCF;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

@@ -1,10 +1,5 @@
 package org.ipvp.hcf.eventgame.eotw;
 
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.faction.event.FactionClaimChangeEvent;
-import org.ipvp.hcf.faction.event.cause.ClaimChangeCause;
-import org.ipvp.hcf.faction.type.Faction;
-import org.ipvp.hcf.faction.type.PlayerFaction;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -12,6 +7,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.faction.event.FactionClaimChangeEvent;
+import org.ipvp.hcf.faction.event.cause.ClaimChangeCause;
+import org.ipvp.hcf.faction.type.Faction;
+import org.ipvp.hcf.faction.type.PlayerFaction;
 
 /**
  * Listener used to handle events for if EOTW is active.

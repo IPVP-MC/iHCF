@@ -1,10 +1,10 @@
 package org.ipvp.hcf.user;
 
-import org.ipvp.hcf.deathban.Deathban;
 import com.doctordark.util.GenericUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
+import org.ipvp.hcf.deathban.Deathban;
 
 import java.util.ArrayList;
 import java.util.HashSet;

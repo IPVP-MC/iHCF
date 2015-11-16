@@ -1,9 +1,5 @@
 package org.ipvp.hcf.eventgame.eotw;
 
-import org.ipvp.hcf.DurationFormatter;
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.faction.type.ClaimableFaction;
-import org.ipvp.hcf.faction.type.Faction;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -11,6 +7,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.ipvp.hcf.DurationFormatter;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.faction.type.ClaimableFaction;
+import org.ipvp.hcf.faction.type.Faction;
 
 import java.util.HashSet;
 import java.util.Iterator;

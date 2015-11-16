@@ -1,8 +1,6 @@
 package org.ipvp.hcf.economy;
 
 import com.doctordark.base.BasePlugin;
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.listener.Crowbar;
 import com.doctordark.util.InventoryUtils;
 import com.doctordark.util.JavaUtils;
 import org.bukkit.ChatColor;
@@ -18,6 +16,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.listener.Crowbar;
 
 import java.util.Arrays;
 import java.util.Map;

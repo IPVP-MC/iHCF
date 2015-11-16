@@ -1,7 +1,7 @@
 package org.ipvp.hcf.eventgame;
 
-import org.ipvp.hcf.HCF;
 import org.bukkit.Bukkit;
+import org.ipvp.hcf.HCF;
 
 import java.io.BufferedReader;
 import java.io.File;

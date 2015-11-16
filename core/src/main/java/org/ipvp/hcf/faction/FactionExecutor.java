@@ -1,5 +1,9 @@
 package org.ipvp.hcf.faction;
 
+import com.doctordark.util.command.ArgumentExecutor;
+import com.doctordark.util.command.CommandArgument;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.ipvp.hcf.HCF;
 import org.ipvp.hcf.faction.argument.FactionAcceptArgument;
 import org.ipvp.hcf.faction.argument.FactionAllyArgument;
@@ -46,10 +50,6 @@ import org.ipvp.hcf.faction.argument.staff.FactionRemoveArgument;
 import org.ipvp.hcf.faction.argument.staff.FactionSetDeathbanMultiplierArgument;
 import org.ipvp.hcf.faction.argument.staff.FactionSetDtrArgument;
 import org.ipvp.hcf.faction.argument.staff.FactionSetDtrRegenArgument;
-import com.doctordark.util.command.ArgumentExecutor;
-import com.doctordark.util.command.CommandArgument;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 
 /**
  * Class to handle the command and tab completion for the faction command.

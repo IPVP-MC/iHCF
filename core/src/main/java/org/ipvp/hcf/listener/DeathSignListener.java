@@ -1,8 +1,5 @@
 package org.ipvp.hcf.listener;
 
-import org.ipvp.hcf.ConfigurationService;
-import org.ipvp.hcf.DateTimeFormats;
-import org.ipvp.hcf.HCF;
 import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -23,6 +20,9 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.ipvp.hcf.ConfigurationService;
+import org.ipvp.hcf.DateTimeFormats;
+import org.ipvp.hcf.HCF;
 
 import java.util.Arrays;
 import java.util.List;

@@ -1,9 +1,5 @@
 package org.ipvp.hcf.command;
 
-import org.ipvp.hcf.ConfigurationService;
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.faction.struct.RegenStatus;
-import org.ipvp.hcf.faction.type.PlayerFaction;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -11,6 +7,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.ipvp.hcf.ConfigurationService;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.faction.struct.RegenStatus;
+import org.ipvp.hcf.faction.type.PlayerFaction;
 
 import java.util.Collections;
 import java.util.List;

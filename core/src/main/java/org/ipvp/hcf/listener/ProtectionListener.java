@@ -1,19 +1,5 @@
 package org.ipvp.hcf.listener;
 
-import org.ipvp.hcf.ConfigurationService;
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.eventgame.CaptureZone;
-import org.ipvp.hcf.eventgame.faction.CapturableFaction;
-import org.ipvp.hcf.faction.claim.Claim;
-import org.ipvp.hcf.faction.event.CaptureZoneEnterEvent;
-import org.ipvp.hcf.faction.event.CaptureZoneLeaveEvent;
-import org.ipvp.hcf.faction.event.PlayerClaimEnterEvent;
-import org.ipvp.hcf.faction.struct.Raidable;
-import org.ipvp.hcf.faction.struct.Role;
-import org.ipvp.hcf.faction.type.ClaimableFaction;
-import org.ipvp.hcf.faction.type.Faction;
-import org.ipvp.hcf.faction.type.PlayerFaction;
-import org.ipvp.hcf.faction.type.WarzoneFaction;
 import com.doctordark.util.BukkitUtils;
 import com.doctordark.util.cuboid.Cuboid;
 import com.google.common.collect.ImmutableMultimap;
@@ -71,6 +57,20 @@ import org.bukkit.material.Cauldron;
 import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
+import org.ipvp.hcf.ConfigurationService;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.eventgame.CaptureZone;
+import org.ipvp.hcf.eventgame.faction.CapturableFaction;
+import org.ipvp.hcf.faction.claim.Claim;
+import org.ipvp.hcf.faction.event.CaptureZoneEnterEvent;
+import org.ipvp.hcf.faction.event.CaptureZoneLeaveEvent;
+import org.ipvp.hcf.faction.event.PlayerClaimEnterEvent;
+import org.ipvp.hcf.faction.struct.Raidable;
+import org.ipvp.hcf.faction.struct.Role;
+import org.ipvp.hcf.faction.type.ClaimableFaction;
+import org.ipvp.hcf.faction.type.Faction;
+import org.ipvp.hcf.faction.type.PlayerFaction;
+import org.ipvp.hcf.faction.type.WarzoneFaction;
 
 import javax.annotation.Nullable;
 

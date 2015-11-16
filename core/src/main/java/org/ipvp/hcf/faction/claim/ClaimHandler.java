@@ -1,5 +1,15 @@
 package org.ipvp.hcf.faction.claim;
 
+import com.doctordark.util.ItemBuilder;
+import com.doctordark.util.cuboid.Cuboid;
+import com.doctordark.util.cuboid.CuboidDirection;
+import com.google.common.base.Preconditions;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.ipvp.hcf.ConfigurationService;
 import org.ipvp.hcf.HCF;
 import org.ipvp.hcf.economy.EconomyManager;
@@ -11,16 +21,6 @@ import org.ipvp.hcf.faction.type.PlayerFaction;
 import org.ipvp.hcf.faction.type.RoadFaction;
 import org.ipvp.hcf.faction.type.WildernessFaction;
 import org.ipvp.hcf.visualise.VisualType;
-import com.doctordark.util.ItemBuilder;
-import com.doctordark.util.cuboid.Cuboid;
-import com.doctordark.util.cuboid.CuboidDirection;
-import com.google.common.base.Preconditions;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.Collection;
 import java.util.HashMap;

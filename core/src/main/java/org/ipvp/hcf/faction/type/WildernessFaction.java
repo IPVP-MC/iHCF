@@ -1,7 +1,7 @@
 package org.ipvp.hcf.faction.type;
 
-import org.ipvp.hcf.ConfigurationService;
 import org.bukkit.command.CommandSender;
+import org.ipvp.hcf.ConfigurationService;
 
 import java.util.Map;
 

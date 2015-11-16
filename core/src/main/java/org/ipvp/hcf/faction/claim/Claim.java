@@ -1,8 +1,5 @@
 package org.ipvp.hcf.faction.claim;
 
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.faction.type.ClaimableFaction;
-import org.ipvp.hcf.faction.type.Faction;
 import com.doctordark.util.GenericUtils;
 import com.doctordark.util.cuboid.Cuboid;
 import com.doctordark.util.cuboid.NamedCuboid;
@@ -10,6 +7,9 @@ import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.faction.type.ClaimableFaction;
+import org.ipvp.hcf.faction.type.Faction;
 
 import java.util.ArrayList;
 import java.util.Collection;

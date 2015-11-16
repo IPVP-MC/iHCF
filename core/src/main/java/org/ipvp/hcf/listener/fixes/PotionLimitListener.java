@@ -1,6 +1,5 @@
 package org.ipvp.hcf.listener.fixes;
 
-import org.ipvp.hcf.ConfigurationService;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -9,6 +8,7 @@ import org.bukkit.event.inventory.BrewEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionType;
+import org.ipvp.hcf.ConfigurationService;
 
 /**
  * Listener that prevents the brewing of illegal {@link org.bukkit.potion.PotionEffectType}s.

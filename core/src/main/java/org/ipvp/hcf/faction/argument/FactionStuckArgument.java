@@ -1,14 +1,14 @@
 package org.ipvp.hcf.faction.argument;
 
-import org.ipvp.hcf.DurationFormatter;
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.timer.type.StuckTimer;
 import com.doctordark.util.command.CommandArgument;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.ipvp.hcf.DurationFormatter;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.timer.type.StuckTimer;
 
 /**
  * Faction argument used to teleport to a nearby {@link org.bukkit.Location} safely if stuck.

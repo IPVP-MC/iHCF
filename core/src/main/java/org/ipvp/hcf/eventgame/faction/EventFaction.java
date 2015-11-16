@@ -1,15 +1,15 @@
 package org.ipvp.hcf.eventgame.faction;
 
+import com.doctordark.util.cuboid.Cuboid;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.ipvp.hcf.eventgame.CaptureZone;
 import org.ipvp.hcf.eventgame.EventType;
 import org.ipvp.hcf.faction.claim.Claim;
 import org.ipvp.hcf.faction.claim.ClaimHandler;
 import org.ipvp.hcf.faction.type.ClaimableFaction;
 import org.ipvp.hcf.faction.type.Faction;
-import com.doctordark.util.cuboid.Cuboid;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.command.CommandSender;
 
 import java.util.List;
 import java.util.Map;

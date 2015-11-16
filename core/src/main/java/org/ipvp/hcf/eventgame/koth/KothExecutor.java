@@ -1,13 +1,13 @@
 package org.ipvp.hcf.eventgame.koth;
 
+import com.doctordark.util.command.ArgumentExecutor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.ipvp.hcf.HCF;
 import org.ipvp.hcf.eventgame.koth.argument.KothHelpArgument;
 import org.ipvp.hcf.eventgame.koth.argument.KothNextArgument;
 import org.ipvp.hcf.eventgame.koth.argument.KothScheduleArgument;
 import org.ipvp.hcf.eventgame.koth.argument.KothSetCapDelayArgument;
-import com.doctordark.util.command.ArgumentExecutor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 
 /**
  * Command used to handle KingOfTheHills.

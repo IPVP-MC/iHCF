@@ -1,15 +1,15 @@
 package org.ipvp.hcf.eventgame.argument;
 
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.eventgame.EventType;
 import com.doctordark.util.command.CommandArgument;
-import org.ipvp.hcf.eventgame.crate.EventKey;
 import net.minecraft.util.com.google.common.primitives.Ints;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.eventgame.EventType;
+import org.ipvp.hcf.eventgame.crate.EventKey;
 
 import java.util.ArrayList;
 import java.util.Collections;

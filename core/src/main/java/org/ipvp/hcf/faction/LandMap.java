@@ -1,13 +1,6 @@
 package org.ipvp.hcf.faction;
 
 import com.doctordark.base.BasePlugin;
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.faction.claim.Claim;
-import org.ipvp.hcf.faction.claim.ClaimHandler;
-import org.ipvp.hcf.faction.type.Faction;
-import org.ipvp.hcf.faction.type.PlayerFaction;
-import org.ipvp.hcf.visualise.VisualBlockData;
-import org.ipvp.hcf.visualise.VisualType;
 import com.doctordark.util.BukkitUtils;
 import com.google.common.base.Objects;
 import org.bukkit.ChatColor;
@@ -15,6 +8,13 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.faction.claim.Claim;
+import org.ipvp.hcf.faction.claim.ClaimHandler;
+import org.ipvp.hcf.faction.type.Faction;
+import org.ipvp.hcf.faction.type.PlayerFaction;
+import org.ipvp.hcf.visualise.VisualBlockData;
+import org.ipvp.hcf.visualise.VisualType;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;

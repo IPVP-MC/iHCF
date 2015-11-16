@@ -1,16 +1,16 @@
 package org.ipvp.hcf.faction.argument;
 
 import com.doctordark.base.GuavaCompat;
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.faction.LandMap;
-import org.ipvp.hcf.faction.claim.Claim;
-import org.ipvp.hcf.user.FactionUser;
-import org.ipvp.hcf.visualise.VisualType;
 import com.doctordark.util.command.CommandArgument;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.faction.LandMap;
+import org.ipvp.hcf.faction.claim.Claim;
+import org.ipvp.hcf.user.FactionUser;
+import org.ipvp.hcf.visualise.VisualType;
 
 import java.util.ArrayList;
 import java.util.Collections;

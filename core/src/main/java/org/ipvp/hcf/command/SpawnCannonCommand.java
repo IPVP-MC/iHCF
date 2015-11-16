@@ -1,9 +1,5 @@
 package org.ipvp.hcf.command;
 
-import org.ipvp.hcf.ConfigurationService;
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.faction.type.Faction;
-import org.ipvp.hcf.faction.type.WarzoneFaction;
 import com.doctordark.util.BukkitUtils;
 import com.doctordark.util.JavaUtils;
 import com.google.common.collect.ImmutableList;
@@ -21,6 +17,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.ipvp.hcf.ConfigurationService;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.faction.type.Faction;
+import org.ipvp.hcf.faction.type.WarzoneFaction;
 
 import java.util.Collections;
 import java.util.List;

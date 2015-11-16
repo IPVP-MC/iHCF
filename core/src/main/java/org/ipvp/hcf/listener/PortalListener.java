@@ -1,8 +1,5 @@
 package org.ipvp.hcf.listener;
 
-import org.ipvp.hcf.DurationFormatter;
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.timer.PlayerTimer;
 import gnu.trove.map.TObjectLongMap;
 import gnu.trove.map.hash.TObjectLongHashMap;
 import org.bukkit.Bukkit;
@@ -19,6 +16,9 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.potion.PotionEffectType;
+import org.ipvp.hcf.DurationFormatter;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.timer.PlayerTimer;
 
 import java.util.UUID;
 

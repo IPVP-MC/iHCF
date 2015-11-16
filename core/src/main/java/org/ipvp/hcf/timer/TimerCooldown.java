@@ -1,10 +1,10 @@
 package org.ipvp.hcf.timer;
 
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.timer.event.TimerExpireEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.timer.event.TimerExpireEvent;
 
 import java.util.UUID;
 

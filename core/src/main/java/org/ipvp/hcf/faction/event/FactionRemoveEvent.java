@@ -1,9 +1,9 @@
 package org.ipvp.hcf.faction.event;
 
-import org.ipvp.hcf.faction.type.Faction;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
+import org.ipvp.hcf.faction.type.Faction;
 
 /**
  * Event called when a {@link Faction} is about to be removed.

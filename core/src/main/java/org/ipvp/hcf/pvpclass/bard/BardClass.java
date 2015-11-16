@@ -1,10 +1,5 @@
 package org.ipvp.hcf.pvpclass.bard;
 
-import org.ipvp.hcf.DurationFormatter;
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.faction.type.Faction;
-import org.ipvp.hcf.faction.type.PlayerFaction;
-import org.ipvp.hcf.pvpclass.PvpClass;
 import com.doctordark.util.BukkitUtils;
 import com.doctordark.util.chat.Lang;
 import gnu.trove.map.TObjectLongMap;
@@ -26,6 +21,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.ipvp.hcf.DurationFormatter;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.faction.type.Faction;
+import org.ipvp.hcf.faction.type.PlayerFaction;
+import org.ipvp.hcf.pvpclass.PvpClass;
 
 import java.util.Collection;
 import java.util.EnumMap;

@@ -1,9 +1,9 @@
 package org.ipvp.hcf.pvpclass.event;
 
-import org.ipvp.hcf.pvpclass.PvpClass;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
+import org.ipvp.hcf.pvpclass.PvpClass;
 
 /**
  * Event called when a player unequips a {@link PvpClass}.

@@ -1,17 +1,17 @@
 package org.ipvp.hcf.faction.argument;
 
-import org.ipvp.hcf.faction.FactionExecutor;
 import com.doctordark.util.BukkitUtils;
 import com.doctordark.util.JavaUtils;
 import com.doctordark.util.command.CommandArgument;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import org.ipvp.hcf.faction.type.Faction;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.ipvp.hcf.faction.FactionExecutor;
+import org.ipvp.hcf.faction.type.Faction;
 
 /**
  * Faction argument used to show help on how to use {@link Faction}s.

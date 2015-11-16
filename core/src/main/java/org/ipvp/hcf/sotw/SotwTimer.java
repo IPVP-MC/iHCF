@@ -1,10 +1,10 @@
 package org.ipvp.hcf.sotw;
 
-import org.ipvp.hcf.HCF;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.ipvp.hcf.HCF;
 
 public class SotwTimer {
 

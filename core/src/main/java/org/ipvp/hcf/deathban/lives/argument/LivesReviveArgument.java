@@ -1,11 +1,5 @@
 package org.ipvp.hcf.deathban.lives.argument;
 
-import org.ipvp.hcf.ConfigurationService;
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.deathban.Deathban;
-import org.ipvp.hcf.faction.struct.Relation;
-import org.ipvp.hcf.faction.type.PlayerFaction;
-import org.ipvp.hcf.user.FactionUser;
 import com.doctordark.util.command.CommandArgument;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -16,6 +10,12 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageRecipient;
+import org.ipvp.hcf.ConfigurationService;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.deathban.Deathban;
+import org.ipvp.hcf.faction.struct.Relation;
+import org.ipvp.hcf.faction.type.PlayerFaction;
+import org.ipvp.hcf.user.FactionUser;
 
 import java.util.ArrayList;
 import java.util.Collection;

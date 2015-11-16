@@ -1,9 +1,9 @@
 package org.ipvp.hcf.timer.event;
 
-import org.ipvp.hcf.timer.Timer;
 import com.google.common.base.Optional;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.ipvp.hcf.timer.Timer;
 
 import java.util.UUID;
 

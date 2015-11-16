@@ -1,14 +1,5 @@
 package org.ipvp.hcf.timer.type;
 
-import org.ipvp.hcf.DurationFormatter;
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.faction.event.PlayerClaimEnterEvent;
-import org.ipvp.hcf.faction.event.PlayerJoinFactionEvent;
-import org.ipvp.hcf.faction.event.PlayerLeaveFactionEvent;
-import org.ipvp.hcf.timer.PlayerTimer;
-import org.ipvp.hcf.timer.event.TimerClearEvent;
-import org.ipvp.hcf.timer.event.TimerStartEvent;
-import org.ipvp.hcf.visualise.VisualType;
 import com.doctordark.util.BukkitUtils;
 import com.google.common.base.Optional;
 import org.apache.commons.lang3.time.DurationFormatUtils;
@@ -22,6 +13,15 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.ipvp.hcf.DurationFormatter;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.faction.event.PlayerClaimEnterEvent;
+import org.ipvp.hcf.faction.event.PlayerJoinFactionEvent;
+import org.ipvp.hcf.faction.event.PlayerLeaveFactionEvent;
+import org.ipvp.hcf.timer.PlayerTimer;
+import org.ipvp.hcf.timer.event.TimerClearEvent;
+import org.ipvp.hcf.timer.event.TimerStartEvent;
+import org.ipvp.hcf.visualise.VisualType;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;

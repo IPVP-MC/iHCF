@@ -1,7 +1,5 @@
 package org.ipvp.hcf.deathban;
 
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.user.FactionUser;
 import com.doctordark.util.BukkitUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -10,6 +8,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.user.FactionUser;
 
 import java.util.ArrayList;
 import java.util.Collections;

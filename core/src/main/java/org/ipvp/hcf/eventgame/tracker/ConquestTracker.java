@@ -1,6 +1,15 @@
 package org.ipvp.hcf.eventgame.tracker;
 
 import com.doctordark.base.GuavaCompat;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Ordering;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.ipvp.hcf.ConfigurationService;
 import org.ipvp.hcf.HCF;
 import org.ipvp.hcf.eventgame.CaptureZone;
@@ -11,15 +20,6 @@ import org.ipvp.hcf.eventgame.faction.EventFaction;
 import org.ipvp.hcf.faction.event.FactionRemoveEvent;
 import org.ipvp.hcf.faction.type.Faction;
 import org.ipvp.hcf.faction.type.PlayerFaction;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Ordering;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PlayerDeathEvent;
 
 import java.util.Collections;
 import java.util.Comparator;

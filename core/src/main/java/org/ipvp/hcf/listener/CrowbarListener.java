@@ -1,11 +1,6 @@
 package org.ipvp.hcf.listener;
 
 import com.doctordark.base.GuavaCompat;
-import org.ipvp.hcf.ConfigurationService;
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.faction.FactionMember;
-import org.ipvp.hcf.faction.claim.Claim;
-import org.ipvp.hcf.faction.type.PlayerFaction;
 import com.doctordark.util.ItemBuilder;
 import com.doctordark.util.ParticleEffect;
 import com.google.common.base.Optional;
@@ -30,6 +25,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.ipvp.hcf.ConfigurationService;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.faction.FactionMember;
+import org.ipvp.hcf.faction.claim.Claim;
+import org.ipvp.hcf.faction.type.PlayerFaction;
 
 import java.util.List;
 

@@ -1,16 +1,16 @@
 package org.ipvp.hcf.eventgame.conquest;
 
+import com.doctordark.util.JavaUtils;
+import com.doctordark.util.command.CommandArgument;
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.ipvp.hcf.ConfigurationService;
 import org.ipvp.hcf.HCF;
 import org.ipvp.hcf.eventgame.EventType;
 import org.ipvp.hcf.eventgame.tracker.ConquestTracker;
 import org.ipvp.hcf.faction.type.Faction;
 import org.ipvp.hcf.faction.type.PlayerFaction;
-import com.doctordark.util.JavaUtils;
-import com.doctordark.util.command.CommandArgument;
-import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 
 public class ConquestSetpointsArgument extends CommandArgument {
 

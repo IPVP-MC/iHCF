@@ -1,8 +1,5 @@
 package org.ipvp.hcf.listener.fixes;
 
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.faction.type.ClaimableFaction;
-import org.ipvp.hcf.faction.type.Faction;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import org.bukkit.ChatColor;
@@ -17,6 +14,9 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.InventoryHolder;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.faction.type.ClaimableFaction;
+import org.ipvp.hcf.faction.type.Faction;
 
 public class PearlGlitchListener implements Listener {
 

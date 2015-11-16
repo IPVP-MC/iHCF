@@ -1,8 +1,8 @@
 package org.ipvp.hcf.faction.event;
 
-import org.ipvp.hcf.faction.type.Faction;
 import com.google.common.base.Preconditions;
 import org.bukkit.event.Event;
+import org.ipvp.hcf.faction.type.Faction;
 
 /**
  * Represents a faction related event

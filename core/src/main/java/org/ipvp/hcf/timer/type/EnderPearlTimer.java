@@ -1,8 +1,5 @@
 package org.ipvp.hcf.timer.type;
 
-import org.ipvp.hcf.DurationFormatter;
-import org.ipvp.hcf.timer.PlayerTimer;
-import org.ipvp.hcf.timer.TimerCooldown;
 import com.doctordark.util.Config;
 import net.minecraft.server.v1_7_R4.EntityPlayer;
 import net.minecraft.server.v1_7_R4.PacketPlayOutSetSlot;
@@ -29,6 +26,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.ipvp.hcf.DurationFormatter;
+import org.ipvp.hcf.timer.PlayerTimer;
+import org.ipvp.hcf.timer.TimerCooldown;
 
 import java.util.Collection;
 import java.util.HashMap;

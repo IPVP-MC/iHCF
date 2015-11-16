@@ -1,6 +1,5 @@
 package org.ipvp.hcf.deathban.lives.argument;
 
-import org.ipvp.hcf.HCF;
 import com.doctordark.util.JavaUtils;
 import com.doctordark.util.command.CommandArgument;
 import org.bukkit.Bukkit;
@@ -9,6 +8,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.ipvp.hcf.HCF;
 
 import java.util.Collections;
 import java.util.List;

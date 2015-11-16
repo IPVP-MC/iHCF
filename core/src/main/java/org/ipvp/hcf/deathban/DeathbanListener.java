@@ -1,9 +1,5 @@
 package org.ipvp.hcf.deathban;
 
-import org.ipvp.hcf.DelayedMessageRunnable;
-import org.ipvp.hcf.DurationFormatter;
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.user.FactionUser;
 import net.minecraft.util.gnu.trove.map.TObjectIntMap;
 import net.minecraft.util.gnu.trove.map.TObjectLongMap;
 import net.minecraft.util.gnu.trove.map.hash.TObjectIntHashMap;
@@ -20,6 +16,10 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRequestRespawnEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.ipvp.hcf.DelayedMessageRunnable;
+import org.ipvp.hcf.DurationFormatter;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.user.FactionUser;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;

@@ -1,7 +1,7 @@
 package org.ipvp.hcf.faction.struct;
 
-import org.ipvp.hcf.faction.type.Faction;
 import org.bukkit.ChatColor;
+import org.ipvp.hcf.faction.type.Faction;
 
 /**
  * Represents the {@link RegenStatus} of a {@link Faction}.

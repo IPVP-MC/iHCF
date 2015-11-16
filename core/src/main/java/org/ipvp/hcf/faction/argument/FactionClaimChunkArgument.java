@@ -1,16 +1,16 @@
 package org.ipvp.hcf.faction.argument;
 
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.faction.claim.Claim;
-import org.ipvp.hcf.faction.claim.ClaimHandler;
-import org.ipvp.hcf.faction.struct.Role;
-import org.ipvp.hcf.faction.type.PlayerFaction;
 import com.doctordark.util.command.CommandArgument;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.faction.claim.Claim;
+import org.ipvp.hcf.faction.claim.ClaimHandler;
+import org.ipvp.hcf.faction.struct.Role;
+import org.ipvp.hcf.faction.type.PlayerFaction;
 
 public class FactionClaimChunkArgument extends CommandArgument {
 

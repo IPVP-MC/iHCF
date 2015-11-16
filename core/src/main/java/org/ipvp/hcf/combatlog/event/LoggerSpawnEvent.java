@@ -1,9 +1,9 @@
 package org.ipvp.hcf.combatlog.event;
 
-import org.ipvp.hcf.combatlog.type.LoggerEntity;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.ipvp.hcf.combatlog.type.LoggerEntity;
 
 public class LoggerSpawnEvent extends Event implements Cancellable {
 

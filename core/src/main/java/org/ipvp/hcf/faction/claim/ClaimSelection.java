@@ -1,12 +1,12 @@
 package org.ipvp.hcf.faction.claim;
 
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.faction.type.Faction;
-import org.ipvp.hcf.faction.type.PlayerFaction;
 import com.doctordark.util.cuboid.Cuboid;
 import com.google.common.base.Preconditions;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.faction.type.Faction;
+import org.ipvp.hcf.faction.type.PlayerFaction;
 
 import java.util.UUID;
 

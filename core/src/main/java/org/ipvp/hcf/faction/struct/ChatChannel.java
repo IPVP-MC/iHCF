@@ -1,8 +1,8 @@
 package org.ipvp.hcf.faction.struct;
 
-import org.ipvp.hcf.ConfigurationService;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.ipvp.hcf.ConfigurationService;
 
 import java.util.Locale;
 

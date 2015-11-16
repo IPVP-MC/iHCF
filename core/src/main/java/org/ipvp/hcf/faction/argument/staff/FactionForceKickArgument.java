@@ -1,13 +1,13 @@
 package org.ipvp.hcf.faction.argument.staff;
 
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.faction.FactionMember;
-import org.ipvp.hcf.faction.struct.Role;
-import org.ipvp.hcf.faction.type.PlayerFaction;
 import com.doctordark.util.command.CommandArgument;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.faction.FactionMember;
+import org.ipvp.hcf.faction.struct.Role;
+import org.ipvp.hcf.faction.type.PlayerFaction;
 
 import java.util.Collections;
 import java.util.List;

@@ -1,11 +1,5 @@
 package org.ipvp.hcf.faction.argument;
 
-import org.ipvp.hcf.ConfigurationService;
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.economy.EconomyManager;
-import org.ipvp.hcf.faction.FactionMember;
-import org.ipvp.hcf.faction.struct.Role;
-import org.ipvp.hcf.faction.type.PlayerFaction;
 import com.doctordark.util.JavaUtils;
 import com.doctordark.util.command.CommandArgument;
 import com.google.common.collect.ImmutableList;
@@ -13,6 +7,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.ipvp.hcf.ConfigurationService;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.economy.EconomyManager;
+import org.ipvp.hcf.faction.FactionMember;
+import org.ipvp.hcf.faction.struct.Role;
+import org.ipvp.hcf.faction.type.PlayerFaction;
 
 import java.util.Collections;
 import java.util.List;

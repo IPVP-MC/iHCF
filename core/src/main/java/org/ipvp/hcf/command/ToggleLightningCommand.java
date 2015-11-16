@@ -1,13 +1,13 @@
 package org.ipvp.hcf.command;
 
-import org.ipvp.hcf.HCF;
-import org.ipvp.hcf.user.FactionUser;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
+import org.ipvp.hcf.HCF;
+import org.ipvp.hcf.user.FactionUser;
 
 import java.util.Collections;
 import java.util.List;
