@@ -5,10 +5,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
+import org.ipvp.hcf.DateTimeFormats;
 
 import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Represents an area a {@link Player} can use to control.
@@ -17,8 +20,10 @@ public class CaptureZone implements ConfigurationSerializable {
 
     public static final int MINIMUM_SIZE_AREA = 2;
 
-    private String name;
+    private ReadWriteLock lock = new ReentrantReadWriteLock();
+    private String scoreboardRemaining;
 
+    private String name;
     private String prefix;
     private Cuboid cuboid;
     private Player cappingPlayer;
@@ -89,6 +94,24 @@ public class CaptureZone implements ConfigurationSerializable {
 
         map.put("captureMillis", Long.toString(this.defaultCaptureMillis));
         return map;
+    }
+
+    public String getScoreboardRemaining() {
+        this.lock.readLock().lock();
+        try {
+            return this.scoreboardRemaining;
+        } finally {
+            this.lock.readLock().unlock();
+        }
+    }
+
+    public void updateScoreboardRemaining() {
+        this.lock.writeLock().lock();
+        try {
+            this.scoreboardRemaining = DateTimeFormats.KOTH_FORMAT.format(this.getRemainingCaptureMillis());
+        } finally {
+            this.lock.writeLock().unlock();
+        }
     }
 
     /**

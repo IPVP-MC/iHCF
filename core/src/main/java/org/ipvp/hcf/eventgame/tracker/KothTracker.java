@@ -37,6 +37,7 @@ public class KothTracker implements EventTracker {
     @Override
     public void tick(EventTimer eventTimer, EventFaction eventFaction) {
         CaptureZone captureZone = ((KothFaction) eventFaction).getCaptureZone();
+        captureZone.updateScoreboardRemaining();
         long remainingMillis = captureZone.getRemainingCaptureMillis();
         if (remainingMillis <= 0L) { // has been captured.
             plugin.getTimerManager().getEventTimer().handleWinner(captureZone.getCappingPlayer());
@@ -77,7 +78,7 @@ public class KothTracker implements EventTracker {
             Bukkit.broadcastMessage(ChatColor.GOLD + "[" + eventFaction.getEventType().getDisplayName() + "] " +
                     ChatColor.DARK_AQUA + player.getName() + ChatColor.BLUE + " has lost control of " +
                     ChatColor.DARK_AQUA + captureZone.getDisplayName() + ChatColor.BLUE + '.' +
-                    ChatColor.RED + " (" + DateTimeFormats.KOTH_FORMAT.format(captureZone.getRemainingCaptureMillis()) + ')');
+                    ChatColor.RED + " (" + captureZone.getScoreboardRemaining() + ')');
         }
     }
 

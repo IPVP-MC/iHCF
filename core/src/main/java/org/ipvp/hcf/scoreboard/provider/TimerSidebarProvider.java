@@ -88,14 +88,16 @@ public class TimerSidebarProvider implements SidebarProvider {
 
             conquestLines = new ArrayList<>();
             conquestLines.add(new SidebarEntry(ChatColor.BLUE.toString(), ChatColor.BOLD + conquestFaction.getName() + ChatColor.GRAY, ":"));
+
             conquestLines.add(new SidebarEntry("  " +
-                    ChatColor.RED.toString() + format.format(conquestFaction.getRed().getRemainingCaptureMillis() * 0.001),
+                    ChatColor.RED.toString() + conquestFaction.getRed().getScoreboardRemaining(),
                     ChatColor.RESET + " ",
-                    ChatColor.YELLOW.toString() + format.format(conquestFaction.getYellow().getRemainingCaptureMillis() * 0.001)));
+                    ChatColor.YELLOW.toString() + conquestFaction.getYellow().getScoreboardRemaining()));
+
             conquestLines.add(new SidebarEntry("  " +
-                    ChatColor.GREEN.toString() + format.format(conquestFaction.getGreen().getRemainingCaptureMillis() * 0.001),
+                    ChatColor.GREEN.toString() + conquestFaction.getGreen().getScoreboardRemaining(),
                     ChatColor.RESET + " " + ChatColor.RESET,
-                    ChatColor.AQUA.toString() + format.format(conquestFaction.getBlue().getRemainingCaptureMillis() * 0.001)));
+                    ChatColor.AQUA.toString() + conquestFaction.getBlue().getScoreboardRemaining()));
 
             // Show the top 3 factions next.
             ConquestTracker conquestTracker = (ConquestTracker) conquestFaction.getEventType().getEventTracker();

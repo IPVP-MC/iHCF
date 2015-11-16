@@ -137,6 +137,7 @@ public class ConquestTracker implements EventTracker, Listener {
         ConquestFaction conquestFaction = (ConquestFaction) eventFaction;
         List<CaptureZone> captureZones = conquestFaction.getCaptureZones();
         for (CaptureZone captureZone : captureZones) {
+            captureZone.updateScoreboardRemaining();
             Player cappingPlayer = captureZone.getCappingPlayer();
             if (cappingPlayer == null) continue;
 
