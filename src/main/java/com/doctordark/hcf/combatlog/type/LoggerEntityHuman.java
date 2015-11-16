@@ -48,15 +48,12 @@ public class LoggerEntityHuman extends EntityPlayer implements LoggerEntity {
         double x = location.getX(), y = location.getY(), z = location.getZ();
         float yaw = location.getYaw(), pitch = location.getPitch();
 
-        // Set some values next
-        new FakePlayerConnection(this);
-        this.playerUUID = player.getUniqueId();
-        this.playerConnection.a(this.locX, this.locY, this.locZ, this.yaw, this.pitch);
-        this.lastDamager = ((CraftPlayer) player).getHandle().lastDamager;
-
+        // Next set the values
+        new FakePlayerConnection(this); // also assigns to the EntityPlayer
         this.spawnIn(world);
-        this.setPosition(x, y, z);
-        this.b(yaw, pitch); // should be setYawAndPitch
+        this.playerConnection.a(x, y, z, yaw, pitch);
+        this.playerUUID = player.getUniqueId();
+        this.lastDamager = ((CraftPlayer) player).getHandle().lastDamager;
 
         /*playerlist.players.add(this);
         playerlist.playersByName.put(this.getName(), this);
