@@ -11,6 +11,9 @@
 
 # Maven
 /target
+/dependency-reduced-pom.xml
+*/target
+*/dependency-reduced-pom.xml
 
 # Vim
 .*.sw[a-p]
@@ -36,5 +39,3 @@ dependency-reduced-pom.xml
 *.ipr
 *.iws
 .idea/
-
-src/target/
