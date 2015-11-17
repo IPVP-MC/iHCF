@@ -33,7 +33,6 @@ import java.util.UUID;
 public class LoggerEntityHuman extends EntityPlayer implements LoggerEntity {
 
     protected BukkitTask removalTask;
-    protected final UUID playerUUID;
 
     public LoggerEntityHuman(Player player, World world) {
         this(player, ((CraftWorld) world).getHandle());
@@ -48,16 +47,15 @@ public class LoggerEntityHuman extends EntityPlayer implements LoggerEntity {
         double x = location.getX(), y = location.getY(), z = location.getZ();
         float yaw = location.getYaw(), pitch = location.getPitch();
 
+        EntityPlayer originPlayer = ((CraftPlayer) player).getHandle();
+        originPlayer.copyTo(this, true);
+        this.lastDamager = originPlayer.lastDamager;
+        this.invulnerableTicks = originPlayer.invulnerableTicks;
+
         // Next set the values
         new FakePlayerConnection(this); // also assigns to the EntityPlayer
         this.spawnIn(world);
         this.playerConnection.a(x, y, z, yaw, pitch);
-        this.playerUUID = player.getUniqueId();
-        this.lastDamager = ((CraftPlayer) player).getHandle().lastDamager;
-
-        /*playerlist.players.add(this);
-        playerlist.playersByName.put(this.getName(), this);
-        playerlist.uuidMap.put(this.playerUUID, this);*/
 
         world.addEntity(this);
         Bukkit.getConsoleSender().sendMessage(String.format(ChatColor.GOLD + "Combat logger of " + player.getName() + " has spawned at %.2f, %.2f, %.2f", x, y, z));
@@ -126,7 +124,7 @@ public class LoggerEntityHuman extends EntityPlayer implements LoggerEntity {
 
     @Override
     public UUID getPlayerUUID() {
-        return this.playerUUID;
+        return this.getUniqueID();
     }
 
     @Override // prevents the entity going through portals
