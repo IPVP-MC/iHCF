@@ -19,7 +19,7 @@ public class FactionAnnouncementArgument extends CommandArgument {
     private final HCF plugin;
 
     public FactionAnnouncementArgument(HCF plugin) {
-        super("announcement", "Set your faction announcement.", new String[]{"announce"});
+        super("announcement", "Set your faction announcement.", new String[]{"announce", "motd"});
         this.plugin = plugin;
     }
 
