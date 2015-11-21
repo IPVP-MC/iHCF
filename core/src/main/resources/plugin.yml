@@ -2,7 +2,7 @@ name: ${project.name}
 version: ${project.version} (Build ${git.commit.id.abbrev}, ${git.commit.time})
 description: ${project.description}
 author: DoctorDark
-main: org.ipvp.hcf.HCF
+main: com.doctordark.hcf.HCF
 softdepend: [ProtocolLib]
 commands:
   angle:

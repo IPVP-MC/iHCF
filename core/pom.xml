@@ -9,8 +9,8 @@
     <version>1.0</version>
 
     <parent>
-        <artifactId>iHCF</artifactId>
-        <groupId>org.ipvp</groupId>
+        <artifactId>IHCF</artifactId>
+        <groupId>com.doctordark</groupId>
         <version>1.0</version>
     </parent>
 
