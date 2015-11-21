@@ -2,10 +2,13 @@ name: ${project.name}
 version: ${project.version} (Build ${git.commit.id.abbrev}, ${git.commit.time})
 description: ${project.description}
 author: DoctorDark
-main: HCFExtra
+main: com.doctordark.hcfextra.HCFExtra
 commands:
   coords:
     description: Shows co-ordinates for events.
+  inv:
+    aliases: [invrestore, restoreinv]
+    description: Restore player inventories from last death.
   help:
     aliases: ["?"]
     description: Find out more about this server.
