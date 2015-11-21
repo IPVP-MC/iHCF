@@ -1,6 +1,7 @@
 package com.doctordark.hcfextra;
 
 import com.doctordark.hcfextra.command.CoordsCommand;
+import com.doctordark.hcfextra.command.EndportalHandler;
 import com.doctordark.hcfextra.command.HCFExtraCommand;
 import com.doctordark.hcfextra.command.HelpCommand;
 import com.doctordark.hcfextra.inventoryrestore.InventoryRestoreHandler;
@@ -27,6 +28,11 @@ public class HCFExtra extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(inventoryRestoreHandler, this);
         (temp = this.getCommand("inv")).setExecutor(inventoryRestoreHandler);
         temp.setPermission("ihcfextra.command.inv");
+
+        EndportalHandler endportalHandler = new EndportalHandler();
+        this.getServer().getPluginManager().registerEvents(endportalHandler, this);
+        (temp = this.getCommand("endportal")).setExecutor(endportalHandler);
+        temp.setPermission("ihcfextra.command.endportal");
 
         (temp = this.getCommand("hcfextra")).setExecutor(new HCFExtraCommand(this));
         temp.setPermission("ihcfextra.command.hcfextra");

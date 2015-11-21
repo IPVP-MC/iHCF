@@ -6,6 +6,8 @@ main: com.doctordark.hcfextra.HCFExtra
 commands:
   coords:
     description: Shows co-ordinates for events.
+  endportal:
+    description: Lights up end-portals properly.
   inv:
     aliases: [invrestore, restoreinv]
     description: Restore player inventories from last death.
