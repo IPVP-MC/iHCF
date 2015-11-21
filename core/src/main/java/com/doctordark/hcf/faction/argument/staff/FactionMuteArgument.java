@@ -1,6 +1,7 @@
 package com.doctordark.hcf.faction.argument.staff;
 
 import com.doctordark.hcf.HCF;
+import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
 import com.doctordark.util.command.CommandArgument;
 import com.google.common.base.Joiner;
@@ -37,20 +38,23 @@ public class FactionMuteArgument extends CommandArgument {
             return true;
         }
 
-        PlayerFaction playerFaction = plugin.getFactionManager().getContainingPlayerFaction(args[1]);
+        Faction faction = plugin.getFactionManager().getContainingFaction(args[1]);
 
-        if (playerFaction == null) {
-            sender.sendMessage(ChatColor.RED + "Faction containing member with IGN or UUID " + args[1] + " not found.");
+        if (!(faction instanceof PlayerFaction)) {
+            sender.sendMessage(ChatColor.RED + "Player faction named or containing member with IGN or UUID " + args[1] + " not found.");
             return true;
         }
 
+        PlayerFaction playerFaction = (PlayerFaction) faction;
         String extraArgs = Joiner.on(' ').join(Arrays.copyOfRange(args, 2, args.length));
         ConsoleCommandSender console = Bukkit.getConsoleSender();
         for (UUID uuid : playerFaction.getMembers().keySet()) {
-            console.getServer().dispatchCommand(sender, "tempban " + Bukkit.getOfflinePlayer(uuid).getName() + extraArgs);
+            String commandLine = "tempmute " + uuid.toString() + " " + extraArgs;
+            sender.sendMessage(ChatColor.RED + ChatColor.BOLD.toString() + "Executing " + ChatColor.RED + commandLine);
+            console.getServer().dispatchCommand(sender, commandLine);
         }
 
-        sender.sendMessage(ChatColor.RED + "Executed mute action on faction " + playerFaction.getName() + ".");
+        sender.sendMessage(ChatColor.RED + ChatColor.BOLD.toString() + "Executed mute action on faction " + playerFaction.getName() + ".");
         return true;
     }
 
