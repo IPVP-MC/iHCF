@@ -11,6 +11,7 @@ import com.doctordark.hcf.timer.event.TimerStartEvent;
 import com.doctordark.hcf.visualise.VisualType;
 import com.doctordark.util.BukkitUtils;
 import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -142,6 +143,14 @@ public class CombatTimer extends PlayerTimer implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         this.clearCooldown(event.getPlayer(), event.getPlayer().getUniqueId());
+    }
+
+    @Override
+    public boolean setCooldown(@Nullable Player player, UUID playerUUID, long duration, boolean overwrite, @Nullable Predicate<Long> currentCooldownPredicate) {
+        if (player != null && plugin.getFactionManager().getFactionAt(player.getLocation()).isSafezone()) {
+            return false;
+        }
+        return super.setCooldown(player, playerUUID, duration, overwrite, currentCooldownPredicate);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
