@@ -1,6 +1,8 @@
 package com.doctordark.hcf.combatlog.type;
 
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftHumanEntity;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 
 import java.util.UUID;
 
@@ -11,7 +13,7 @@ public interface LoggerEntity {
      *
      * @return the {@link org.bukkit.entity.Entity}
      */
-    CraftLivingEntity getBukkitEntity();
+    CraftPlayer getBukkitEntity();
 
     /**
      * Gets the {@link UUID} of the represented.

@@ -7,14 +7,12 @@ import com.doctordark.hcf.combatlog.event.LoggerSpawnEvent;
 import com.doctordark.hcf.combatlog.type.LoggerEntity;
 import com.doctordark.hcf.combatlog.type.LoggerEntityHuman;
 import net.minecraft.server.v1_7_R4.EntityPlayer;
-import net.minecraft.server.v1_7_R4.MinecraftServer;
-import net.minecraft.server.v1_7_R4.PlayerList;
 import net.minecraft.server.v1_7_R4.WorldServer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftHumanEntity;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -23,7 +21,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
@@ -110,7 +107,6 @@ public class CombatLogListener implements Listener {
                 player.setTicksLived(loggerEntity.getTicksLived());
             }
 
-            PlayerList playerList = MinecraftServer.getServer().getPlayerList();
             new BukkitRunnable() {
                 @Override
                 public void run() {
@@ -154,22 +150,28 @@ public class CombatLogListener implements Listener {
                 return;
             }
 
-            LoggerEntity loggerEntity = new LoggerEntityHuman(player, location.getWorld());
-            LoggerSpawnEvent calledEvent = new LoggerSpawnEvent(loggerEntity);
-            Bukkit.getPluginManager().callEvent(calledEvent);
-            if (calledEvent.isCancelled()) {
-                return;
-            }
+            // Run a tick later so the actual
+            // player NBT can be saved properly.
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    LoggerEntity loggerEntity = new LoggerEntityHuman(player, location.getWorld());
+                    LoggerSpawnEvent calledEvent = new LoggerSpawnEvent(loggerEntity);
+                    Bukkit.getPluginManager().callEvent(calledEvent);
+                    if (calledEvent.isCancelled()) {
+                        return;
+                    }
 
-            this.loggers.put(player.getUniqueId(), loggerEntity);
+                    loggers.put(player.getUniqueId(), loggerEntity);
 
-            // Make the NPC spawn with the players stuff for cosmetic effect
-            CraftEntity craftEntity = loggerEntity.getBukkitEntity();
-            CraftLivingEntity craftLivingEntity = (CraftLivingEntity) craftEntity;
-            EntityEquipment entityEquipment = craftLivingEntity.getEquipment();
-            entityEquipment.setItemInHand(inventory.getItemInHand());
-            entityEquipment.setArmorContents(inventory.getArmorContents());
-            craftLivingEntity.addPotionEffects(player.getActivePotionEffects());
+                    // Make the NPC spawn with the players stuff for cosmetic effect
+                    CraftHumanEntity craftEntity = loggerEntity.getBukkitEntity();
+                    PlayerInventory loggerInventory = craftEntity.getInventory();
+                    loggerInventory.setContents(inventory.getContents());
+                    loggerInventory.setArmorContents(inventory.getArmorContents());
+                    craftEntity.addPotionEffects(player.getActivePotionEffects());
+                }
+            }.runTask(plugin);
         }
     }
 }
