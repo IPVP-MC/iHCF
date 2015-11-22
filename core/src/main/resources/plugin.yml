@@ -4,6 +4,7 @@ description: ${project.description}
 author: DoctorDark
 main: com.doctordark.hcf.HCF
 softdepend: [Essentials, ProtocolLib]
+depend: [iBase]
 commands:
   angle:
     description: Check your yaw and pitch position.
