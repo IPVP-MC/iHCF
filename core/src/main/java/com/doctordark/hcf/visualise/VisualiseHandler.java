@@ -14,6 +14,7 @@ import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_7_R4.CraftChunk;
 import org.bukkit.craftbukkit.v1_7_R4.util.CraftMagicNumbers;
 import org.bukkit.entity.Player;
+import org.spigotmc.AsyncCatcher;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 public class VisualiseHandler {
@@ -218,6 +220,31 @@ public class VisualiseHandler {
     }
 
     /**
+     * Clears all visual blocks in a {@link Chunk}.
+     *
+     * @param chunk the {@link Chunk} to clear in
+     */
+    public void clearVisualBlocks(Chunk chunk) {
+        AsyncCatcher.catchOp("Chunk operation");
+        if (!this.storedVisualises.isEmpty()) {
+            Set<Location> keys = this.storedVisualises.columnKeySet();
+            for (Location location : new HashSet<>(keys)) {
+                if (location.getWorld().equals(chunk.getWorld()) && chunk.getX() == (((int) location.getX()) >> 4) && chunk.getZ() == (((int) location.getZ()) >> 4)) {
+                    keys.remove(location);
+                }
+            }
+
+            /*for (Location location : keys) {
+                Table.Cell<UUID, Location, VisualBlock> cell = iterator.next();
+                Location location = cell.getColumnKey();
+                if (location.getWorld().equals(chunk.getWorld()) && chunk.getX() == (((int) location.getX()) >> 4) && chunk.getZ() == (((int) location.getZ()) >> 4)) {
+                    iterator.remove();
+                }
+            }*/
+        }
+    }
+
+    /**
      * Clears all visual blocks that are shown to a player.
      *
      * @param player the player to clear for
@@ -255,7 +282,10 @@ public class VisualiseHandler {
                                                         boolean sendRemovalPackets) {
 
         synchronized (storedVisualises) {
-            if (!this.storedVisualises.containsRow(player.getUniqueId())) return Collections.emptyMap();
+            if (!this.storedVisualises.containsRow(player.getUniqueId())) {
+                return Collections.emptyMap();
+            }
+
             Map<Location, VisualBlock> results = new HashMap<>(this.storedVisualises.row(player.getUniqueId())); // copy to prevent commodification
             Map<Location, VisualBlock> removed = new HashMap<>();
             for (Map.Entry<Location, VisualBlock> entry : results.entrySet()) {

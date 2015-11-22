@@ -14,6 +14,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 public class CoreListener implements Listener {
@@ -74,5 +75,10 @@ public class CoreListener implements Listener {
         Player player = event.getPlayer();
         plugin.getVisualiseHandler().clearVisualBlocks(player, null, null, false);
         plugin.getUserManager().getUser(player.getUniqueId()).setShowClaimMap(false);
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onChunkUnload(ChunkUnloadEvent event) {
+        plugin.getVisualiseHandler().clearVisualBlocks(event.getChunk());
     }
 }
