@@ -82,7 +82,7 @@ public class ProtectionListener implements Listener {
     public static final String PROTECTION_BYPASS_PERMISSION = "hcf.faction.protection.bypass";
 
     // No such ImmutableEnumMultimap :/
-    private static final ImmutableMultimap<Material, Material> ITEM_BLOCK_INTERACTABLES = ImmutableMultimap.<Material, Material>builder().
+    private static final ImmutableMultimap<Material, Material> ITEM_ON_BLOCK_RIGHT_CLICK_DENY = ImmutableMultimap.<Material, Material>builder().
             put(Material.DIAMOND_HOE, Material.GRASS).
             put(Material.GOLD_HOE, Material.GRASS).
             put(Material.IRON_HOE, Material.GRASS).
@@ -90,7 +90,7 @@ public class ProtectionListener implements Listener {
             put(Material.WOOD_HOE, Material.GRASS).
             build();
 
-    private static final ImmutableSet<Material> BLOCK_INTERACTABLES = Sets.immutableEnumSet(
+    private static final ImmutableSet<Material> BLOCK_RIGHT_CLICK_DENY = Sets.immutableEnumSet(
             Material.BED,
             Material.BED_BLOCK,
             Material.BEACON,
@@ -458,27 +458,28 @@ public class ProtectionListener implements Listener {
                 event.setCancelled(true);
             }
         } else if (action == Action.RIGHT_CLICK_BLOCK) {
-            boolean canBuild = !BLOCK_INTERACTABLES.contains(block.getType());
-
-            // Special case for cauldron
-            if (canBuild) {
+            boolean canRightClick = !BLOCK_RIGHT_CLICK_DENY.contains(block.getType());
+            if (canRightClick) {
                 Material itemType = event.hasItem() ? event.getItem().getType() : null;
-                if (itemType != null && ITEM_BLOCK_INTERACTABLES.containsKey(itemType) && ITEM_BLOCK_INTERACTABLES.get(itemType).contains(event.getClickedBlock().getType())) {
-                    if (block.getType() != Material.WORKBENCH || !plugin.getFactionManager().getFactionAt(block).isSafezone()) {
-                        canBuild = false;
-                    }
-                } else {
+                if (itemType != null && ITEM_ON_BLOCK_RIGHT_CLICK_DENY.get(itemType).contains(event.getClickedBlock().getType())) {
                     MaterialData materialData = block.getState().getData();
                     if (materialData instanceof Cauldron) {
+                        // Only prevent right clicking cauldron if has water and player is using a Glass Bottle.
                         Cauldron cauldron = (Cauldron) materialData;
                         if (!cauldron.isEmpty() && event.hasItem() && event.getItem().getType() == Material.GLASS_BOTTLE) {
-                            canBuild = false;
+                            canRightClick = false;
                         }
+                    } else {
+                        // Player clicked a block that they were not allowed to with current tool
+                        canRightClick = false;
                     }
                 }
+                // Allow workbench use in safezones.
+            } else if (block.getType() == Material.WORKBENCH && plugin.getFactionManager().getFactionAt(block.getLocation()).isSafezone()) {
+                canRightClick = true;
             }
 
-            if (!canBuild && !attemptBuild(event.getPlayer(), block.getLocation(), ChatColor.YELLOW + "You cannot do this in the territory of %1$s" + ChatColor.YELLOW + '.', true)) {
+            if (!canRightClick && !attemptBuild(event.getPlayer(), block.getLocation(), ChatColor.YELLOW + "You cannot do this in the territory of %1$s" + ChatColor.YELLOW + '.', true)) {
                 event.setCancelled(true);
             }
         }
