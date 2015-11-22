@@ -3,7 +3,7 @@ version: ${project.version} (Build ${git.commit.id.abbrev}, ${git.commit.time})
 description: ${project.description}
 author: DoctorDark
 main: com.doctordark.hcf.HCF
-softdepend: [ProtocolLib]
+softdepend: [Essentials, ProtocolLib]
 commands:
   angle:
     description: Check your yaw and pitch position.

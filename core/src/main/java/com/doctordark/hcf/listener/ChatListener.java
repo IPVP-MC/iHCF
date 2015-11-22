@@ -18,9 +18,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
 
 import java.util.Collection;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -67,15 +68,22 @@ public class ChatListener implements Listener {
     private static final String DOUBLE_POST_BYPASS_PERMISSION = "hcf.doublepost.bypass";
     private static final Pattern PATTERN = Pattern.compile("\\W");
 
-    private final Essentials essentials;
+    private Essentials essentials;
     private final Map<UUID, String> messageHistory;
     private final HCF plugin;
 
     public ChatListener(HCF plugin) {
         this.plugin = plugin;
-        this.essentials = (Essentials) Bukkit.getPluginManager().getPlugin("Essentials");
 
-        // Use a temporary 2 minute cache map to prevent large maps causing higher memory usage and long lookups.
+        PluginManager pluginManager = plugin.getServer().getPluginManager();
+        Plugin essentialsChatPlugin = pluginManager.getPlugin("EssentialsChat");
+        if (essentialsChatPlugin != null && essentialsChatPlugin.isEnabled()) {
+            Plugin essentialsPlugin = pluginManager.getPlugin("Essentials");
+            if (essentialsPlugin instanceof Essentials && essentialsPlugin.isEnabled()) {
+                this.essentials = (Essentials) essentialsPlugin;
+            }
+        }
+
         this.messageHistory = new MapMaker().expireAfterWrite(2, TimeUnit.MINUTES).makeMap();
     }
 
@@ -123,24 +131,31 @@ public class ChatListener implements Listener {
             }
         }
 
-        String format = essentials.getSettings().getChatFormat(essentials.getUser(player).getGroup());
-        String displayName = ChatColor.WHITE + format;
+        String displayName = player.getDisplayName();
+        ConsoleCommandSender console = Bukkit.getConsoleSender();
+        String defaultFormat = this.getChatFormat(player, playerFaction, console);
 
         // Handle the custom messaging here.
-        event.setFormat(format);
+        event.setFormat(defaultFormat);
         event.setCancelled(true);
-
-        ConsoleCommandSender console = Bukkit.getConsoleSender();
-        console.sendMessage(this.getFormattedMessage(player, playerFaction, displayName, message, console));
+        console.sendMessage(String.format(defaultFormat, displayName, message));
         for (Player recipient : event.getRecipients()) {
-            recipient.sendMessage(this.getFormattedMessage(player, playerFaction, displayName, message, recipient));
+            recipient.sendMessage(String.format(this.getChatFormat(player, playerFaction, recipient), displayName, message));
         }
     }
 
-    private String getFormattedMessage(Player player, PlayerFaction playerFaction, String playerDisplayName, String message, CommandSender viewer) {
-        String tag = playerFaction == null ? ChatColor.RED + Faction.FACTIONLESS_PREFIX : playerFaction.getDisplayName(viewer);
-        return ChatColor.GOLD + "[" + tag + ChatColor.GOLD + "] " + (EOTW_CAPPERS.contains(player.getUniqueId()) ? EOTW_CAPPER_PREFIX : "") +
-                String.format(Locale.ENGLISH, playerDisplayName, player.getName(), message);
+    private String getChatFormat(Player player, PlayerFaction playerFaction, CommandSender viewer) {
+        String factionTag = playerFaction == null ? ChatColor.RED + Faction.FACTIONLESS_PREFIX : playerFaction.getDisplayName(viewer);
+        String capperTag = EOTW_CAPPERS.contains(player.getUniqueId()) ? EOTW_CAPPER_PREFIX : "";
+        String result;
+        if (this.essentials != null && viewer instanceof Player) {
+            result = this.essentials.getSettings().getChatFormat(this.essentials.getUser((Player) viewer).getGroup());
+            result = result.replace("{FACTION}", factionTag).replace("{EOTWCAPPERPREFIX}", capperTag).replace("{DISPLAYNAME}", "%1$s").replace("{MESSAGE}", "%2$s");
+        } else {
+            result = ChatColor.GOLD + "[" + factionTag + ChatColor.GOLD + "] " + capperTag + "%1$s" + ChatColor.GRAY + ": " + ChatColor.WHITE + "%2$s";
+        }
+
+        return result;
     }
 
     /**
