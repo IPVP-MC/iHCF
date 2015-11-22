@@ -31,7 +31,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class MapKitCommand implements CommandExecutor, TabCompleter, Listener {
@@ -51,14 +50,26 @@ public class MapKitCommand implements CommandExecutor, TabCompleter, Listener {
 
         List<ItemStack> items = new ArrayList<>();
 
-        for (Map.Entry<Enchantment, Integer> entry : ConfigurationService.ENCHANTMENT_LIMITS.entrySet()) {
-            items.add(new ItemBuilder(Material.ENCHANTED_BOOK).
-                    displayName(ChatColor.YELLOW + Lang.fromEnchantment(entry.getKey()) + ": " + ChatColor.GREEN + entry.getValue()).build());
+        for (Enchantment enchantment : Enchantment.values()) {
+            Integer maxLevel = ConfigurationService.ENCHANTMENT_LIMITS.get(enchantment);
+            if (maxLevel == null) {
+                maxLevel = enchantment.getMaxLevel();
+            }
+
+            ItemBuilder builder = new ItemBuilder(Material.ENCHANTED_BOOK);
+            builder.displayName(ChatColor.YELLOW + Lang.fromEnchantment(enchantment) + ": " + ChatColor.GREEN + maxLevel);
+            items.add(builder.build());
         }
 
-        for (Map.Entry<PotionType, Integer> entry : ConfigurationService.POTION_LIMITS.entrySet()) {
-            items.add(new ItemBuilder(new Potion(entry.getKey()).toItemStack(1)).
-                    displayName(ChatColor.YELLOW + WordUtils.capitalizeFully(entry.getKey().name().replace('_', ' ')) + ": " + ChatColor.GREEN + entry.getValue()).build());
+        for (PotionType potionType : PotionType.values()) {
+            Integer maxLevel = ConfigurationService.POTION_LIMITS.get(potionType);
+            if (maxLevel == null) {
+                maxLevel = potionType.getMaxLevel();
+            }
+
+            ItemBuilder builder = new ItemBuilder(new Potion(potionType).toItemStack(1));
+            builder.displayName(ChatColor.YELLOW + WordUtils.capitalizeFully(potionType.name().replace('_', ' ')) + ": " + ChatColor.GREEN + maxLevel);
+            items.add(builder.build());
         }
 
         Player player = (Player) sender;
