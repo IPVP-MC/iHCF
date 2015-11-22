@@ -11,6 +11,7 @@ import net.minecraft.util.gnu.trove.map.hash.TObjectLongHashMap;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -62,10 +63,14 @@ public class DeathbanListener implements Listener {
         int lives = this.plugin.getDeathbanManager().getLives(uuid);
 
         String formattedRemaining = DurationFormatter.getRemaining(deathban.getRemaining(), true, false);
+        Location deathbanLocation = deathban.getDeathPoint();
 
         if (lives <= 0) {  // If the user has no lives, inform that they need some.
-            event.disallow(PlayerLoginEvent.Result.KICK_OTHER,
-                    ChatColor.RED + "You are still deathbanned for " + formattedRemaining + ": " + ChatColor.YELLOW + deathban.getReason() + ChatColor.RED + ".");
+            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, ChatColor.AQUA + "You have been killed " +
+                    ChatColor.GREEN + "(" + ChatColor.WHITE + deathban.getReason() + ChatColor.GREEN + ")" +
+                    ChatColor.AQUA + " at " + ChatColor.GOLD + "(" + deathbanLocation.getBlockX() + ", " + deathbanLocation.getBlockY() + ", " + deathbanLocation.getBlockZ() + ")" +
+                    ChatColor.AQUA + ". You're deathbanned for " + ChatColor.GREEN + formattedRemaining + ChatColor.AQUA + "."
+            );
 
             return;
         }
@@ -90,10 +95,13 @@ public class DeathbanListener implements Listener {
         String reason = deathban.getReason();
         this.lastAttemptedJoinMap.put(uuid, millis + LIFE_USE_DELAY_MILLIS);
 
-        event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "You are currently death-banned" + (reason != null ? " for " + reason : "") + ".\n" +
-                ChatColor.WHITE + formattedRemaining + " remaining.\n" +
+        event.disallow(PlayerLoginEvent.Result.KICK_OTHER, ChatColor.AQUA + "You have been killed " +
+                ChatColor.GREEN + "(" + ChatColor.WHITE + deathban.getReason() + ChatColor.GREEN + ")" +
+                ChatColor.AQUA + " at " + ChatColor.GOLD + "(" + deathbanLocation.getBlockX() + ", " + deathbanLocation.getBlockY() + ", " + deathbanLocation.getBlockZ() + ")" +
+                ChatColor.AQUA + ". You're deathbanned for " + ChatColor.GREEN + formattedRemaining + ChatColor.AQUA + ". " +
                 ChatColor.RED + "You currently have " + (lives <= 0 ? "no" : lives) + " lives.\n\n" +
-                "You may use a life by reconnecting within " + ChatColor.YELLOW + DeathbanListener.LIFE_USE_DELAY_WORDS + ChatColor.RED + ".");
+                "You may use a life by reconnecting within " + ChatColor.YELLOW + DeathbanListener.LIFE_USE_DELAY_WORDS + ChatColor.RED + "."
+        );
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
