@@ -1,5 +1,8 @@
 package com.doctordark.hcf.scoreboard;
 
+import javax.annotation.Nonnull;
+
+@Nonnull
 public class SidebarEntry {
 
     public final String name;

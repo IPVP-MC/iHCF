@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BufferedObjective {
 
@@ -23,9 +24,9 @@ public class BufferedObjective {
     private final Scoreboard scoreboard;
 
     private Set<String> previousLines = new HashSet<>();
-    private TIntObjectHashMap<SidebarEntry> contents = new TIntObjectHashMap<>();
+    private final TIntObjectHashMap<SidebarEntry> contents = new TIntObjectHashMap<>();
 
-    private boolean requiresUpdate = false; // If the scoreboard needs an update.
+    private AtomicBoolean requiresUpdate = new AtomicBoolean(false); // If the scoreboard needs an update.
     private String title;
     private Objective current;
     private DisplaySlot displaySlot;
@@ -39,7 +40,7 @@ public class BufferedObjective {
     public void setTitle(String title) {
         if (this.title == null || !this.title.equals(title)) {
             this.title = title;
-            this.requiresUpdate = true;
+            this.requiresUpdate.set(true);
         }
     }
 
@@ -49,78 +50,71 @@ public class BufferedObjective {
     }
 
     public void setAllLines(List<SidebarEntry> lines) {
-        if (lines.size() != this.contents.size()) {
-            this.contents.clear();
-            if (lines.isEmpty()) {
-                this.requiresUpdate = true;
-                return;
+        synchronized (this.contents) {
+            if (lines.size() != this.contents.size()) {
+                this.contents.clear();
+                if (lines.isEmpty()) {
+                    this.requiresUpdate.set(true);
+                    return;
+                }
             }
-        }
 
-        int size = Math.min(MAX_SIDEBAR_ENTRIES, lines.size());
-        int count = 0;
-        for (SidebarEntry sidebarEntry : lines) {
-            this.setLine(size - count++, sidebarEntry);
-        }
-    }
-
-    public void setLine(int lineNumber, SidebarEntry sidebarEntry) {
-        SidebarEntry value = this.contents.get(lineNumber);
-        if (value == null || value != sidebarEntry) {
-            this.contents.put(lineNumber, sidebarEntry);
-            this.requiresUpdate = true;
+            int size = Math.min(MAX_SIDEBAR_ENTRIES, lines.size());
+            int count = 0, lineNumber;
+            for (SidebarEntry sidebarEntry : lines) {
+                lineNumber = size - count++;
+                SidebarEntry value = this.contents.get(lineNumber);
+                if (value == null || value != sidebarEntry) {
+                    this.contents.put(lineNumber, sidebarEntry);
+                    this.requiresUpdate.set(true);
+                }
+            }
         }
     }
 
     public void flip() {
-        if (!this.requiresUpdate) {
-            return;
-        }
+        if (this.requiresUpdate.getAndSet(false)) {
+            Set<String> newLines = new HashSet<>(this.contents.size());
+            this.contents.forEachEntry(new TIntObjectProcedure<SidebarEntry>() {
+                @Override
+                public boolean execute(int i, SidebarEntry sidebarEntry) {
+                    Team team = scoreboard.getOrRegisterNewTeam(sidebarEntry.name.length() > MAX_NAME_LENGTH ? sidebarEntry.name.substring(0, MAX_NAME_LENGTH) : sidebarEntry.name);
 
-        Set<String> adding = new HashSet<>();
-        contents.forEachEntry(new TIntObjectProcedure<SidebarEntry>() {
-            @Override
-            public boolean execute(int i, SidebarEntry sidebarEntry) {
-                String name = sidebarEntry.name;
-                if (name.length() > MAX_NAME_LENGTH) name = name.substring(0, MAX_NAME_LENGTH);
+                    if (sidebarEntry.prefix != null) {
+                        team.setPrefix(sidebarEntry.prefix.length() > MAX_PREFIX_LENGTH ? sidebarEntry.prefix.substring(0, MAX_PREFIX_LENGTH) : sidebarEntry.prefix);
+                    }
 
-                Team team = scoreboard.getOrRegisterNewTeam(name);
+                    if (sidebarEntry.suffix != null) {
+                        team.setSuffix(sidebarEntry.suffix.length() > MAX_SUFFIX_LENGTH ? sidebarEntry.suffix.substring(0, MAX_SUFFIX_LENGTH) : sidebarEntry.suffix);
+                    }
 
-                if (sidebarEntry.prefix != null) { // Trim the prefix of this.
-                    team.setPrefix(sidebarEntry.prefix.length() > MAX_PREFIX_LENGTH ? sidebarEntry.prefix.substring(0, MAX_PREFIX_LENGTH) : sidebarEntry.prefix);
+                    newLines.add(sidebarEntry.name);
+                    if (!team.hasEntry(sidebarEntry.name)) {
+                        team.addEntry(sidebarEntry.name);
+                    }
+
+                    current.getScore(sidebarEntry.name).setScore(i);
+                    return true;
+                }
+            });
+
+            // Reset the previous scores.
+            this.previousLines.removeAll(newLines);
+            Iterator<String> iterator = this.previousLines.iterator();
+            while (iterator.hasNext()) {
+                String last = iterator.next();
+                Team team = this.scoreboard.getTeam(last);
+                if (team != null) {
+                    team.removeEntry(last);
+                    this.scoreboard.resetScores(last);
                 }
 
-                if (sidebarEntry.suffix != null) { // Trim the suffix of this.
-                    team.setSuffix(sidebarEntry.suffix.length() > MAX_SUFFIX_LENGTH ? sidebarEntry.suffix.substring(0, MAX_SUFFIX_LENGTH) : sidebarEntry.suffix);
-                }
-
-                adding.add(name);
-                if (!team.hasEntry(name)) {
-                    team.addEntry(name);
-                }
-
-                current.getScore(name).setScore(i);
-                return true;
-            }
-        });
-
-        // Reset the previous scores.
-        this.previousLines.removeAll(adding);
-        Iterator<String> iterator = this.previousLines.iterator();
-        while (iterator.hasNext()) {
-            String last = iterator.next();
-            Team team = this.scoreboard.getTeam(last);
-            if (team != null) {
-                team.removeEntry(last);
+                iterator.remove();
             }
 
-            this.scoreboard.resetScores(last);
-            iterator.remove();
+            this.previousLines = newLines; // flip around
+            this.current.setDisplayName(this.title);
         }
-
-        this.previousLines = adding; // flip around
-        this.current.setDisplayName(this.title);
-        this.requiresUpdate = false;
     }
 
     // Hides the objective from the display slot until flip() is called

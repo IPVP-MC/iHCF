@@ -42,7 +42,6 @@ public class TimerSidebarProvider implements SidebarProvider {
         }
     };
 
-    private static final SidebarEntry EMPTY_ENTRY_FILLER = new SidebarEntry(" ", " ", " ");
     private static final Comparator<Map.Entry<UUID, ArcherMark>> ARCHER_MARK_COMPARATOR = (o1, o2) -> o1.getValue().compareTo(o2.getValue());
 
     private final HCF plugin;
