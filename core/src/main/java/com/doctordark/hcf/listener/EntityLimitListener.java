@@ -1,5 +1,7 @@
 package com.doctordark.hcf.listener;
 
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Squid;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -15,23 +17,27 @@ public class EntityLimitListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
-        if (event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.SLIME_SPLIT) { // allow slimes to always split
+        Entity entity = event.getEntity();
+        if (entity instanceof Squid) {
+            event.setCancelled(true);
             return;
         }
 
-        switch (event.getSpawnReason()) {
-            case NATURAL:
-                if (event.getLocation().getChunk().getEntities().length > MAX_NATURAL_CHUNK_ENTITIES) {
-                    event.setCancelled(true);
-                }
-                break;
-            case CHUNK_GEN:
-                if (event.getLocation().getChunk().getEntities().length > MAX_CHUNK_GENERATED_ENTITIES) {
-                    event.setCancelled(true);
-                }
-                break;
-            default:
-                break;
+        if (event.getSpawnReason() != CreatureSpawnEvent.SpawnReason.SLIME_SPLIT) { // allow slimes to always split
+            switch (event.getSpawnReason()) {
+                case NATURAL:
+                    if (event.getLocation().getChunk().getEntities().length > MAX_NATURAL_CHUNK_ENTITIES) {
+                        event.setCancelled(true);
+                    }
+                    break;
+                case CHUNK_GEN:
+                    if (event.getLocation().getChunk().getEntities().length > MAX_CHUNK_GENERATED_ENTITIES) {
+                        event.setCancelled(true);
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

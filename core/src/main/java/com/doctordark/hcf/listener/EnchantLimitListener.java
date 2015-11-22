@@ -1,4 +1,4 @@
-package com.doctordark.hcf.listener.fixes;
+package com.doctordark.hcf.listener;
 
 import com.doctordark.hcf.ConfigurationService;
 import com.google.common.collect.ImmutableMap;

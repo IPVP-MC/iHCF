@@ -28,7 +28,9 @@ public class VoidGlitchFixListener implements Listener {
                 }
 
                 Location destination = BukkitUtils.getHighestLocation(entity.getLocation());
-                if (destination == null) return;
+                if (destination == null) {
+                    return;
+                }
 
                 if (entity.teleport(destination, PlayerTeleportEvent.TeleportCause.PLUGIN)) {
                     event.setCancelled(true);

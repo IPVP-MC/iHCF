@@ -1,4 +1,4 @@
-package com.doctordark.hcf.listener.fixes;
+package com.doctordark.hcf.listener;
 
 import com.doctordark.hcf.ConfigurationService;
 import org.bukkit.Material;
@@ -34,24 +34,26 @@ public class PotionLimitListener implements Listener {
             event.getContents().getHolder().setBrewingTime(EMPTY_BREW_TIME);
         }
 
-        //*** Version that works with a Spigot version that does not
-        //*** have a BrewEvent#getResults() method:
-        /*BrewerInventory inventory = event.getContents();
-        ItemStack[] contents = inventory.getContents();
-        int length = contents.length;
-        ItemStack[] cloned = new ItemStack[length];
-        for (int i = 0; i < length; i++) {
-            ItemStack previous = contents[i];
-            cloned[i] = (previous == null ? null : previous.clone());
-        }
-
-        BrewingStand stand = inventory.getHolder();
-        Bukkit.getScheduler().runTask(HCF.getPlugin(), () -> {
-            if (!testValidity(inventory.getContents())) {
-                stand.setBrewingTime(EMPTY_BREW_TIME);
-                inventory.setContents(cloned);
-            }
-        });*/
+        /** Version that works with a Spigot version that does not
+         * have a BrewEvent#getResults() API:
+         *
+         * BrewerInventory inventory = event.getContents();
+         * ItemStack[] contents = inventory.getContents();
+         * int length = contents.length;
+         * ItemStack[] cloned = new ItemStack[length];
+         * for (int i = 0; i < length; i++) {
+         *   ItemStack previous = contents[i];
+         *   cloned[i] = (previous == null ? null : previous.clone());
+         * }
+         *
+         * BrewingStand stand = inventory.getHolder();
+         * Bukkit.getScheduler().runTask(HCF.getPlugin(), () -> {
+         *   if (!testValidity(inventory.getContents())) {
+         *     stand.setBrewingTime(EMPTY_BREW_TIME);
+         *     inventory.setContents(cloned);
+         *   }
+         * })
+         */
     }
 
     private boolean testValidity(ItemStack[] contents) {
@@ -60,14 +62,17 @@ public class PotionLimitListener implements Listener {
                 Potion potion = Potion.fromItemStack(stack);
 
                 // Just to be safe, null check this.
-                if (potion == null) continue;
-
-                PotionType type = potion.getType();
+                if (potion == null) {
+                    continue;
+                }
 
                 // Mundane potions etc, can return a null type
-                if (type == null) continue;
+                PotionType type = potion.getType();
+                if (type == null) {
+                    continue;
+                }
 
-                // is 33s poison, allow
+                // TODO: More configurable if 33 second splash poison is allowed
                 if (type == PotionType.POISON && !potion.hasExtendedDuration() && potion.getLevel() == 1) {
                     continue;
                 }
@@ -77,6 +82,7 @@ public class PotionLimitListener implements Listener {
                 }
             }
         }
+
         return true;
     }
 }

@@ -44,21 +44,19 @@ public class PortalListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
     public void onPlayerPortal(PlayerPortalEvent event) {
-        if (event.getCause() != PlayerTeleportEvent.TeleportCause.END_PORTAL) {
-            return;
-        }
+        if (event.getCause() == PlayerTeleportEvent.TeleportCause.END_PORTAL) {
+            World toWorld = event.getTo().getWorld();
+            if (toWorld != null && toWorld.getEnvironment() == World.Environment.THE_END) {
+                event.useTravelAgent(false);
+                event.setTo(toWorld.getSpawnLocation().clone().add(0.5, 0, 0.5));
+                return;
+            }
 
-        World toWorld = event.getTo().getWorld();
-        if (toWorld != null && toWorld.getEnvironment() == World.Environment.THE_END) {
-            event.useTravelAgent(false);
-            event.setTo(toWorld.getSpawnLocation());
-            return;
-        }
-
-        World fromWorld = event.getFrom().getWorld();
-        if (fromWorld != null && fromWorld.getEnvironment() == World.Environment.THE_END) {
-            event.useTravelAgent(false);
-            event.setTo(endExit);
+            World fromWorld = event.getFrom().getWorld();
+            if (fromWorld != null && fromWorld.getEnvironment() == World.Environment.THE_END) {
+                event.useTravelAgent(false);
+                event.setTo(endExit);
+            }
         }
     }
 

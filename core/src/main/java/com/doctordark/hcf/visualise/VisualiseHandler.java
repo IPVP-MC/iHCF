@@ -260,8 +260,6 @@ public class VisualiseHandler {
             Map<Location, VisualBlock> removed = new HashMap<>();
             for (Map.Entry<Location, VisualBlock> entry : results.entrySet()) {
                 VisualBlock visualBlock = entry.getValue();
-
-
                 if ((predicate == null || predicate.apply(visualBlock)) && (visualType == null || visualBlock.getVisualType() == visualType)) {
                     Location location = entry.getKey();
                     if (removed.put(location, visualBlock) == null) { // not really necessary, but might as well

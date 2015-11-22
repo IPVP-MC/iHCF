@@ -27,7 +27,6 @@ public class BookDeenchantListener implements Listener {
             // The player didn't click an enchantment table, Creative players will instantly destroy.
             Player player = event.getPlayer();
             if (event.getClickedBlock().getType() == Material.ENCHANTMENT_TABLE && player.getGameMode() != GameMode.CREATIVE) {
-
                 // The player didn't click with an enchanted book.
                 ItemStack stack = event.getItem();
                 if (stack != null && stack.getType() == Material.ENCHANTED_BOOK) {

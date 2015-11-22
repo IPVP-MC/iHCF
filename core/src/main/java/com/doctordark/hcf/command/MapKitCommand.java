@@ -1,4 +1,4 @@
-package com.doctordark.hcfold;
+package com.doctordark.hcf.command;
 
 import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.HCF;

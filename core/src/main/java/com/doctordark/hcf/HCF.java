@@ -5,6 +5,7 @@ import com.doctordark.hcf.command.AngleCommand;
 import com.doctordark.hcf.command.GoppleCommand;
 import com.doctordark.hcf.command.LocationCommand;
 import com.doctordark.hcf.command.LogoutCommand;
+import com.doctordark.hcf.command.MapKitCommand;
 import com.doctordark.hcf.command.PvpTimerCommand;
 import com.doctordark.hcf.command.RegenCommand;
 import com.doctordark.hcf.command.ServerTimeCommand;
@@ -51,7 +52,6 @@ import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
 import com.doctordark.hcf.faction.type.RoadFaction;
 import com.doctordark.hcf.faction.type.SpawnFaction;
-import com.doctordark.hcf.listener.AutoSmeltOreListener;
 import com.doctordark.hcf.listener.BookDeenchantListener;
 import com.doctordark.hcf.listener.BottledExpListener;
 import com.doctordark.hcf.listener.ChatListener;
@@ -60,12 +60,15 @@ import com.doctordark.hcf.listener.CrowbarListener;
 import com.doctordark.hcf.listener.DeathListener;
 import com.doctordark.hcf.listener.DeathMessageListener;
 import com.doctordark.hcf.listener.DeathSignListener;
+import com.doctordark.hcf.listener.EnchantLimitListener;
 import com.doctordark.hcf.listener.EntityLimitListener;
+import com.doctordark.hcf.listener.EventSignListener;
 import com.doctordark.hcf.listener.ExpMultiplierListener;
 import com.doctordark.hcf.listener.FactionListener;
 import com.doctordark.hcf.listener.FurnaceSmeltSpeederListener;
 import com.doctordark.hcf.listener.KitMapListener;
 import com.doctordark.hcf.listener.PortalListener;
+import com.doctordark.hcf.listener.PotionLimitListener;
 import com.doctordark.hcf.listener.ProtectionListener;
 import com.doctordark.hcf.listener.SignSubclaimListener;
 import com.doctordark.hcf.listener.SkullListener;
@@ -74,11 +77,9 @@ import com.doctordark.hcf.listener.fixes.BeaconStrengthFixListener;
 import com.doctordark.hcf.listener.fixes.BlockHitFixListener;
 import com.doctordark.hcf.listener.fixes.BlockJumpGlitchFixListener;
 import com.doctordark.hcf.listener.fixes.BoatGlitchFixListener;
-import com.doctordark.hcf.listener.fixes.EnchantLimitListener;
 import com.doctordark.hcf.listener.fixes.EnderChestRemovalListener;
 import com.doctordark.hcf.listener.fixes.InfinityArrowFixListener;
 import com.doctordark.hcf.listener.fixes.PearlGlitchListener;
-import com.doctordark.hcf.listener.fixes.PotionLimitListener;
 import com.doctordark.hcf.listener.fixes.VoidGlitchFixListener;
 import com.doctordark.hcf.pvpclass.PvpClassManager;
 import com.doctordark.hcf.pvpclass.bard.EffectRestorer;
@@ -93,9 +94,6 @@ import com.doctordark.hcf.user.UserManager;
 import com.doctordark.hcf.visualise.ProtocolLibHook;
 import com.doctordark.hcf.visualise.VisualiseHandler;
 import com.doctordark.hcf.visualise.WallBorderListener;
-import com.doctordark.hcfold.EndListener;
-import com.doctordark.hcfold.EventSignListener;
-import com.doctordark.hcfold.MapKitCommand;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import lombok.Getter;
 import org.bukkit.ChatColor;
@@ -233,7 +231,6 @@ public class HCF extends JavaPlugin {
 
     private void registerListeners() {
         PluginManager manager = this.getServer().getPluginManager();
-        manager.registerEvents(new AutoSmeltOreListener(), this);
         manager.registerEvents(new BlockHitFixListener(), this);
         manager.registerEvents(new BlockJumpGlitchFixListener(), this);
         manager.registerEvents(new BoatGlitchFixListener(), this);
@@ -252,7 +249,6 @@ public class HCF extends JavaPlugin {
         manager.registerEvents(new EnchantLimitListener(), this);
         manager.registerEvents(new EnderChestRemovalListener(), this);
         manager.registerEvents(new EntityLimitListener(), this);
-        manager.registerEvents(new EndListener(), this);
         manager.registerEvents(new EotwListener(this), this);
         manager.registerEvents(new EventSignListener(), this);
         manager.registerEvents(new ExpMultiplierListener(), this);
@@ -273,7 +269,7 @@ public class HCF extends JavaPlugin {
         manager.registerEvents(new BeaconStrengthFixListener(), this);
         manager.registerEvents(new VoidGlitchFixListener(), this);
         manager.registerEvents(new WallBorderListener(this), this);
-        manager.registerEvents(new WorldListener(this), this);
+        manager.registerEvents(new WorldListener(), this);
     }
 
     private void registerCommands() {
