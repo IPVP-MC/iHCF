@@ -9,7 +9,6 @@ import com.doctordark.hcf.command.PvpTimerCommand;
 import com.doctordark.hcf.command.RegenCommand;
 import com.doctordark.hcf.command.ServerTimeCommand;
 import com.doctordark.hcf.command.SpawnCannonCommand;
-import com.doctordark.hcf.command.ToggleBroadcastsCommand;
 import com.doctordark.hcf.command.ToggleCapzoneEntryCommand;
 import com.doctordark.hcf.command.ToggleLightningCommand;
 import com.doctordark.hcf.command.ToggleSidebarCommand;
@@ -64,7 +63,6 @@ import com.doctordark.hcf.listener.DeathSignListener;
 import com.doctordark.hcf.listener.EntityLimitListener;
 import com.doctordark.hcf.listener.ExpMultiplierListener;
 import com.doctordark.hcf.listener.FactionListener;
-import com.doctordark.hcf.listener.FoundDiamondsListener;
 import com.doctordark.hcf.listener.FurnaceSmeltSpeederListener;
 import com.doctordark.hcf.listener.KitMapListener;
 import com.doctordark.hcf.listener.PortalListener;
@@ -145,9 +143,6 @@ public class HCF extends JavaPlugin {
     private FactionManager factionManager;
 
     @Getter
-    private FoundDiamondsListener foundDiamondsListener;
-
-    @Getter
     private KeyManager keyManager;
 
     @Getter
@@ -208,7 +203,6 @@ public class HCF extends JavaPlugin {
         this.combatLogListener.removeCombatLoggers();
         this.pvpClassManager.onDisable();
         this.scoreboardHandler.clearBoards();
-        this.foundDiamondsListener.saveConfig(); // temporary
         this.saveData();
 
         HCF.plugin = null; // always initialise last
@@ -263,7 +257,6 @@ public class HCF extends JavaPlugin {
         manager.registerEvents(new EventSignListener(), this);
         manager.registerEvents(new ExpMultiplierListener(), this);
         manager.registerEvents(new FactionListener(this), this);
-        manager.registerEvents(this.foundDiamondsListener = new FoundDiamondsListener(this), this);
         manager.registerEvents(new FurnaceSmeltSpeederListener(), this);
         manager.registerEvents(new InfinityArrowFixListener(), this);
         manager.registerEvents(new KeyListener(this), this);
@@ -304,7 +297,6 @@ public class HCF extends JavaPlugin {
         getCommand("spawncannon").setExecutor(new SpawnCannonCommand(this));
         getCommand("staffrevive").setExecutor(new StaffReviveCommand(this));
         getCommand("timer").setExecutor(new TimerExecutor(this));
-        getCommand("togglebroadcasts").setExecutor(new ToggleBroadcastsCommand());
         getCommand("togglecapzoneentry").setExecutor(new ToggleCapzoneEntryCommand(this));
         getCommand("togglelightning").setExecutor(new ToggleLightningCommand(this));
         getCommand("togglesidebar").setExecutor(new ToggleSidebarCommand(this));

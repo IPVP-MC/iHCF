@@ -62,9 +62,6 @@ commands:
     description: Command used by staff to revive players.
   timer:
     description: Command to manage timers.
-  togglebroadcasts:
-    aliases: [tb]
-    description: Toggle found diamond ore notifications.
   togglecapzoneentry:
     aliases: [togglecapentry]
     description: Command used to hide or show capture zone entry messages.
