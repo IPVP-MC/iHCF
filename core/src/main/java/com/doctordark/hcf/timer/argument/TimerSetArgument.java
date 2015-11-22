@@ -7,7 +7,7 @@ import com.doctordark.util.JavaUtils;
 import com.doctordark.util.command.CommandArgument;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
+import compat.com.google.common.FluentIterableCompat;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -90,7 +90,7 @@ public class TimerSetArgument extends CommandArgument {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 2) {
-            return FluentIterable.from(plugin.getTimerManager().getTimers()).filter(new Predicate<Timer>() {
+            return FluentIterableCompat.from(plugin.getTimerManager().getTimers()).filter(new Predicate<Timer>() {
                 @Override
                 public boolean apply(Timer timer) {
                     return timer instanceof PlayerTimer;
