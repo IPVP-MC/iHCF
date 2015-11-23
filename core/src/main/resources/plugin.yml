@@ -3,7 +3,7 @@ version: ${project.version} (Build ${git.commit.id.abbrev}, ${git.commit.time})
 description: ${project.description}
 author: DoctorDark
 main: com.doctordark.hcf.HCF
-softdepend: [Essentials, ProtocolLib]
+softdepend: [Essentials, EssentialsChat, ProtocolLib]
 depend: [iBase]
 commands:
   angle:

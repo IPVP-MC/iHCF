@@ -6,6 +6,7 @@ import com.doctordark.hcf.faction.struct.ChatChannel;
 import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
 import com.earth2me.essentials.Essentials;
+import com.earth2me.essentials.User;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.MapMaker;
 import org.apache.commons.lang.StringUtils;
@@ -149,8 +150,9 @@ public class ChatListener implements Listener {
         String capperTag = EOTW_CAPPERS.contains(player.getUniqueId()) ? EOTW_CAPPER_PREFIX : "";
         String result;
         if (this.essentials != null && viewer instanceof Player) {
-            result = this.essentials.getSettings().getChatFormat(this.essentials.getUser((Player) viewer).getGroup());
-            result = result.replace("{FACTION}", factionTag).replace("{EOTWCAPPERPREFIX}", capperTag).replace("{DISPLAYNAME}", "%1$s").replace("{MESSAGE}", "%2$s");
+            User user = this.essentials.getUser((Player) viewer);
+            result = this.essentials.getSettings().getChatFormat(user.getGroup());
+            result = result.replace("{FACTION}", factionTag).replace("{EOTWCAPPERPREFIX}", capperTag).replace("{DISPLAYNAME}", user.getDisplayName()).replace("{MESSAGE}", "%2$s");
         } else {
             result = ChatColor.GOLD + "[" + factionTag + ChatColor.GOLD + "] " + capperTag + "%1$s" + ChatColor.GRAY + ": " + ChatColor.WHITE + "%2$s";
         }
