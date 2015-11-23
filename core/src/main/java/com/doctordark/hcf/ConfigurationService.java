@@ -86,7 +86,7 @@ public final class ConfigurationService {
     public static long DEFAULT_DEATHBAN_DURATION = TimeUnit.HOURS.toMillis(1L);
 
     // Faction tag colours.
-    public static final ChatColor TEAMMATE_COLOUR = ChatColor.GREEN;
+    public static final ChatColor TEAMMATE_COLOUR = ChatColor.DARK_GREEN;
     public static final ChatColor ALLY_COLOUR = ChatColor.GOLD;
     public static final ChatColor ENEMY_COLOUR = ChatColor.RED;
 
