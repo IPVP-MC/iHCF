@@ -149,8 +149,8 @@ public class ChatListener implements Listener {
         String factionTag = playerFaction == null ? ChatColor.RED + Faction.FACTIONLESS_PREFIX : playerFaction.getDisplayName(viewer);
         String capperTag = EOTW_CAPPERS.contains(player.getUniqueId()) ? EOTW_CAPPER_PREFIX : "";
         String result;
-        if (this.essentials != null && viewer instanceof Player) {
-            User user = this.essentials.getUser((Player) viewer);
+        if (this.essentials != null) {
+            User user = this.essentials.getUser(player);
             result = this.essentials.getSettings().getChatFormat(user.getGroup());
             result = result.replace("{FACTION}", factionTag).replace("{EOTWCAPPERPREFIX}", capperTag).replace("{DISPLAYNAME}", user.getDisplayName()).replace("{MESSAGE}", "%2$s");
         } else {
