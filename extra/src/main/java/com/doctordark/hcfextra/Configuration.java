@@ -41,6 +41,7 @@ public class Configuration {
     private String[] convertLines(File file) throws IOException {
         if (!file.exists()) {
             this.quietlyCreateFile(file);
+            return new String[]{};
         }
 
         plugin.getLogger().log(Level.INFO, "Reading lines of file " + file.getName() + ".");
@@ -56,7 +57,7 @@ public class Configuration {
 
     private void quietlyCreateFile(File file) {
         try {
-            HCFExtra.getPlugin().getLogger().log(Level.INFO, (file.createNewFile() ? "Failed to create" : "Created") + " file " + file.getName() + ".");
+            HCFExtra.getPlugin().getLogger().log(Level.INFO, (file.createNewFile() ? "Created" : "Failed to create") + " file " + file.getName() + ".");
         } catch (IOException ex) {
             ex.printStackTrace();
         }
