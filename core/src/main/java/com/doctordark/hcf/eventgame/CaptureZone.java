@@ -10,8 +10,6 @@ import org.bukkit.entity.Player;
 import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Represents an area a {@link Player} can use to control.
@@ -20,9 +18,8 @@ public class CaptureZone implements ConfigurationSerializable {
 
     public static final int MINIMUM_SIZE_AREA = 2;
 
-    private ReadWriteLock lock = new ReentrantReadWriteLock();
+    private final Object lock = new Object();
     private String scoreboardRemaining;
-
     private String name;
     private String prefix;
     private Cuboid cuboid;
@@ -97,20 +94,14 @@ public class CaptureZone implements ConfigurationSerializable {
     }
 
     public String getScoreboardRemaining() {
-        this.lock.readLock().lock();
-        try {
+        synchronized (this.lock) {
             return this.scoreboardRemaining;
-        } finally {
-            this.lock.readLock().unlock();
         }
     }
 
     public void updateScoreboardRemaining() {
-        this.lock.writeLock().lock();
-        try {
+        synchronized (this.lock) {
             this.scoreboardRemaining = DateTimeFormats.KOTH_FORMAT.format(this.getRemainingCaptureMillis());
-        } finally {
-            this.lock.writeLock().unlock();
         }
     }
 

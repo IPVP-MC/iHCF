@@ -11,8 +11,7 @@ import com.doctordark.hcf.eventgame.faction.EventFaction;
 import com.doctordark.hcf.faction.event.FactionRemoveEvent;
 import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Ordering;
+import com.doctordark.util.ConcurrentValueOrderedMap;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -21,11 +20,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -40,9 +35,8 @@ public class ConquestTracker implements EventTracker, Listener {
      */
     private static final long MINIMUM_CONTROL_TIME_ANNOUNCE = TimeUnit.SECONDS.toMillis(5L);
     public static final long DEFAULT_CAP_MILLIS = TimeUnit.SECONDS.toMillis(30L);
-    private static final Comparator<Map.Entry<PlayerFaction, Integer>> POINTS_COMPARATOR = (e1, e2) -> e2.getValue().compareTo(e1.getValue());
 
-    private final Map<PlayerFaction, Integer> factionPointsMap = Collections.synchronizedMap(new LinkedHashMap<>());
+    private final ConcurrentValueOrderedMap<PlayerFaction, Integer> factionPointsMap = new ConcurrentValueOrderedMap<>();
     private final HCF plugin;
 
     public ConquestTracker(HCF plugin) {
@@ -54,9 +48,7 @@ public class ConquestTracker implements EventTracker, Listener {
     public void onFactionRemove(FactionRemoveEvent event) {
         Faction faction = event.getFaction();
         if (faction instanceof PlayerFaction) {
-            synchronized (factionPointsMap) {
-                factionPointsMap.remove(faction);
-            }
+            this.factionPointsMap.remove((PlayerFaction) faction);
         }
     }
 
@@ -65,8 +57,8 @@ public class ConquestTracker implements EventTracker, Listener {
      *
      * @return immutable copy of the faction points map
      */
-    public Map<PlayerFaction, Integer> getFactionPointsMap() {
-        return ImmutableMap.copyOf(factionPointsMap);
+    public ConcurrentValueOrderedMap<PlayerFaction, Integer> getFactionPointsMap() {
+        return this.factionPointsMap;
     }
 
     /**
@@ -77,9 +69,7 @@ public class ConquestTracker implements EventTracker, Listener {
      * @return the new points of the {@link PlayerFaction}.
      */
     public int getPoints(PlayerFaction faction) {
-        synchronized (factionPointsMap) {
-            return GuavaCompat.firstNonNull(factionPointsMap.get(faction), 0);
-        }
+        return GuavaCompat.firstNonNull(this.factionPointsMap.get(faction), 0);
     }
 
     /**
@@ -90,18 +80,7 @@ public class ConquestTracker implements EventTracker, Listener {
      * @return the new points of the {@link PlayerFaction}
      */
     public int setPoints(PlayerFaction faction, int amount) {
-        if (amount <= 0) return amount;
-
-        synchronized (factionPointsMap) {
-            factionPointsMap.put(faction, amount);
-            List<Map.Entry<PlayerFaction, Integer>> entries = Ordering.from(POINTS_COMPARATOR).sortedCopy(factionPointsMap.entrySet());
-
-            factionPointsMap.clear();
-            for (Map.Entry<PlayerFaction, Integer> entry : entries) {
-                factionPointsMap.put(entry.getKey(), entry.getValue());
-            }
-        }
-
+        this.factionPointsMap.put(faction, amount);
         return amount;
     }
 
@@ -158,10 +137,7 @@ public class ConquestTracker implements EventTracker, Listener {
                                 ChatColor.AQUA + '(' + newPoints + '/' + ConfigurationService.CONQUEST_REQUIRED_WIN_POINTS + ')');
                     } else {
                         // Clear all the points for the next Conquest event.
-                        synchronized (factionPointsMap) {
-                            factionPointsMap.clear();
-                        }
-
+                        this.factionPointsMap.clear();
                         plugin.getTimerManager().getEventTimer().handleWinner(cappingPlayer);
                         return;
                     }
@@ -204,9 +180,7 @@ public class ConquestTracker implements EventTracker, Listener {
 
     @Override
     public void stopTiming() {
-        synchronized (factionPointsMap) {
-            factionPointsMap.clear();
-        }
+        factionPointsMap.clear();
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
