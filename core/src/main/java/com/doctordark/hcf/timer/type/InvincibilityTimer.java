@@ -244,6 +244,15 @@ public class InvincibilityTimer extends PlayerTimer implements Listener {
                 player.sendMessage(ChatColor.GREEN + "Your " + getDisplayName() + ChatColor.GREEN + " timer is now paused.");
                 this.setPaused(player.getUniqueId(), true);
             }
+
+            if (event.getEnterCause() == PlayerClaimEnterEvent.EnterCause.TELEPORT) {
+                // Allow player to enter own claim, but just remove PVP Protection when teleporting.
+                PlayerFaction playerFaction; // lazy-load
+                if (toFaction instanceof PlayerFaction && (playerFaction = plugin.getFactionManager().getPlayerFaction(player)) != null && playerFaction == toFaction) {
+                    player.sendMessage(ChatColor.AQUA + "You have entered your own claim, therefore your " + getDisplayName() + ChatColor.AQUA + " timer was cleared.");
+                    this.clearCooldown(player);
+                }
+            }
         }
     }
 
@@ -253,17 +262,6 @@ public class InvincibilityTimer extends PlayerTimer implements Listener {
         Faction toFaction = event.getToFaction();
         long remaining; // lazy load
         if (toFaction instanceof ClaimableFaction && (remaining = getRemaining(player)) > 0L) {
-            if (event.getEnterCause() == PlayerClaimEnterEvent.EnterCause.TELEPORT) {
-                // Allow player to enter own claim, but just remove PVP Protection when teleporting.
-                PlayerFaction playerFaction; // lazy-load
-
-                if (toFaction instanceof PlayerFaction && (playerFaction = plugin.getFactionManager().getPlayerFaction(player)) != null && playerFaction == toFaction) {
-                    player.sendMessage(ChatColor.AQUA + "You have entered your own claim, therefore your " + getDisplayName() + ChatColor.AQUA + " timer was cleared.");
-                    this.clearCooldown(player);
-                    return;
-                }
-            }
-
             if (!toFaction.isSafezone() && !(toFaction instanceof RoadFaction)) {
                 event.setCancelled(true);
                 player.sendMessage(ChatColor.RED + "You cannot enter " + toFaction.getDisplayName(player) + ChatColor.RED + " whilst your " +
