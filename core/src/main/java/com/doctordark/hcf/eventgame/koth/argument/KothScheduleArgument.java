@@ -1,17 +1,17 @@
 package com.doctordark.hcf.eventgame.koth.argument;
 
-import com.doctordark.hcf.DateTimeFormats;
+import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.HCF;
-import com.doctordark.util.BukkitUtils;
-import com.doctordark.util.command.CommandArgument;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.commons.lang3.time.DurationFormatUtils;
+import org.apache.commons.lang3.time.FastDateFormat;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.ipvp.util.BukkitUtils;
+import org.ipvp.util.command.CommandArgument;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import java.util.Map;
 public class KothScheduleArgument extends CommandArgument {
 
     private static final String TIME_UNTIL_PATTERN = "d'd' H'h' mm'm'";
-    private static final DateTimeFormatter HHMMA = DateTimeFormatter.ofPattern("h:mma");
+    private static final FastDateFormat HHMMA = FastDateFormat.getInstance("h:mma", ConfigurationService.SERVER_TIME_ZONE, Locale.ENGLISH);
 
     // The time of event schedules, the String as the faction name.
     private final HCF plugin;
@@ -44,7 +44,7 @@ public class KothScheduleArgument extends CommandArgument {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        LocalDateTime now = LocalDateTime.now(DateTimeFormats.SERVER_ZONE_ID);
+        LocalDateTime now = LocalDateTime.now(ConfigurationService.SERVER_TIME_ZONE_ID);
         int currentDay = now.getDayOfYear();
 
         Map<LocalDateTime, String> scheduleMap = plugin.getEventScheduler().getScheduleMap();
@@ -60,10 +60,11 @@ public class KothScheduleArgument extends CommandArgument {
                 String monthName = scheduleDateTime.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
                 String weekName = scheduleDateTime.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
                 ChatColor colour = dayDifference == 0 ? ChatColor.GREEN : ChatColor.AQUA;
+                long remainingMillis = now.until(scheduleDateTime, ChronoUnit.MILLIS);
                 shownEvents.add("  " + colour + WordUtils.capitalizeFully(entry.getValue()) + ": " + ChatColor.YELLOW +
-                        weekName + ' ' + scheduleDateTime.getDayOfMonth() + ' ' + monthName + ChatColor.RED + " (" + HHMMA.format(scheduleDateTime) + ')' +
+                        weekName + ' ' + scheduleDateTime.getDayOfMonth() + ' ' + monthName + ChatColor.RED + " (" + HHMMA.format(remainingMillis) + ')' +
                         ChatColor.GRAY + " - " + ChatColor.GOLD +
-                        DurationFormatUtils.formatDuration(now.until(scheduleDateTime, ChronoUnit.MILLIS), TIME_UNTIL_PATTERN));
+                        DurationFormatUtils.formatDuration(remainingMillis, TIME_UNTIL_PATTERN));
             }
         }
 
@@ -77,7 +78,7 @@ public class KothScheduleArgument extends CommandArgument {
 
         sender.sendMessage(ChatColor.GRAY + BukkitUtils.STRAIGHT_LINE_DEFAULT);
         sender.sendMessage(ChatColor.GRAY + "Server time is currently " + ChatColor.WHITE +
-                weekName + ' ' + now.getDayOfMonth() + ' ' + monthName + ' ' + HHMMA.format(now) + ChatColor.GRAY + '.');
+                weekName + ' ' + now.getDayOfMonth() + ' ' + monthName + ' ' + HHMMA.format(System.currentTimeMillis()) + ChatColor.GRAY + '.');
         sender.sendMessage(shownEvents.toArray(new String[shownEvents.size()]));
         sender.sendMessage(ChatColor.GRAY + "For more info about King of the Hill, use " + ChatColor.WHITE + '/' + label + " help" + ChatColor.GRAY + '.');
         sender.sendMessage(ChatColor.GRAY + BukkitUtils.STRAIGHT_LINE_DEFAULT);

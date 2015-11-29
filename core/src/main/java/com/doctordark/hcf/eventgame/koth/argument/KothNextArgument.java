@@ -1,5 +1,6 @@
 package com.doctordark.hcf.eventgame.koth.argument;
 
+import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.DateTimeFormats;
 import com.doctordark.hcf.HCF;
 import com.doctordark.util.command.CommandArgument;
@@ -44,7 +45,7 @@ public class KothNextArgument extends CommandArgument {
             return true;
         }
 
-        LocalDateTime now = LocalDateTime.now(DateTimeFormats.SERVER_ZONE_ID);
+        LocalDateTime now = LocalDateTime.now(ConfigurationService.SERVER_TIME_ZONE_ID);
 
         for (Map.Entry<LocalDateTime, String> entry : scheduleMap.entrySet()) {
             // Only show the events that haven't been yet.

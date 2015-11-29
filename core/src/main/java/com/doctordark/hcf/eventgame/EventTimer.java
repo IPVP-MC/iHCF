@@ -1,5 +1,6 @@
 package com.doctordark.hcf.eventgame;
 
+import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.DateTimeFormats;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.eventgame.crate.EventKey;
@@ -67,7 +68,7 @@ public class EventTimer extends GlobalTimer implements Listener {
                 }
 
                 // There isn't an active event, find one!
-                LocalDateTime now = LocalDateTime.now(DateTimeFormats.SERVER_ZONE_ID);
+                LocalDateTime now = LocalDateTime.now(ConfigurationService.SERVER_TIME_ZONE_ID);
                 int day = now.getDayOfYear();
                 int hour = now.getHour();
                 int minute = now.getMinute();

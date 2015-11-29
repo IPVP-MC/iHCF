@@ -9,6 +9,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionType;
 
+import java.time.ZoneId;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
@@ -28,9 +29,10 @@ public final class ConfigurationService {
 
     public static final boolean DISABLE_OBSIDIAN_GENERATORS = true;
 
-    public static final TimeZone SERVER_TIME_ZONE = TimeZone.getTimeZone("GMT+1");
     public static final int WARZONE_RADIUS = 850;
     public static final String DONATE_URL = "donate.ipvp.org";
+    public static final TimeZone SERVER_TIME_ZONE = TimeZone.getTimeZone("EST");
+    public static final ZoneId SERVER_TIME_ZONE_ID = SERVER_TIME_ZONE.toZoneId();
 
     public static final int SPAWN_BUFFER = 128;
     public static final int MAP_NUMBER = 7;
