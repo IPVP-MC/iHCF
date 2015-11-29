@@ -8,7 +8,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -22,9 +21,7 @@ public class ServerTimeCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        sender.sendMessage(ChatColor.GREEN + "The server time is " + ChatColor.LIGHT_PURPLE +
-                FORMAT.format(LocalDateTime.now(ConfigurationService.SERVER_TIME_ZONE_ID)) + ChatColor.GREEN + '.');
-
+        sender.sendMessage(ChatColor.GREEN + "The server time is " + ChatColor.LIGHT_PURPLE + FORMAT.format(System.currentTimeMillis()) + ChatColor.GREEN + '.');
         return true;
     }
 
