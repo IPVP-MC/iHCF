@@ -6,11 +6,11 @@ import com.doctordark.hcf.eventgame.EventType;
 import com.doctordark.hcf.eventgame.tracker.ConquestTracker;
 import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
-import com.doctordark.util.JavaUtils;
-import com.doctordark.util.command.CommandArgument;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.ipvp.util.JavaUtils;
+import org.ipvp.util.command.CommandArgument;
 
 public class ConquestSetpointsArgument extends CommandArgument {
 

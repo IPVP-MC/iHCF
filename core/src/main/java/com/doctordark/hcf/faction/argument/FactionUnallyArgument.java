@@ -7,7 +7,6 @@ import com.doctordark.hcf.faction.struct.Relation;
 import com.doctordark.hcf.faction.struct.Role;
 import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
-import com.doctordark.util.command.CommandArgument;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -16,6 +15,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.ipvp.util.command.CommandArgument;
 
 import java.util.Collection;
 import java.util.Collections;

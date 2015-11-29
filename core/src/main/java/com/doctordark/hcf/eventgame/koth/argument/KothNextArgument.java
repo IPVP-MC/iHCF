@@ -3,11 +3,11 @@ package com.doctordark.hcf.eventgame.koth.argument;
 import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.DateTimeFormats;
 import com.doctordark.hcf.HCF;
-import com.doctordark.util.command.CommandArgument;
 import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.ipvp.util.command.CommandArgument;
 
 import java.time.LocalDateTime;
 import java.time.format.TextStyle;

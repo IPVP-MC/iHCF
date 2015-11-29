@@ -3,8 +3,6 @@ package com.doctordark.hcf.timer.argument;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.timer.PlayerTimer;
 import com.doctordark.hcf.timer.Timer;
-import com.doctordark.util.JavaUtils;
-import com.doctordark.util.command.CommandArgument;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import compat.com.google.common.FluentIterableCompat;
@@ -15,6 +13,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.ipvp.util.JavaUtils;
+import org.ipvp.util.command.CommandArgument;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;

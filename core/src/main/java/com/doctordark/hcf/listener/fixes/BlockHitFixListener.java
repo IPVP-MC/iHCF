@@ -1,6 +1,5 @@
 package com.doctordark.hcf.listener.fixes;
 
-import com.doctordark.util.BukkitUtils;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import org.bukkit.Material;
@@ -14,6 +13,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.ipvp.util.BukkitUtils;
 
 import java.util.HashMap;
 import java.util.Map;

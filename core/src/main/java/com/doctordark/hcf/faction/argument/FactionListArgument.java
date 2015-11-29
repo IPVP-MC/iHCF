@@ -2,10 +2,6 @@ package com.doctordark.hcf.faction.argument;
 
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.type.PlayerFaction;
-import com.doctordark.util.BukkitUtils;
-import com.doctordark.util.JavaUtils;
-import com.doctordark.util.MapSorting;
-import com.doctordark.util.command.CommandArgument;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -17,6 +13,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.ipvp.util.BukkitUtils;
+import org.ipvp.util.JavaUtils;
+import org.ipvp.util.MapSorting;
+import org.ipvp.util.command.CommandArgument;
 
 import java.util.ArrayList;
 import java.util.Collection;

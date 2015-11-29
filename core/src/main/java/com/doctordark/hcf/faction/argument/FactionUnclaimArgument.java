@@ -5,13 +5,13 @@ import com.doctordark.hcf.faction.FactionMember;
 import com.doctordark.hcf.faction.claim.Claim;
 import com.doctordark.hcf.faction.struct.Role;
 import com.doctordark.hcf.faction.type.PlayerFaction;
-import com.doctordark.util.command.CommandArgument;
 import com.google.common.collect.ImmutableList;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.ipvp.util.command.CommandArgument;
 
 import java.util.ArrayList;
 import java.util.Collection;

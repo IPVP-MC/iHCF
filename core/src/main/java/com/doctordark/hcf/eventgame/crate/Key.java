@@ -1,8 +1,8 @@
 package com.doctordark.hcf.eventgame.crate;
 
-import com.doctordark.util.Config;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
+import org.ipvp.util.Config;
 
 /**
  * Represents an {@link Key} that can be used to unlock crates.

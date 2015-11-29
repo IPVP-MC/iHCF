@@ -4,7 +4,6 @@ import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.pvpclass.PvpClass;
 import com.doctordark.hcf.timer.PlayerTimer;
 import com.doctordark.hcf.timer.TimerCooldown;
-import com.doctordark.util.Config;
 import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -17,6 +16,7 @@ import org.bukkit.event.inventory.EquipmentSetEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.ipvp.util.Config;
 
 import javax.annotation.Nullable;
 import java.util.Collection;

@@ -4,11 +4,11 @@ import com.doctordark.hcf.DateTimeFormats;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.eventgame.EventTimer;
 import com.doctordark.hcf.eventgame.faction.EventFaction;
-import com.doctordark.util.command.CommandArgument;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.ipvp.util.command.CommandArgument;
 
 /**
  * A {@link CommandArgument} argument used for checking the uptime of current event.

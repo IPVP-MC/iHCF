@@ -6,10 +6,10 @@ import com.doctordark.hcf.faction.claim.Claim;
 import com.doctordark.hcf.faction.claim.ClaimHandler;
 import com.doctordark.hcf.faction.type.ClaimableFaction;
 import com.doctordark.hcf.faction.type.Faction;
-import com.doctordark.util.cuboid.Cuboid;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
+import org.ipvp.util.cuboid.Cuboid;
 
 import java.util.List;
 import java.util.Map;

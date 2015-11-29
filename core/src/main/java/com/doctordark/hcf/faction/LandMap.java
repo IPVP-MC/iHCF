@@ -1,6 +1,5 @@
 package com.doctordark.hcf.faction;
 
-import com.doctordark.base.BasePlugin;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.claim.Claim;
 import com.doctordark.hcf.faction.claim.ClaimHandler;
@@ -8,13 +7,14 @@ import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
 import com.doctordark.hcf.visualise.VisualBlockData;
 import com.doctordark.hcf.visualise.VisualType;
-import com.doctordark.util.BukkitUtils;
 import com.google.common.base.Objects;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.ipvp.base.BasePlugin;
+import org.ipvp.util.BukkitUtils;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;

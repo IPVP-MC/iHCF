@@ -2,9 +2,9 @@ package com.doctordark.hcf.faction.struct;
 
 import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.faction.type.Faction;
-import com.doctordark.util.BukkitUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
+import org.ipvp.util.BukkitUtils;
 
 /**
  * Represents a relation between {@link Faction}s and {@link org.bukkit.entity.Player}s.

@@ -2,7 +2,6 @@ package com.doctordark.hcf.deathban;
 
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.user.FactionUser;
-import com.doctordark.util.BukkitUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -10,6 +9,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.ipvp.util.BukkitUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;

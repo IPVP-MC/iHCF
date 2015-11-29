@@ -6,7 +6,6 @@ import com.doctordark.hcf.faction.type.ClaimableFaction;
 import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.RoadFaction;
 import com.doctordark.hcf.timer.Timer;
-import com.doctordark.util.cuboid.Cuboid;
 import com.google.common.base.Predicate;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -22,6 +21,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
+import org.ipvp.util.cuboid.Cuboid;
 
 import java.util.Collection;
 import java.util.HashMap;

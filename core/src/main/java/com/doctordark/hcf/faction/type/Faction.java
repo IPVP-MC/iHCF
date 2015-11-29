@@ -4,13 +4,13 @@ import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.event.FactionRenameEvent;
 import com.doctordark.hcf.faction.struct.Relation;
-import com.doctordark.util.BukkitUtils;
 import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
+import org.ipvp.util.BukkitUtils;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

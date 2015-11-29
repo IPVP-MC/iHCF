@@ -1,12 +1,12 @@
 package com.doctordark.hcf.eventgame.crate;
 
 import com.doctordark.hcf.HCF;
-import com.doctordark.util.Config;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Table;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.inventory.ItemStack;
+import org.ipvp.util.Config;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

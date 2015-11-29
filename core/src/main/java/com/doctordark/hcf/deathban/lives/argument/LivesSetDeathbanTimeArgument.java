@@ -2,12 +2,12 @@ package com.doctordark.hcf.deathban.lives.argument;
 
 import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.deathban.Deathban;
-import com.doctordark.util.JavaUtils;
-import com.doctordark.util.command.CommandArgument;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.ipvp.util.JavaUtils;
+import org.ipvp.util.command.CommandArgument;
 
 import java.util.Collections;
 import java.util.List;

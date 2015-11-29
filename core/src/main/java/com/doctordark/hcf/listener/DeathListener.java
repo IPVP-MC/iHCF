@@ -6,7 +6,6 @@ import com.doctordark.hcf.faction.struct.Role;
 import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
 import com.doctordark.hcf.user.FactionUser;
-import com.doctordark.util.JavaUtils;
 import net.minecraft.server.v1_7_R4.EntityLightning;
 import net.minecraft.server.v1_7_R4.PacketPlayOutSpawnEntityWeather;
 import net.minecraft.server.v1_7_R4.WorldServer;
@@ -21,6 +20,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.ipvp.util.JavaUtils;
 
 import java.util.concurrent.TimeUnit;
 

@@ -1,9 +1,6 @@
 package com.doctordark.hcf.economy;
 
-import com.doctordark.base.BaseConstants;
 import com.doctordark.hcf.HCF;
-import com.doctordark.util.BukkitUtils;
-import com.doctordark.util.JavaUtils;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
@@ -14,6 +11,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.ipvp.base.BaseConstants;
+import org.ipvp.util.BukkitUtils;
+import org.ipvp.util.JavaUtils;
 
 import java.util.Collections;
 import java.util.List;

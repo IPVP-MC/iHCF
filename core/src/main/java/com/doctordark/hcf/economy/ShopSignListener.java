@@ -1,10 +1,7 @@
 package com.doctordark.hcf.economy;
 
-import com.doctordark.base.BasePlugin;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.listener.Crowbar;
-import com.doctordark.util.InventoryUtils;
-import com.doctordark.util.JavaUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -18,6 +15,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.ipvp.base.BasePlugin;
+import org.ipvp.util.InventoryUtils;
+import org.ipvp.util.JavaUtils;
 
 import java.util.Arrays;
 import java.util.Map;

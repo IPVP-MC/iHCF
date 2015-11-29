@@ -4,8 +4,6 @@ import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.WarzoneFaction;
-import com.doctordark.util.BukkitUtils;
-import com.doctordark.util.JavaUtils;
 import com.google.common.collect.ImmutableList;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -21,6 +19,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.ipvp.util.BukkitUtils;
+import org.ipvp.util.JavaUtils;
 
 import java.util.Collections;
 import java.util.List;

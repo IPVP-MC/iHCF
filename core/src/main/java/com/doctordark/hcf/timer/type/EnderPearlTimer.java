@@ -3,7 +3,6 @@ package com.doctordark.hcf.timer.type;
 import com.doctordark.hcf.DurationFormatter;
 import com.doctordark.hcf.timer.PlayerTimer;
 import com.doctordark.hcf.timer.TimerCooldown;
-import com.doctordark.util.Config;
 import net.minecraft.server.v1_7_R4.EntityPlayer;
 import net.minecraft.server.v1_7_R4.PacketPlayOutSetSlot;
 import net.minecraft.server.v1_7_R4.PlayerInventory;
@@ -29,6 +28,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.ipvp.util.Config;
 
 import javax.annotation.Nullable;
 import java.util.Collection;

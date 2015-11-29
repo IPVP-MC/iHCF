@@ -14,8 +14,6 @@ import com.doctordark.hcf.faction.type.ClaimableFaction;
 import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
 import com.doctordark.hcf.faction.type.WarzoneFaction;
-import com.doctordark.util.BukkitUtils;
-import com.doctordark.util.cuboid.Cuboid;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
@@ -71,6 +69,8 @@ import org.bukkit.material.Cauldron;
 import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
+import org.ipvp.util.BukkitUtils;
+import org.ipvp.util.cuboid.Cuboid;
 
 import javax.annotation.Nullable;
 

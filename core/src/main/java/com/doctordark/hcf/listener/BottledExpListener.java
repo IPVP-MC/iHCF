@@ -1,7 +1,5 @@
 package com.doctordark.hcf.listener;
 
-import com.doctordark.util.ExperienceManager;
-import com.doctordark.util.JavaUtils;
 import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -21,6 +19,8 @@ import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.ipvp.util.ExperienceManager;
+import org.ipvp.util.JavaUtils;
 
 import java.util.List;
 

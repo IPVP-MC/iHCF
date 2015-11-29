@@ -4,7 +4,6 @@ import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.claim.ClaimSelection;
 import com.doctordark.hcf.faction.type.ClaimableFaction;
 import com.doctordark.hcf.faction.type.Faction;
-import com.doctordark.util.command.CommandArgument;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -12,6 +11,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.ipvp.util.command.CommandArgument;
 
 import java.util.ArrayList;
 import java.util.Collections;

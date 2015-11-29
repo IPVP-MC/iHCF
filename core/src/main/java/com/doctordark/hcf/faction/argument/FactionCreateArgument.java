@@ -4,12 +4,12 @@ import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
-import com.doctordark.util.JavaUtils;
-import com.doctordark.util.command.CommandArgument;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.ipvp.util.JavaUtils;
+import org.ipvp.util.command.CommandArgument;
 
 /**
  * Faction argument used to create a new {@link Faction}.

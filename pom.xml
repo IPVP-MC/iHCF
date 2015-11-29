@@ -34,12 +34,6 @@
 
         <!-- Locally for now -->
         <dependency>
-            <groupId>com.doctordark.base</groupId>
-            <artifactId>ibase</artifactId>
-            <version>3.2-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>org.github.paperspigot</groupId>
             <artifactId>paperspigot-api</artifactId>
             <version>1.7.10-R0.1-SNAPSHOT</version>

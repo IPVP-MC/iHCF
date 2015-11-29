@@ -2,9 +2,6 @@ package com.doctordark.hcf.command;
 
 import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.HCF;
-import com.doctordark.util.InventoryUtils;
-import com.doctordark.util.ItemBuilder;
-import com.doctordark.util.chat.Lang;
 import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -26,6 +23,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionType;
+import org.ipvp.util.InventoryUtils;
+import org.ipvp.util.ItemBuilder;
+import org.ipvp.util.chat.Lang;
 
 import java.util.ArrayList;
 import java.util.Collections;

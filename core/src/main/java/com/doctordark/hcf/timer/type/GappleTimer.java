@@ -2,8 +2,6 @@ package com.doctordark.hcf.timer.type;
 
 import com.doctordark.hcf.DurationFormatter;
 import com.doctordark.hcf.timer.PlayerTimer;
-import com.doctordark.util.imagemessage.ImageChar;
-import com.doctordark.util.imagemessage.ImageMessage;
 import com.google.common.base.Predicate;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.ChatColor;
@@ -15,6 +13,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.ipvp.util.imagemessage.ImageChar;
+import org.ipvp.util.imagemessage.ImageMessage;
 
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;

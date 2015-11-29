@@ -6,14 +6,14 @@ import com.doctordark.hcf.faction.struct.Relation;
 import com.doctordark.hcf.faction.struct.Role;
 import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
-import com.doctordark.util.chat.ClickAction;
-import com.doctordark.util.chat.Text;
-import com.doctordark.util.command.CommandArgument;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.ipvp.util.chat.ClickAction;
+import org.ipvp.util.chat.Text;
+import org.ipvp.util.command.CommandArgument;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -6,7 +6,6 @@ import com.doctordark.hcf.faction.event.FactionRemoveEvent;
 import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
 import com.doctordark.hcf.user.FactionUser;
-import com.doctordark.util.command.CommandArgument;
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
@@ -17,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.ipvp.util.command.CommandArgument;
 
 import java.util.ArrayList;
 import java.util.Collection;

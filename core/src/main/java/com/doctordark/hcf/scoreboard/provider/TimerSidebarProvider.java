@@ -62,9 +62,11 @@ public class TimerSidebarProvider implements SidebarProvider {
         if (eotwRunnable != null) {
             long remaining = eotwRunnable.getMillisUntilStarting();
             if (remaining > 0L) {
-                lines.add(new SidebarEntry(ChatColor.RED.toString() + ChatColor.BOLD, "EOTW" + ChatColor.RED + " starts", " in " + ChatColor.BOLD + DurationFormatter.getRemaining(remaining, true)));
+                lines.add(new SidebarEntry(ChatColor.RED.toString() + ChatColor.BOLD, "EOTW" + ChatColor.RED + " starts", " in " + ChatColor.BOLD +
+                        DurationFormatter.getRemaining(remaining, true)));
             } else if ((remaining = eotwRunnable.getMillisUntilCappable()) > 0L) {
-                lines.add(new SidebarEntry(ChatColor.RED.toString() + ChatColor.BOLD, "EOTW" + ChatColor.RED + " cappable", " in " + ChatColor.BOLD + DurationFormatter.getRemaining(remaining, true)));
+                lines.add(new SidebarEntry(ChatColor.RED.toString() + ChatColor.BOLD, "EOTW" + ChatColor.RED + " cappable", " in " + ChatColor.BOLD +
+                        DurationFormatter.getRemaining(remaining, true)));
             }
         }
 

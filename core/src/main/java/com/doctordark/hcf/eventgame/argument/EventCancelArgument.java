@@ -3,11 +3,11 @@ package com.doctordark.hcf.eventgame.argument;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.eventgame.EventTimer;
 import com.doctordark.hcf.faction.type.Faction;
-import com.doctordark.util.command.CommandArgument;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.ipvp.util.command.CommandArgument;
 
 /**
  * An {@link CommandArgument} used for cancelling the current running event.

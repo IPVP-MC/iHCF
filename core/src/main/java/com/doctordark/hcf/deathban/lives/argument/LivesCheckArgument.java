@@ -1,13 +1,13 @@
 package com.doctordark.hcf.deathban.lives.argument;
 
 import com.doctordark.hcf.HCF;
-import com.doctordark.util.command.CommandArgument;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.ipvp.util.command.CommandArgument;
 
 import java.util.Collections;
 import java.util.List;

@@ -6,7 +6,6 @@ import com.doctordark.hcf.deathban.Deathban;
 import com.doctordark.hcf.faction.struct.Relation;
 import com.doctordark.hcf.faction.type.PlayerFaction;
 import com.doctordark.hcf.user.FactionUser;
-import com.doctordark.util.command.CommandArgument;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import org.bukkit.Bukkit;
@@ -16,6 +15,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageRecipient;
+import org.ipvp.util.command.CommandArgument;
 
 import java.util.ArrayList;
 import java.util.Collection;

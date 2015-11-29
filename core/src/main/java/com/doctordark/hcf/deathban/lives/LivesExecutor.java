@@ -9,7 +9,7 @@ import com.doctordark.hcf.deathban.lives.argument.LivesReviveArgument;
 import com.doctordark.hcf.deathban.lives.argument.LivesSetArgument;
 import com.doctordark.hcf.deathban.lives.argument.LivesSetDeathbanTimeArgument;
 import com.doctordark.hcf.deathban.lives.argument.LivesTopArgument;
-import com.doctordark.util.command.ArgumentExecutor;
+import org.ipvp.util.command.ArgumentExecutor;
 
 /**
  * Handles the execution and tab completion of the lives command.

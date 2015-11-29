@@ -9,7 +9,7 @@ import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.User;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.MapMaker;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;

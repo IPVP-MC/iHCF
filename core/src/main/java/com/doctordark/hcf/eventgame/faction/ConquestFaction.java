@@ -3,7 +3,6 @@ package com.doctordark.hcf.eventgame.faction;
 import com.doctordark.hcf.eventgame.CaptureZone;
 import com.doctordark.hcf.eventgame.EventType;
 import com.doctordark.hcf.faction.claim.Claim;
-import com.doctordark.util.BukkitUtils;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -11,6 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.ipvp.util.BukkitUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
