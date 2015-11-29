@@ -1,5 +1,6 @@
 package com.doctordark.hcf.visualise;
 
+import com.doctordark.hcf.VisualiseUtil;
 import com.doctordark.util.cuboid.Cuboid;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
@@ -9,14 +10,13 @@ import com.google.common.collect.Table;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_7_R4.CraftChunk;
-import org.bukkit.craftbukkit.v1_7_R4.util.CraftMagicNumbers;
 import org.bukkit.entity.Player;
+import org.bukkit.material.MaterialData;
 import org.spigotmc.AsyncCatcher;
 
 import javax.annotation.Nullable;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -108,16 +108,6 @@ public class VisualiseHandler {
         return this.generate(player, locations, visualType, canOverwrite);
     }
 
-    public LinkedHashMap<Location, VisualBlockData> generateAsync(Player player, Cuboid cuboid, VisualType visualType, boolean canOverwrite) {
-        Collection<Location> locations = new HashSet<>(cuboid.getSizeX() * cuboid.getSizeY() * cuboid.getSizeZ());
-        Iterator<Location> iterator = cuboid.locationIterator();
-        while (iterator.hasNext()) {
-            locations.add(iterator.next());
-        }
-
-        return this.generateAsync(player, locations, visualType, canOverwrite);
-    }
-
     public LinkedHashMap<Location, VisualBlockData> generate(Player player, Iterable<Location> locations, VisualType visualType, boolean canOverwrite) {
         synchronized (storedVisualises) {
             LinkedHashMap<Location, VisualBlockData> results = new LinkedHashMap<>();
@@ -125,6 +115,7 @@ public class VisualiseHandler {
             ArrayList<VisualBlockData> filled = visualType.blockFiller().bulkGenerate(player, locations);
             if (filled != null) {
                 int count = 0;
+                Map<Location, MaterialData> updatedBlocks = new HashMap<>();
                 for (Location location : locations) {
                     if (!canOverwrite && storedVisualises.contains(player.getUniqueId(), location)) {
                         continue;
@@ -137,42 +128,14 @@ public class VisualiseHandler {
 
                     VisualBlockData visualBlockData = filled.get(count++);
                     results.put(location, visualBlockData);
-                    player.sendBlockChange(location, visualBlockData.getBlockType(), visualBlockData.getData());
+                    updatedBlocks.put(location, visualBlockData);
                     storedVisualises.put(player.getUniqueId(), location, new VisualBlock(visualType, visualBlockData, location));
                 }
-            }
 
-            return results;
-        }
-    }
-
-    public LinkedHashMap<Location, VisualBlockData> generateAsync(Player player, Iterable<Location> locations, VisualType visualType, boolean canOverwrite) {
-        synchronized (storedVisualises) {
-            LinkedHashMap<Location, VisualBlockData> results = new LinkedHashMap<>();
-
-            ArrayList<VisualBlockData> filled = visualType.blockFiller().bulkGenerate(player, locations);
-            if (filled != null) {
-                for (Location location : locations) {
-                    if (!canOverwrite && storedVisualises.contains(player.getUniqueId(), location)) {
-                        continue;
-                    }
-
-                    location.getWorld().getChunkAtAsync(location, new World.ChunkLoadCallback() {
-                        int count = 0;
-
-                        @Override
-                        public void onLoad(Chunk chunk) {
-                            Material previousType = CraftMagicNumbers.getMaterial(((CraftChunk) chunk).getHandle().getType(location.getBlockX(), location.getBlockY(), location.getBlockZ()));
-                            if (previousType.isSolid() || previousType != Material.AIR) {
-                                return;
-                            }
-
-                            VisualBlockData visualBlockData = filled.get(count++);
-                            results.put(location, visualBlockData);
-                            player.sendBlockChange(location, visualBlockData.getBlockType(), visualBlockData.getData());
-                            storedVisualises.put(player.getUniqueId(), location, new VisualBlock(visualType, visualBlockData, location));
-                        }
-                    });
+                try {
+                    VisualiseUtil.handleBlockChanges(player, updatedBlocks);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                 }
             }
 
@@ -233,14 +196,6 @@ public class VisualiseHandler {
                     keys.remove(location);
                 }
             }
-
-            /*for (Location location : keys) {
-                Table.Cell<UUID, Location, VisualBlock> cell = iterator.next();
-                Location location = cell.getColumnKey();
-                if (location.getWorld().equals(chunk.getWorld()) && chunk.getX() == (((int) location.getX()) >> 4) && chunk.getZ() == (((int) location.getZ()) >> 4)) {
-                    iterator.remove();
-                }
-            }*/
         }
     }
 

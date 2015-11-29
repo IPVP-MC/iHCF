@@ -42,58 +42,15 @@ public class WallBorderListener implements Listener {
     private static final int WALL_BORDER_HEIGHT_ABOVE_DIFF = 4;
     private static final int WALL_BORDER_HORIZONTAL_DISTANCE = 7;
 
-    private final boolean useTaskInstead; //TODO: configurable
     private final Map<UUID, BukkitTask> wallBorderTask = new HashMap<>();
     private final HCF plugin;
 
     public WallBorderListener(HCF plugin) {
         this.plugin = plugin;
-        this.useTaskInstead = plugin.getRandom().nextBoolean() ? false : false; // TODO: configurable, temporary to suppress IDE warnings about always true;
-    }
-
-    private static final class WarpTimerRunnable extends BukkitRunnable {
-
-        private WallBorderListener listener;
-        private Player player;
-
-        private double lastX = Double.MAX_VALUE;
-        private double lastY = Double.MAX_VALUE;
-        private double lastZ = Double.MAX_VALUE;
-
-        public WarpTimerRunnable(WallBorderListener listener, Player player) {
-            this.listener = listener;
-            this.player = player;
-        }
-
-        @Override
-        public void run() {
-            Location location = player.getLocation();
-
-            // Check if the player moved or is AFK.
-            double x = location.getBlockX();
-            double y = location.getBlockY();
-            double z = location.getBlockZ();
-            if (this.lastX == x && this.lastY == y && this.lastZ == z) {
-                return;
-            }
-
-            this.lastX = x;
-            this.lastY = y;
-            this.lastZ = z;
-            this.listener.handlePositionChanged(player, player.getWorld(), (int) x, (int) y, (int) z);
-        }
-
-        @Override
-        public synchronized void cancel() throws IllegalStateException {
-            super.cancel();
-            this.listener = null;
-            this.player = null;
-        }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
-        if (!this.useTaskInstead) return;
         BukkitTask task = wallBorderTask.remove(event.getPlayer().getUniqueId());
         if (task != null) {
             task.cancel();
@@ -103,15 +60,11 @@ public class WallBorderListener implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        if (this.useTaskInstead) {
-            wallBorderTask.put(player.getUniqueId(), new WarpTimerRunnable(this, player).runTaskTimerAsynchronously(plugin, 3L, 3L));
-            return;
-        }
 
         // For some reason, sending the packet on the initial join doesn't display the visual
         // blocks due to an error on Mojangs end, well at least with 1.7.10 so we have to send
         // it a little later.
-        Location now = player.getLocation();
+        Location now = player.getLocation().clone();
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -125,7 +78,6 @@ public class WallBorderListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerMove(PlayerMoveEvent event) {
-        if (this.useTaskInstead) return;
         Location to = event.getTo();
         int toX = to.getBlockX();
         int toY = to.getBlockY();
@@ -216,12 +168,7 @@ public class WallBorderListener implements Listener {
 
                         Location second = location.clone();
                         second.setY(maxHeight);
-
-                        if (useTaskInstead) {
-                            generated += plugin.getVisualiseHandler().generateAsync(player, new Cuboid(first, second), visualType, false).size();
-                        } else {
-                            generated += plugin.getVisualiseHandler().generate(player, new Cuboid(first, second), visualType, false).size();
-                        }
+                        generated += plugin.getVisualiseHandler().generate(player, new Cuboid(first, second), visualType, false).size();
                     }
                 }
 
