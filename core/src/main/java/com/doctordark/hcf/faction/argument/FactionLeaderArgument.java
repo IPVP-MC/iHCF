@@ -1,17 +1,16 @@
 package com.doctordark.hcf.faction.argument;
 
-import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.FactionMember;
 import com.doctordark.hcf.faction.struct.Role;
 import com.doctordark.hcf.faction.type.PlayerFaction;
+import com.doctordark.util.command.CommandArgument;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.ipvp.util.command.CommandArgument;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -77,8 +76,10 @@ public class FactionLeaderArgument extends CommandArgument {
 
         targetMember.setRole(Role.LEADER);
         selfMember.setRole(Role.CAPTAIN);
-        playerFaction.broadcast(ConfigurationService.TEAMMATE_COLOUR + selfMember.getRole().getAstrix() + selfMember.getName() + ChatColor.YELLOW +
-                " has transferred the faction to " + ConfigurationService.TEAMMATE_COLOUR + targetMember.getRole().getAstrix() + targetMember.getName() + ChatColor.YELLOW + '.');
+
+        ChatColor colour = plugin.getConfiguration().getRelationColourTeammate();
+        playerFaction.broadcast(colour + selfMember.getRole().getAstrix() + selfMember.getName() + ChatColor.YELLOW +
+                " has transferred the faction to " + colour + targetMember.getRole().getAstrix() + targetMember.getName() + ChatColor.YELLOW + '.');
 
         return true;
     }

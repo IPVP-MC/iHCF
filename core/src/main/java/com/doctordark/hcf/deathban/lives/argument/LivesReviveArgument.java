@@ -1,11 +1,11 @@
 package com.doctordark.hcf.deathban.lives.argument;
 
-import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.deathban.Deathban;
 import com.doctordark.hcf.faction.struct.Relation;
 import com.doctordark.hcf.faction.type.PlayerFaction;
 import com.doctordark.hcf.user.FactionUser;
+import com.doctordark.util.command.CommandArgument;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import org.bukkit.Bukkit;
@@ -15,7 +15,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageRecipient;
-import org.ipvp.util.command.CommandArgument;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -71,7 +70,7 @@ public class LivesReviveArgument extends CommandArgument {
         Relation relation = Relation.ENEMY;
         if (sender instanceof Player) {
             if (!sender.hasPermission(REVIVE_BYPASS_PERMISSION)) {
-                if (ConfigurationService.KIT_MAP) {
+                if (plugin.getConfiguration().isKitMap()) {
                     sender.sendMessage(ChatColor.RED + "You cannot revive players during a kit map.");
                     return true;
                 }
@@ -96,7 +95,7 @@ public class LivesReviveArgument extends CommandArgument {
             relation = playerFaction == null ? Relation.ENEMY : playerFaction.getFactionRelation(plugin.getFactionManager().getPlayerFaction(targetUUID));
             sender.sendMessage(ChatColor.YELLOW + "You have used a life to revive " + relation.toChatColour() + target.getName() + ChatColor.YELLOW + '.');
         } else {
-            sender.sendMessage(ChatColor.YELLOW + "You have revived " + ConfigurationService.ENEMY_COLOUR + target.getName() + ChatColor.YELLOW + '.');
+            sender.sendMessage(ChatColor.YELLOW + "You have revived " + plugin.getConfiguration().getRelationColourTeammate() + target.getName() + ChatColor.YELLOW + '.');
         }
 
         if (sender instanceof PluginMessageRecipient) {

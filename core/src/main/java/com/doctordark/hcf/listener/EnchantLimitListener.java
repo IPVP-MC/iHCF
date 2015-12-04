@@ -1,6 +1,6 @@
 package com.doctordark.hcf.listener;
 
-import com.doctordark.hcf.ConfigurationService;
+import com.doctordark.hcf.HCF;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.server.v1_7_R4.EnumArmorMaterial;
 import net.minecraft.server.v1_7_R4.EnumToolMaterial;
@@ -45,14 +45,10 @@ public class EnchantLimitListener implements Listener {
             Material.DIAMOND, EnumArmorMaterial.DIAMOND
     ));
 
-    /**
-     * Gets the new fixed level for an enchantment.
-     *
-     * @param enchant the enchant to get for
-     * @return the capped level of enchantment
-     */
-    public int getMaxLevel(Enchantment enchant) {
-        return ConfigurationService.ENCHANTMENT_LIMITS.getOrDefault(enchant, enchant.getMaxLevel());
+    private final HCF plugin;
+
+    public EnchantLimitListener(HCF plugin) {
+        this.plugin = plugin;
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
@@ -62,7 +58,7 @@ public class EnchantLimitListener implements Listener {
         while (iterator.hasNext()) {
             Map.Entry<Enchantment, Integer> entry = iterator.next();
             Enchantment enchantment = entry.getKey();
-            int maxLevel = getMaxLevel(enchantment);
+            int maxLevel = plugin.getConfiguration().getEnchantmentLimit(enchantment);
             if (entry.getValue() > maxLevel) {
                 if (maxLevel > 0) {
                     adding.put(enchantment, maxLevel);
@@ -143,7 +139,7 @@ public class EnchantLimitListener implements Listener {
                 entries = enchantmentStorageMeta.getStoredEnchants().entrySet();
                 for (Map.Entry<Enchantment, Integer> entry : entries) {
                     Enchantment enchantment = entry.getKey();
-                    int maxLevel = getMaxLevel(enchantment);
+                    int maxLevel = plugin.getConfiguration().getEnchantmentLimit(enchantment);
                     if (entry.getValue() > maxLevel) {
                         updated = true;
                         if (maxLevel > 0) {
@@ -160,7 +156,7 @@ public class EnchantLimitListener implements Listener {
                 entries = stack.getEnchantments().entrySet();
                 for (Map.Entry<Enchantment, Integer> entry : entries) {
                     Enchantment enchantment = entry.getKey();
-                    int maxLevel = getMaxLevel(enchantment);
+                    int maxLevel = plugin.getConfiguration().getEnchantmentLimit(enchantment);
                     if (entry.getValue() > maxLevel) {
                         updated = true;
                         stack.removeEnchantment(enchantment);

@@ -1,17 +1,16 @@
 package com.doctordark.hcf.faction.argument;
 
-import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.FactionMember;
 import com.doctordark.hcf.faction.claim.Claim;
 import com.doctordark.hcf.faction.struct.Role;
 import com.doctordark.hcf.faction.type.PlayerFaction;
+import com.doctordark.util.command.CommandArgument;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.ipvp.util.command.CommandArgument;
 
 public class FactionSetHomeArgument extends CommandArgument {
 
@@ -65,9 +64,9 @@ public class FactionSetHomeArgument extends CommandArgument {
         }
 
         playerFaction.setHome(location);
-        playerFaction.broadcast(ConfigurationService.TEAMMATE_COLOUR + factionMember.getRole().getAstrix() + sender.getName() + ChatColor.YELLOW + " has updated the faction home.");
+        playerFaction.broadcast(plugin.getConfiguration().getRelationColourTeammate() + factionMember.getRole().getAstrix() +
+                sender.getName() + ChatColor.YELLOW + " has updated the faction home.");
+
         return true;
     }
-
-
 }

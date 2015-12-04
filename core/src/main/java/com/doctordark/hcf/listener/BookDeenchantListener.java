@@ -1,5 +1,6 @@
 package com.doctordark.hcf.listener;
 
+import com.doctordark.hcf.HCF;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -21,8 +22,18 @@ public class BookDeenchantListener implements Listener {
 
     private static final ItemStack EMPTY_BOOK = new ItemStack(Material.BOOK, 1);
 
+    private final HCF plugin;
+
+    public BookDeenchantListener(HCF plugin) {
+        this.plugin = plugin;
+    }
+
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onPlayerInteract(PlayerInteractEvent event) {
+        if (!plugin.getConfiguration().isBookDeenchanting()) {
+            return;
+        }
+
         if (event.getAction() == Action.LEFT_CLICK_BLOCK && event.hasItem()) {
             // The player didn't click an enchantment table, Creative players will instantly destroy.
             Player player = event.getPlayer();

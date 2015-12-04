@@ -1,6 +1,8 @@
 package com.doctordark.hcf.eventgame.crate;
 
 import com.doctordark.hcf.eventgame.EventType;
+import com.doctordark.util.Config;
+import com.doctordark.util.InventorySerialisation;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Lists;
 import lombok.Getter;
@@ -10,8 +12,6 @@ import org.bukkit.configuration.MemorySection;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.ipvp.util.Config;
-import org.ipvp.util.InventorySerialisation;
 
 import java.io.IOException;
 import java.util.ArrayList;

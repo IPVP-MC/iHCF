@@ -1,12 +1,12 @@
 package com.doctordark.hcf.faction.argument.subclaim;
 
 import com.doctordark.hcf.faction.claim.ClaimHandler;
+import com.doctordark.util.command.CommandArgument;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
-import org.ipvp.util.command.CommandArgument;
 
 import java.util.Collections;
 import java.util.List;

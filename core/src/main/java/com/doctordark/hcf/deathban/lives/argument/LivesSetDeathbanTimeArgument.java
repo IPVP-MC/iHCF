@@ -1,13 +1,13 @@
 package com.doctordark.hcf.deathban.lives.argument;
 
-import com.doctordark.hcf.ConfigurationService;
+import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.deathban.Deathban;
+import com.doctordark.util.JavaUtils;
+import com.doctordark.util.command.CommandArgument;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.ipvp.util.JavaUtils;
-import org.ipvp.util.command.CommandArgument;
 
 import java.util.Collections;
 import java.util.List;
@@ -17,9 +17,12 @@ import java.util.List;
  */
 public class LivesSetDeathbanTimeArgument extends CommandArgument {
 
-    public LivesSetDeathbanTimeArgument() {
+    private final HCF plugin;
+
+    public LivesSetDeathbanTimeArgument(HCF plugin) {
         super("setdeathbantime", "Sets the base deathban time");
         this.permission = "hcf.command.lives.argument." + getName();
+        this.plugin = plugin;
     }
 
     @Override
@@ -34,14 +37,14 @@ public class LivesSetDeathbanTimeArgument extends CommandArgument {
             return true;
         }
 
-        long duration = JavaUtils.parse(args[1]);
+        Integer duration = JavaUtils.tryParseInt(args[1]);
 
-        if (duration == -1L) {
+        if (duration == null) {
             sender.sendMessage(ChatColor.RED + "Invalid duration, use the correct format: 10m 1s");
             return true;
         }
 
-        ConfigurationService.DEFAULT_DEATHBAN_DURATION = duration;
+        plugin.getConfiguration().setDeathbanBaseDurationMinutes(duration);
         Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Base death-ban time set to " +
                 DurationFormatUtils.formatDurationWords(duration, true, true) + " (not including multipliers, etc).");
 

@@ -1,5 +1,6 @@
 package com.doctordark.hcf.faction;
 
+import com.doctordark.base.GuavaCompat;
 import com.doctordark.hcf.faction.struct.ChatChannel;
 import com.doctordark.hcf.faction.struct.Role;
 import com.doctordark.hcf.faction.type.Faction;
@@ -8,7 +9,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
-import org.ipvp.base.GuavaCompat;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

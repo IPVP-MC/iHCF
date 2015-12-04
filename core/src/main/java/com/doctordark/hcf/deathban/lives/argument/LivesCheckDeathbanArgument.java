@@ -4,6 +4,7 @@ import com.doctordark.hcf.DateTimeFormats;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.deathban.Deathban;
 import com.doctordark.hcf.user.FactionUser;
+import com.doctordark.util.command.CommandArgument;
 import com.google.common.base.Strings;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
@@ -13,7 +14,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.ipvp.util.command.CommandArgument;
 
 import java.util.ArrayList;
 import java.util.Collections;

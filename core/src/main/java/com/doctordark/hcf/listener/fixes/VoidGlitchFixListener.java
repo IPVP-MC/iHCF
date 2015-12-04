@@ -1,5 +1,6 @@
 package com.doctordark.hcf.listener.fixes;
 
+import com.doctordark.util.BukkitUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -10,7 +11,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.ipvp.util.BukkitUtils;
 
 /**
  * Listener that prevents players being killed by the void in the Overworld.

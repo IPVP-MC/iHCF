@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package compat.com.google.common;
+package compat.com.google.common.collect;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.base.Function;

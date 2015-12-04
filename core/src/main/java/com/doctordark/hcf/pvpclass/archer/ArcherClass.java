@@ -1,6 +1,5 @@
 package com.doctordark.hcf.pvpclass.archer;
 
-import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.pvpclass.PvpClass;
 import com.doctordark.hcf.pvpclass.event.PvpClassUnequipEvent;
@@ -123,6 +122,7 @@ public class ArcherClass extends PvpClass implements Listener {
                         givenMarks.put(attackedUUID, archerMark = new ArcherMark());
                     }
 
+                    ChatColor enemyColour = plugin.getConfiguration().getRelationColourEnemy();
                     int newLevel = archerMark.incrementMark();
                     if (newLevel >= MARK_EXECUTION_LEVEL) {
                         event.setDamage(event.getDamage() + 5.0);
@@ -137,14 +137,14 @@ public class ArcherClass extends PvpClass implements Listener {
                         world.playEffect(location, Effect.EXPLOSION_HUGE, 4);
                         world.playSound(location, Sound.EXPLODE, 1.0F, 1.0F);
 
-                        attacked.sendMessage(ChatColor.GOLD + "Wipeout! " + ConfigurationService.ENEMY_COLOUR + shooter.getName() + ChatColor.GOLD + " hit you with a level " +
+                        attacked.sendMessage(ChatColor.GOLD + "Wipeout! " + enemyColour + shooter.getName() + ChatColor.GOLD + " hit you with a level " +
                                 ChatColor.WHITE + ChatColor.GOLD + newLevel + " mark.");
-                        shooter.sendMessage(ChatColor.YELLOW + "Wipeout! Hit " + ConfigurationService.ENEMY_COLOUR + attacked.getName() + ChatColor.YELLOW + " with a level " +
+                        shooter.sendMessage(ChatColor.YELLOW + "Wipeout! Hit " + enemyColour + attacked.getName() + ChatColor.YELLOW + " with a level " +
                                 ChatColor.WHITE + newLevel + ChatColor.YELLOW + " mark.");
                     } else {
                         event.setDamage(event.getDamage() + 3.0);
                         shooter.sendMessage(ChatColor.YELLOW + "Now have a level " + ChatColor.WHITE + newLevel + ChatColor.YELLOW + " mark on " +
-                                ConfigurationService.ENEMY_COLOUR + attacked.getName() + ChatColor.YELLOW + '.');
+                                enemyColour + attacked.getName() + ChatColor.YELLOW + '.');
 
                         final ArcherMark finalMark = archerMark;
                         long ticks = MARK_TIMEOUT_SECONDS * 20L;
@@ -153,14 +153,14 @@ public class ArcherClass extends PvpClass implements Listener {
                             public void run() {
                                 int newLevel = finalMark.decrementMark();
                                 if (newLevel == 0) {
-                                    attacked.sendMessage(ConfigurationService.ENEMY_COLOUR + shooter.getName() + ChatColor.YELLOW + "'s mark on you has expired.");
-                                    shooter.sendMessage(ChatColor.GOLD + "No longer have a mark on " + ConfigurationService.ENEMY_COLOUR + attacked.getName() + ChatColor.GOLD + '.');
+                                    attacked.sendMessage(enemyColour + shooter.getName() + ChatColor.YELLOW + "'s mark on you has expired.");
+                                    shooter.sendMessage(ChatColor.GOLD + "No longer have a mark on " + enemyColour + attacked.getName() + ChatColor.GOLD + '.');
                                     getSentMarks(shooter).remove(attacked.getUniqueId());
                                     cancel();
                                 } else {
-                                    attacked.sendMessage(ConfigurationService.ENEMY_COLOUR + shooter.getName() + ChatColor.GOLD + "'s mark on you has expired to level " +
+                                    attacked.sendMessage(enemyColour + shooter.getName() + ChatColor.GOLD + "'s mark on you has expired to level " +
                                             ChatColor.WHITE + ChatColor.GOLD + newLevel + '.');
-                                    shooter.sendMessage(ChatColor.YELLOW + "Mark level on " + ConfigurationService.ENEMY_COLOUR + attacked.getName() + ChatColor.YELLOW + " is now " +
+                                    shooter.sendMessage(ChatColor.YELLOW + "Mark level on " + enemyColour + attacked.getName() + ChatColor.YELLOW + " is now " +
                                             ChatColor.WHITE + ChatColor.YELLOW + newLevel + '.');
                                 }
                             }

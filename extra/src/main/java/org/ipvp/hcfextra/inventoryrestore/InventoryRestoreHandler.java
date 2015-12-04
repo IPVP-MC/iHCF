@@ -1,4 +1,4 @@
-package com.doctordark.hcfextra.inventoryrestore;
+package org.ipvp.hcfextra.inventoryrestore;
 
 import lombok.Getter;
 import org.bukkit.Bukkit;

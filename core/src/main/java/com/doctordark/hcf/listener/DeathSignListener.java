@@ -1,10 +1,8 @@
 package com.doctordark.hcf.listener;
 
-import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.DateTimeFormats;
 import com.doctordark.hcf.HCF;
 import com.google.common.collect.Lists;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -15,7 +13,6 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -32,11 +29,14 @@ import java.util.List;
  */
 public class DeathSignListener implements Listener {
 
-    private final static String DEATH_SIGN_ITEM_NAME = ChatColor.GOLD + "Death Sign";
+    private static final String DEATH_SIGN_ITEM_NAME = ChatColor.GOLD + "Death Sign";
+
+    private final HCF plugin;
 
     public DeathSignListener(HCF plugin) {
-        if (!plugin.getConfig().getBoolean("death-signs", true)) {
-            Bukkit.getScheduler().runTaskLater(plugin, () -> HandlerList.unregisterAll(this), 5L);
+        this.plugin = plugin;
+        if (plugin.getConfiguration().isDeathSigns()) {
+            plugin.getServer().getPluginManager().registerEvents(this, plugin);
         }
     }
 
@@ -117,7 +117,7 @@ public class DeathSignListener implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
         Player killer = player.getKiller();
-        if (killer != null && !killer.equals(player) & !ConfigurationService.KIT_MAP) {
+        if (killer != null && !killer.equals(player) & !plugin.getConfiguration().isKitMap()) {
             event.getDrops().add(getDeathSign(player.getName(), killer.getName()));
         }
     }

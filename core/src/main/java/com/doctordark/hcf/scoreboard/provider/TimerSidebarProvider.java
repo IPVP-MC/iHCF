@@ -1,6 +1,5 @@
 package com.doctordark.hcf.scoreboard.provider;
 
-import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.DateTimeFormats;
 import com.doctordark.hcf.DurationFormatter;
 import com.doctordark.hcf.HCF;
@@ -48,11 +47,6 @@ public class TimerSidebarProvider implements SidebarProvider {
 
     public TimerSidebarProvider(HCF plugin) {
         this.plugin = plugin;
-    }
-
-    @Override
-    public String getTitle() {
-        return ConfigurationService.SCOREBOARD_TITLE;
     }
 
     @Override

@@ -1,14 +1,15 @@
 package com.doctordark.hcf.faction.type;
 
 import com.doctordark.hcf.ConfigurationService;
+import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.claim.Claim;
+import com.doctordark.util.BukkitUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.ipvp.util.BukkitUtils;
 
 import java.util.Map;
 
@@ -124,7 +125,7 @@ public class RoadFaction extends ClaimableFaction implements ConfigurationSerial
 
     @Override
     public String getDisplayName(CommandSender sender) {
-        return ConfigurationService.ROAD_COLOUR + getName();
+        return HCF.getPlugin().getConfiguration().getRelationColourRoad() + getName();
     }
 
     @Override

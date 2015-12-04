@@ -1,6 +1,5 @@
 package com.doctordark.hcf.pvpclass.type;
 
-import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.pvpclass.PvpClass;
 import org.bukkit.ChatColor;
@@ -41,11 +40,13 @@ public class RogueClass extends PvpClass implements Listener {
             if (plugin.getPvpClassManager().getEquippedClass(attacker) == this) {
                 ItemStack stack = attacker.getItemInHand();
                 if (stack != null && stack.getType() == Material.GOLD_SWORD && stack.getEnchantments().isEmpty()) {
+                    ChatColor relationColourEnemy = plugin.getConfiguration().getRelationColourEnemy();
+
                     Player player = (Player) entity;
-                    player.sendMessage(ConfigurationService.ENEMY_COLOUR + attacker.getName() + ChatColor.YELLOW + " has backstabbed you.");
+                    player.sendMessage(relationColourEnemy + attacker.getName() + ChatColor.YELLOW + " has backstabbed you.");
                     player.playSound(player.getLocation(), Sound.ITEM_BREAK, 1.0F, 1.0F);
 
-                    attacker.sendMessage(ChatColor.YELLOW + "You have backstabbed " + ConfigurationService.ENEMY_COLOUR + player.getName() + ChatColor.YELLOW + '.');
+                    attacker.sendMessage(ChatColor.YELLOW + "You have backstabbed " + relationColourEnemy + player.getName() + ChatColor.YELLOW + '.');
                     attacker.setItemInHand(new ItemStack(Material.AIR, 1));
                     attacker.playSound(player.getLocation(), Sound.ITEM_BREAK, 1.0F, 1.0F);
 

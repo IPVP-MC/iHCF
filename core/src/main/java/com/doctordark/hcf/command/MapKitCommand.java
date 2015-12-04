@@ -1,7 +1,9 @@
 package com.doctordark.hcf.command;
 
-import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.HCF;
+import com.doctordark.util.InventoryUtils;
+import com.doctordark.util.ItemBuilder;
+import com.doctordark.util.chat.Lang;
 import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -23,9 +25,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionType;
-import org.ipvp.util.InventoryUtils;
-import org.ipvp.util.ItemBuilder;
-import org.ipvp.util.chat.Lang;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,8 +37,10 @@ public class MapKitCommand implements CommandExecutor, TabCompleter, Listener {
 
     private Inventory mapkitInventory;
 
+    private final HCF plugin;
+
     public MapKitCommand(HCF plugin) {
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        (this.plugin = plugin).getServer().getPluginManager().registerEvents(this, plugin);
 
         this.reloadMapKitInventory();
     }
@@ -48,11 +49,7 @@ public class MapKitCommand implements CommandExecutor, TabCompleter, Listener {
         List<ItemStack> items = new ArrayList<>();
 
         for (Enchantment enchantment : Enchantment.values()) {
-            Integer maxLevel = ConfigurationService.ENCHANTMENT_LIMITS.get(enchantment);
-            if (maxLevel == null) {
-                maxLevel = enchantment.getMaxLevel();
-            }
-
+            int maxLevel = plugin.getConfiguration().getEnchantmentLimit(enchantment);
             ItemBuilder builder = new ItemBuilder(Material.ENCHANTED_BOOK);
             builder.displayName(ChatColor.YELLOW + Lang.fromEnchantment(enchantment) + ": " + ChatColor.GREEN + (maxLevel == 0 ? "Disabled" : maxLevel));
             builder.lore(SEPARATOR_LINE, ChatColor.WHITE + "  No Extra Data", SEPARATOR_LINE);
@@ -60,22 +57,14 @@ public class MapKitCommand implements CommandExecutor, TabCompleter, Listener {
         }
 
         for (PotionType potionType : PotionType.values()) {
-            if (potionType == PotionType.WATER) {
-                continue;
-            }
-
-            Integer maxLevel = ConfigurationService.POTION_LIMITS.get(potionType);
-            if (maxLevel == null) {
-                maxLevel = potionType.getMaxLevel();
-            }
-
+            int maxLevel = plugin.getConfiguration().getPotionLimit(potionType);
             ItemBuilder builder = new ItemBuilder(new Potion(potionType).toItemStack(1));
             builder.displayName(ChatColor.YELLOW + WordUtils.capitalizeFully(potionType.name().replace('_', ' ')) + ": " + ChatColor.GREEN + (maxLevel == 0 ? "Disabled" : maxLevel));
             builder.lore(SEPARATOR_LINE, ChatColor.WHITE + "  No Extra Data", SEPARATOR_LINE);
             items.add(builder.build());
         }
 
-        this.mapkitInventory = Bukkit.createInventory(null, InventoryUtils.getSafestInventorySize(items.size()), "Map " + ConfigurationService.MAP_NUMBER + " Kit");
+        this.mapkitInventory = Bukkit.createInventory(null, InventoryUtils.getSafestInventorySize(items.size()), "Map " + plugin.getConfiguration().getMapNumber() + " Kit");
         for (ItemStack item : items) {
             this.mapkitInventory.addItem(item);
         }

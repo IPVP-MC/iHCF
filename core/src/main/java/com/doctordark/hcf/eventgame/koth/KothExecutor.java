@@ -5,9 +5,9 @@ import com.doctordark.hcf.eventgame.koth.argument.KothHelpArgument;
 import com.doctordark.hcf.eventgame.koth.argument.KothNextArgument;
 import com.doctordark.hcf.eventgame.koth.argument.KothScheduleArgument;
 import com.doctordark.hcf.eventgame.koth.argument.KothSetCapDelayArgument;
+import com.doctordark.util.command.ArgumentExecutor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.ipvp.util.command.ArgumentExecutor;
 
 /**
  * Command used to handle KingOfTheHills.

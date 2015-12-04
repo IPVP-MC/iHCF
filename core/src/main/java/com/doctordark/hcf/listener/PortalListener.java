@@ -49,6 +49,10 @@ public class PortalListener implements Listener {
             if (toWorld != null && toWorld.getEnvironment() == World.Environment.THE_END) {
                 event.useTravelAgent(false);
                 event.setTo(toWorld.getSpawnLocation().clone().add(0.5, 0, 0.5));
+                if (plugin.getConfiguration().isEndExtinguishFireOnExit()) {
+                    event.getPlayer().setFireTicks(0);
+                }
+
                 return;
             }
 
@@ -85,7 +89,7 @@ public class PortalListener implements Listener {
             Player player = event.getPlayer();
 
             // Prevent entering the end if it's closed.
-            if (false /*TODO:plugin.getEndManager().isOpened()*/) {
+            if (plugin.getConfiguration().isEndOpen()) {
                 message(player, ChatColor.RED + "The End is currently closed.");
                 event.setCancelled(true);
                 return;

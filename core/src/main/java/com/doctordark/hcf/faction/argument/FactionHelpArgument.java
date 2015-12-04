@@ -2,6 +2,9 @@ package com.doctordark.hcf.faction.argument;
 
 import com.doctordark.hcf.faction.FactionExecutor;
 import com.doctordark.hcf.faction.type.Faction;
+import com.doctordark.util.BukkitUtils;
+import com.doctordark.util.JavaUtils;
+import com.doctordark.util.command.CommandArgument;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
@@ -9,9 +12,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.ipvp.util.BukkitUtils;
-import org.ipvp.util.JavaUtils;
-import org.ipvp.util.command.CommandArgument;
 
 /**
  * Faction argument used to show help on how to use {@link Faction}s.

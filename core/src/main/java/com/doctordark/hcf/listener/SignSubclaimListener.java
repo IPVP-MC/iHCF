@@ -1,6 +1,5 @@
 package com.doctordark.hcf.listener;
 
-import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.struct.Role;
 import com.doctordark.hcf.faction.type.Faction;
@@ -133,9 +132,11 @@ public class SignSubclaimListener implements Listener {
 
                     // the lines may contain a name of a user not in the faction.
                     List<String> actualMembers = memberList.stream().filter(member -> playerFaction.getMember(member) != null).collect(Collectors.toList());
-                    playerFaction.broadcast(ConfigurationService.TEAMMATE_COLOUR + player.getName() + ChatColor.YELLOW + " has created a subclaim on block type " +
-                            ChatColor.AQUA + attachedBlock.getName() + ChatColor.YELLOW + " at " + ChatColor.WHITE + '(' + attachedBlock.getX() + ", " + attachedBlock.getZ() + ')' +
-                            ChatColor.YELLOW + " for " + (leaderChest ? "leaders" : actualMembers.isEmpty() ? "captains" : "members " + ChatColor.RED + '[' + StringUtils.join(actualMembers, ", ") + ']'));
+                    playerFaction.broadcast(plugin.getConfiguration().getRelationColourTeammate() + player.getName() +
+                            ChatColor.YELLOW + " has created a subclaim on block type " + ChatColor.AQUA + attachedBlock.getName() +
+                            ChatColor.YELLOW + " at " + ChatColor.WHITE + '(' + attachedBlock.getX() + ", " + attachedBlock.getZ() + ')' + ChatColor.YELLOW +
+                            " for " + (leaderChest ? "leaders" : actualMembers.isEmpty() ? "captains" : "members " + ChatColor.RED + '[' +
+                            StringUtils.join(actualMembers, ", ") + ']'));
                 }
             }
         }
@@ -219,7 +220,7 @@ public class SignSubclaimListener implements Listener {
             return;
         }
 
-        if (plugin.getEotwHandler().isEndOfTheWorld() || ConfigurationService.KIT_MAP) {
+        if (plugin.getEotwHandler().isEndOfTheWorld() || plugin.getConfiguration().isKitMap()) {
             return;
         }
 

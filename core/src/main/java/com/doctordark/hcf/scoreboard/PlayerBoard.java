@@ -1,8 +1,9 @@
 package com.doctordark.hcf.scoreboard;
 
-import com.doctordark.hcf.ConfigurationService;
+import com.doctordark.hcf.Configuration;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.type.PlayerFaction;
+import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -15,7 +16,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class PlayerBoard {
 
+    @Getter
     private boolean sidebarVisible = false;
+
     private SidebarProvider defaultProvider;
     private SidebarProvider temporaryProvider;
     private BukkitRunnable runnable;
@@ -26,7 +29,11 @@ public class PlayerBoard {
     private final Team allies;
 
     private final BufferedObjective bufferedObjective;
+
+    @Getter
     private final Scoreboard scoreboard;
+
+    @Getter
     private final Player player;
 
     private final HCF plugin;
@@ -35,47 +42,37 @@ public class PlayerBoard {
         this.plugin = plugin;
         this.player = player;
 
+        Configuration configuration = plugin.getConfiguration();
+
         this.scoreboard = plugin.getServer().getScoreboardManager().getNewScoreboard();
-        this.bufferedObjective = new BufferedObjective(scoreboard);
+        this.bufferedObjective = new BufferedObjective(scoreboard, configuration.getScoreboardSidebarTitle());
 
         this.members = scoreboard.registerNewTeam("members");
-        this.members.setPrefix(ConfigurationService.TEAMMATE_COLOUR.toString());
+        this.members.setPrefix(configuration.getRelationColourTeammate().toString());
         this.members.setCanSeeFriendlyInvisibles(true);
 
         this.neutrals = scoreboard.registerNewTeam("neutrals");
-        this.neutrals.setPrefix(ConfigurationService.ENEMY_COLOUR.toString());
+        this.neutrals.setPrefix(configuration.getRelationColourEnemy().toString());
 
-        this.allies = scoreboard.registerNewTeam("enemies");
-        this.allies.setPrefix(ConfigurationService.ALLY_COLOUR.toString());
+        this.allies = scoreboard.registerNewTeam("allies");
+        this.allies.setPrefix(configuration.getRelationColourAlly().toString());
 
-        player.setScoreboard(scoreboard);
+        player.setScoreboard(this.scoreboard);
     }
 
     /**
      * Removes this {@link PlayerBoard}.
      */
     public void remove() {
-        if (!this.removed.getAndSet(true) && scoreboard != null) {
-            for (Team team : scoreboard.getTeams()) {
+        if (!this.removed.getAndSet(true) && this.scoreboard != null) {
+            for (Team team : this.scoreboard.getTeams()) {
                 team.unregister();
             }
 
-            for (Objective objective : scoreboard.getObjectives()) {
+            for (Objective objective : this.scoreboard.getObjectives()) {
                 objective.unregister();
             }
         }
-    }
-
-    public Player getPlayer() {
-        return this.player;
-    }
-
-    public Scoreboard getScoreboard() {
-        return this.scoreboard;
-    }
-
-    public boolean isSidebarVisible() {
-        return this.sidebarVisible;
     }
 
     public void setSidebarVisible(boolean visible) {
@@ -143,7 +140,6 @@ public class PlayerBoard {
         if (provider == null) {
             this.bufferedObjective.setVisible(false);
         } else {
-            this.bufferedObjective.setTitle(provider.getTitle());
             this.bufferedObjective.setAllLines(provider.getLines(player));
             this.bufferedObjective.flip();
         }

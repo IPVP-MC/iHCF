@@ -1,12 +1,12 @@
 package com.doctordark.hcf.faction.argument;
 
-import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.event.FactionRelationRemoveEvent;
 import com.doctordark.hcf.faction.struct.Relation;
 import com.doctordark.hcf.faction.struct.Role;
 import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
+import com.doctordark.util.command.CommandArgument;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -15,7 +15,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.ipvp.util.command.CommandArgument;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -45,7 +44,7 @@ public class FactionUnallyArgument extends CommandArgument {
             return true;
         }
 
-        if (ConfigurationService.MAX_ALLIES_PER_FACTION <= 0) {
+        if (plugin.getConfiguration().getFactionMaxAllies() <= 0) {
             sender.sendMessage(ChatColor.RED + "Allies are disabled this map.");
             return true;
         }

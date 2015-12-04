@@ -1,12 +1,12 @@
-package com.doctordark.hcfextra.command;
+package org.ipvp.hcfextra.command;
 
-import com.doctordark.hcfextra.HCFExtra;
 import com.google.common.collect.ImmutableList;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.ipvp.hcfextra.HCFExtra;
 
 import java.util.Collections;
 import java.util.List;

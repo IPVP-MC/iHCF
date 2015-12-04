@@ -16,12 +16,20 @@
 
     <repositories>
         <repository>
+            <id>worldborder-repo</id>
+            <url>http://depot.carrade.eu/maven2/</url>
+        </repository>
+        <repository>
             <id>protocollib-repo</id>
             <url>http://repo.dmulloy2.net/content/groups/public/</url>
         </repository>
         <repository>
             <id>ess-repo</id>
             <url>http://repo.ess3.net/content/groups/essentials</url>
+        </repository>
+        <repository>
+            <id>techcable-repo</id>
+            <url>http://repo.techcable.net/content/groups/public/</url>
         </repository>
     </repositories>
 
@@ -45,12 +53,15 @@
             <version>3.6.4</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>net.techcable</groupId>
+            <artifactId>techutils</artifactId>
+            <version>1.1.2-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
-        <sourceDirectory>${basedir}/src/main/java/</sourceDirectory>
-        <finalName>${project.name}</finalName>
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -66,16 +77,10 @@
                             <shadedArtifactAttached>false</shadedArtifactAttached>
                             <createDependencyReducedPom>true</createDependencyReducedPom>
 
-                            <artifactSet>
-                                <includes>
-                                    <include>org.apache.commons:commons-collections4</include>
-                                </includes>
-                            </artifactSet>
-
                             <relocations>
                                 <relocation>
-                                    <pattern>org.apache.commons.collections4</pattern>
-                                    <shadedPattern>com.doctordark.hcf.internal.org.apache.commons.collections4</shadedPattern>
+                                    <pattern>net.techcable.techutils</pattern>
+                                    <shadedPattern>com.doctordark.internal.net.techcable.techutils</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>

@@ -98,12 +98,15 @@ import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -115,6 +118,9 @@ public class HCF extends JavaPlugin {
 
     @Getter
     private Random random = new Random();
+
+    @Getter
+    private Configuration configuration;
 
     @Getter
     private ClaimHandler claimHandler;
@@ -172,7 +178,6 @@ public class HCF extends JavaPlugin {
         Plugin wep = getServer().getPluginManager().getPlugin("WorldEdit");
         this.worldEdit = wep instanceof WorldEditPlugin && wep.isEnabled() ? (WorldEditPlugin) wep : null;
 
-        ConfigurationService.init(this);
         this.effectRestorer = new EffectRestorer(this);
         this.registerConfiguration();
         this.registerCommands();
@@ -207,6 +212,17 @@ public class HCF extends JavaPlugin {
     }
 
     private void registerConfiguration() {
+        this.configuration = new Configuration();
+        try {
+            String configFileName = "config.cdl";
+            this.configuration.load(new File(plugin.getDataFolder(), configFileName), HCF.class.getResource("/" + configFileName));
+        } catch (IOException | InvalidConfigurationException ex) {
+            getLogger().info("Failed to load configuration ");
+            ex.printStackTrace();
+        } finally {
+            DateTimeFormats.load(this.configuration.getServerTimeZone());
+        }
+
         ConfigurationSerialization.registerClass(CaptureZone.class);
         ConfigurationSerialization.registerClass(Deathban.class);
         ConfigurationSerialization.registerClass(Claim.class);
@@ -234,37 +250,36 @@ public class HCF extends JavaPlugin {
         manager.registerEvents(new BlockHitFixListener(), this);
         manager.registerEvents(new BlockJumpGlitchFixListener(), this);
         manager.registerEvents(new BoatGlitchFixListener(), this);
-        manager.registerEvents(new BookDeenchantListener(), this);
-        manager.registerEvents(new BottledExpListener(), this);
+        manager.registerEvents(new BookDeenchantListener(this), this);
+        manager.registerEvents(new BottledExpListener(this), this);
         manager.registerEvents(new ChatListener(this), this);
         manager.registerEvents(new ClaimWandListener(this), this);
         manager.registerEvents(this.combatLogListener = new CombatLogListener(this), this);
         manager.registerEvents(new CoreListener(this), this);
-        //manager.registerEvents(new CreativeClickListener(), this);
         manager.registerEvents(new CrowbarListener(this), this);
         manager.registerEvents(new DeathListener(this), this);
         manager.registerEvents(new DeathMessageListener(this), this);
-        manager.registerEvents(new DeathSignListener(this), this);
+        new DeathSignListener(this);
         manager.registerEvents(new DeathbanListener(this), this);
-        manager.registerEvents(new EnchantLimitListener(), this);
+        manager.registerEvents(new EnchantLimitListener(this), this);
         manager.registerEvents(new EnderChestRemovalListener(), this);
         manager.registerEvents(new EntityLimitListener(), this);
         manager.registerEvents(new EotwListener(this), this);
         manager.registerEvents(new EventSignListener(), this);
-        manager.registerEvents(new ExpMultiplierListener(), this);
+        manager.registerEvents(new ExpMultiplierListener(this), this);
         manager.registerEvents(new FactionListener(this), this);
-        manager.registerEvents(new FurnaceSmeltSpeederListener(), this);
+        manager.registerEvents(new FurnaceSmeltSpeederListener(this), this);
         manager.registerEvents(new InfinityArrowFixListener(), this);
         manager.registerEvents(new KeyListener(this), this);
         manager.registerEvents(new KitMapListener(this), this);
         manager.registerEvents(new PearlGlitchListener(this), this);
         manager.registerEvents(new PortalListener(this), this);
-        manager.registerEvents(new PotionLimitListener(), this);
+        manager.registerEvents(new PotionLimitListener(this), this);
         manager.registerEvents(new ProtectionListener(this), this);
         manager.registerEvents(new SubclaimWandListener(this), this);
         manager.registerEvents(new SignSubclaimListener(this), this);
         manager.registerEvents(new ShopSignListener(this), this);
-        manager.registerEvents(new SkullListener(), this);
+        manager.registerEvents(new SkullListener(this), this);
         manager.registerEvents(new SotwListener(this), this);
         manager.registerEvents(new BeaconStrengthFixListener(), this);
         manager.registerEvents(new VoidGlitchFixListener(), this);
@@ -288,7 +303,7 @@ public class HCF extends JavaPlugin {
         getCommand("pay").setExecutor(new PayCommand(this));
         getCommand("pvptimer").setExecutor(new PvpTimerCommand(this));
         getCommand("regen").setExecutor(new RegenCommand(this));
-        getCommand("servertime").setExecutor(new ServerTimeCommand());
+        getCommand("servertime").setExecutor(new ServerTimeCommand(this));
         getCommand("sotw").setExecutor(new SotwCommand(this));
         getCommand("spawncannon").setExecutor(new SpawnCannonCommand(this));
         getCommand("staffrevive").setExecutor(new StaffReviveCommand(this));

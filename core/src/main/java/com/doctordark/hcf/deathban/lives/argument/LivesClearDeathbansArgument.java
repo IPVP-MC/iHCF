@@ -3,10 +3,10 @@ package com.doctordark.hcf.deathban.lives.argument;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.deathban.Deathban;
 import com.doctordark.hcf.user.FactionUser;
+import com.doctordark.util.command.CommandArgument;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.ipvp.util.command.CommandArgument;
 
 /**
  * An {@link CommandArgument} used to clear all {@link Deathban}s.

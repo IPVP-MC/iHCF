@@ -1,5 +1,8 @@
 package com.doctordark.hcf.listener;
 
+import com.doctordark.hcf.HCF;
+import com.doctordark.util.ExperienceManager;
+import com.doctordark.util.JavaUtils;
 import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -19,8 +22,6 @@ import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.ipvp.util.ExperienceManager;
-import org.ipvp.util.JavaUtils;
 
 import java.util.List;
 
@@ -31,7 +32,11 @@ public class BottledExpListener implements Listener {
 
     private static final String BOTTLED_EXP_DISPLAY_NAME = ChatColor.AQUA.toString() + "Bottled Exp";
 
-    public BottledExpListener() {
+    private final HCF plugin;
+
+    public BottledExpListener(HCF plugin) {
+        this.plugin = plugin;
+
         // if we don't create a fake custom recipe, players won't be able to craft it.
         Bukkit.addRecipe(new ShapelessRecipe(createExpBottle(1)).addIngredient(Material.GLASS_BOTTLE));
     }
@@ -39,6 +44,10 @@ public class BottledExpListener implements Listener {
     // Don't ignore cancelled as AIR interactions are cancelled
     @EventHandler(ignoreCancelled = false, priority = EventPriority.HIGH)
     public void onPlayerInteract(PlayerInteractEvent event) {
+        if (plugin.getConfiguration().isBottledExp()) {
+            return;
+        }
+
         Action action = event.getAction();
         if (event.hasItem() && (action == Action.RIGHT_CLICK_AIR || (action == Action.RIGHT_CLICK_BLOCK && !event.isCancelled()))) {
             ItemStack stack = event.getItem();

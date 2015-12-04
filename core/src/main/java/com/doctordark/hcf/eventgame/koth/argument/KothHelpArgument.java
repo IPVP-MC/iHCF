@@ -1,10 +1,10 @@
 package com.doctordark.hcf.eventgame.koth.argument;
 
 import com.doctordark.hcf.eventgame.koth.KothExecutor;
+import com.doctordark.util.command.CommandArgument;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.ipvp.util.command.CommandArgument;
 
 /**
  * An {@link CommandArgument} used for viewing help about KingOfTheHill games.

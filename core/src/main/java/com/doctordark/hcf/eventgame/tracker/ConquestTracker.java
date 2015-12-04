@@ -1,6 +1,6 @@
 package com.doctordark.hcf.eventgame.tracker;
 
-import com.doctordark.hcf.ConfigurationService;
+import com.doctordark.base.GuavaCompat;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.eventgame.CaptureZone;
 import com.doctordark.hcf.eventgame.EventTimer;
@@ -10,6 +10,7 @@ import com.doctordark.hcf.eventgame.faction.EventFaction;
 import com.doctordark.hcf.faction.event.FactionRemoveEvent;
 import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
+import com.doctordark.util.ConcurrentValueOrderedMap;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -17,8 +18,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.ipvp.base.GuavaCompat;
-import org.ipvp.util.ConcurrentValueOrderedMap;
 
 import java.util.List;
 import java.util.UUID;
@@ -128,13 +127,13 @@ public class ConquestTracker implements EventTracker, Listener {
                 PlayerFaction playerFaction = plugin.getFactionManager().getPlayerFaction(uuid);
                 if (playerFaction != null) {
                     int newPoints = addPoints(playerFaction, 1);
-                    if (newPoints < ConfigurationService.CONQUEST_REQUIRED_WIN_POINTS) {
+                    if (newPoints < plugin.getConfiguration().getConquestRequiredVictoryPoints()) {
                         // Reset back to the default for this tracker.
                         captureZone.setRemainingCaptureMillis(captureZone.getDefaultCaptureMillis());
                         Bukkit.broadcastMessage(ChatColor.YELLOW + "[" + eventFaction.getName() + "] " +
                                 ChatColor.LIGHT_PURPLE + ChatColor.BOLD + playerFaction.getName() +
                                 ChatColor.GOLD + " gained " + 1 + " point for capturing " + captureZone.getDisplayName() + ChatColor.GOLD + ". " +
-                                ChatColor.AQUA + '(' + newPoints + '/' + ConfigurationService.CONQUEST_REQUIRED_WIN_POINTS + ')');
+                                ChatColor.AQUA + '(' + newPoints + '/' + plugin.getConfiguration().getConquestRequiredVictoryPoints() + ')');
                     } else {
                         // Clear all the points for the next Conquest event.
                         this.factionPointsMap.clear();
@@ -189,16 +188,16 @@ public class ConquestTracker implements EventTracker, Listener {
         if (currentEventFac instanceof ConquestFaction) {
             Player player = event.getEntity();
             PlayerFaction playerFaction = plugin.getFactionManager().getPlayerFaction(player);
-            if (playerFaction != null && ConfigurationService.CONQUEST_POINT_LOSS_PER_DEATH > 0) {
+            if (playerFaction != null && plugin.getConfiguration().getConquestPointLossPerDeath() > 0) {
                 int oldPoints = getPoints(playerFaction);
                 if (oldPoints == 0) return;
 
-                int newPoints = takePoints(playerFaction, ConfigurationService.CONQUEST_POINT_LOSS_PER_DEATH);
+                int newPoints = takePoints(playerFaction, plugin.getConfiguration().getConquestPointLossPerDeath());
                 event.setDeathMessage(null); // for some reason if it isn't handled manually, weird colour coding happens
                 Bukkit.broadcastMessage(ChatColor.YELLOW + "[" + currentEventFac.getName() + "] " +
                         ChatColor.GOLD + playerFaction.getName() + " lost " +
-                        ConfigurationService.CONQUEST_POINT_LOSS_PER_DEATH + " points because " + player.getName() + " died." +
-                        ChatColor.AQUA + " (" + newPoints + '/' + ConfigurationService.CONQUEST_REQUIRED_WIN_POINTS + ')' + ChatColor.YELLOW + '.');
+                        plugin.getConfiguration().getConquestPointLossPerDeath() + " points because " + player.getName() + " died." +
+                        ChatColor.AQUA + " (" + newPoints + '/' + plugin.getConfiguration().getConquestRequiredVictoryPoints() + ')' + ChatColor.YELLOW + '.');
             }
         }
     }

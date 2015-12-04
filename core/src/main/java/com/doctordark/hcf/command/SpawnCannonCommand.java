@@ -4,6 +4,8 @@ import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.WarzoneFaction;
+import com.doctordark.util.BukkitUtils;
+import com.doctordark.util.JavaUtils;
 import com.google.common.collect.ImmutableList;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -19,8 +21,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.ipvp.util.BukkitUtils;
-import org.ipvp.util.JavaUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -100,7 +100,7 @@ public class SpawnCannonCommand implements CommandExecutor, TabCompleter {
             }
 
             int min = ConfigurationService.SPAWN_RADIUS_MAP.get(world.getEnvironment());
-            int max = ConfigurationService.WARZONE_RADIUS;
+            int max = plugin.getConfiguration().getWarzoneRadius();
             int maxCannonDistance = getMaxCannonDistance(sender);
             Random random = plugin.getRandom();
 
@@ -159,7 +159,7 @@ public class SpawnCannonCommand implements CommandExecutor, TabCompleter {
      */
     public int getMaxCannonDistance(CommandSender sender) {
         int decrement = 50;
-        int radius = ((ConfigurationService.WARZONE_RADIUS + decrement - 1) / decrement) * decrement;
+        int radius = ((plugin.getConfiguration().getWarzoneRadius() + decrement - 1) / decrement) * decrement;
         for (int i = radius; i > 0; i -= decrement) {
             if (sender.hasPermission("hcf.spawncannon." + i)) {
                 return i;

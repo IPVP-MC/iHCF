@@ -1,16 +1,15 @@
 package com.doctordark.hcf.faction.argument;
 
-import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.struct.Role;
 import com.doctordark.hcf.faction.type.PlayerFaction;
+import com.doctordark.util.JavaUtils;
+import com.doctordark.util.command.CommandArgument;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.ipvp.util.JavaUtils;
-import org.ipvp.util.command.CommandArgument;
 
 import java.util.concurrent.TimeUnit;
 
@@ -59,18 +58,22 @@ public class FactionRenameArgument extends CommandArgument {
 
         String newName = args[1];
 
-        if (ConfigurationService.DISALLOWED_FACTION_NAMES.contains(newName.toLowerCase())) {
+        if (plugin.getConfiguration().getFactionDisallowedNames().contains(newName.toLowerCase())) {
             sender.sendMessage(ChatColor.RED + "'" + newName + "' is a blocked faction name.");
             return true;
         }
 
-        if (newName.length() < ConfigurationService.FACTION_NAME_CHARACTERS_MIN) {
-            sender.sendMessage(ChatColor.RED + "Faction names must have at least " + ConfigurationService.FACTION_NAME_CHARACTERS_MIN + " characters.");
+        int value = plugin.getConfiguration().getFactionNameMinCharacters();
+
+        if (newName.length() < value) {
+            sender.sendMessage(ChatColor.RED + "Faction names must have at least " + value + " characters.");
             return true;
         }
 
-        if (newName.length() > ConfigurationService.FACTION_NAME_CHARACTERS_MAX) {
-            sender.sendMessage(ChatColor.RED + "Faction names cannot be longer than " + ConfigurationService.FACTION_NAME_CHARACTERS_MAX + " characters.");
+        value = plugin.getConfiguration().getFactionNameMaxCharacters();
+
+        if (newName.length() > value) {
+            sender.sendMessage(ChatColor.RED + "Faction names cannot be longer than " + value + " characters.");
             return true;
         }
 

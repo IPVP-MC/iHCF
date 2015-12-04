@@ -1,6 +1,5 @@
 package com.doctordark.hcf.listener;
 
-import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.eventgame.faction.KothFaction;
 import com.doctordark.hcf.faction.event.CaptureZoneEnterEvent;
@@ -152,15 +151,9 @@ public class FactionListener implements Listener {
         }
 
         Player player = event.getPlayer();
-        if (getLastLandChangedMeta(player) > 0L) return; // delay before re-messaging.
-
-        Faction fromFaction = event.getFromFaction();
-
-        player.sendMessage(ChatColor.YELLOW + "Now leaving: " + fromFaction.getDisplayName(player) + ChatColor.YELLOW + '(' +
-                (fromFaction.isDeathban() ? ChatColor.RED + "Deathban" : ChatColor.GREEN + "Non-Deathban") + ChatColor.YELLOW + ')');
-
-        player.sendMessage(ChatColor.YELLOW + "Now entering: " + toFaction.getDisplayName(player) + ChatColor.YELLOW + '(' +
-                (toFaction.isDeathban() ? ChatColor.RED + "Deathban" : ChatColor.GREEN + "Non-Deathban") + ChatColor.YELLOW + ')');
+        if (this.getLastLandChangedMeta(player) <= 0L) { // delay before re-messaging.
+            player.sendMessage(ChatColor.GOLD + "You are now in " + event.getToFaction().getDisplayName(player) + ChatColor.GOLD + ".");
+        }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -173,13 +166,12 @@ public class FactionListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onPlayerPreFactionJoin(PlayerJoinFactionEvent event) {
-        Faction faction = event.getFaction();
+        PlayerFaction playerFaction = event.getFaction();
         Optional<Player> optionalPlayer = event.getPlayer();
-        if (faction instanceof PlayerFaction && optionalPlayer.isPresent()) {
+        if (optionalPlayer.isPresent()) {
             Player player = optionalPlayer.get();
-            PlayerFaction playerFaction = (PlayerFaction) faction;
 
-            if (!ConfigurationService.KIT_MAP && !plugin.getEotwHandler().isEndOfTheWorld() && playerFaction.getRegenStatus() == RegenStatus.PAUSED) {
+            if (!plugin.getConfiguration().isKitMap() && !plugin.getEotwHandler().isEndOfTheWorld() && playerFaction.getRegenStatus() == RegenStatus.PAUSED) {
                 event.setCancelled(true);
                 player.sendMessage(ChatColor.RED + "You cannot join factions that are not regenerating DTR.");
                 return;

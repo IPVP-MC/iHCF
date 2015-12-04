@@ -1,6 +1,5 @@
 package com.doctordark.hcf.listener;
 
-import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.eventgame.CaptureZone;
 import com.doctordark.hcf.eventgame.faction.CapturableFaction;
@@ -14,6 +13,8 @@ import com.doctordark.hcf.faction.type.ClaimableFaction;
 import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
 import com.doctordark.hcf.faction.type.WarzoneFaction;
+import com.doctordark.util.BukkitUtils;
+import com.doctordark.util.cuboid.Cuboid;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
@@ -69,8 +70,6 @@ import org.bukkit.material.Cauldron;
 import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
-import org.ipvp.util.BukkitUtils;
-import org.ipvp.util.cuboid.Cuboid;
 
 import javax.annotation.Nullable;
 
@@ -228,19 +227,10 @@ public class ProtectionListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onBlockFromTo(BlockFromToEvent event) {
-        Block toBlock = event.getToBlock();
         Block fromBlock = event.getBlock();
-        if (ConfigurationService.DISABLE_OBSIDIAN_GENERATORS) {
-            Material fromType = fromBlock.getType();
-            Material toType = toBlock.getType();
-            if ((toType == Material.REDSTONE_WIRE || toType == Material.TRIPWIRE) && (fromType == Material.AIR || fromType == Material.STATIONARY_LAVA || fromType == Material.LAVA)) {
-                toBlock.setType(Material.AIR);
-            }
-        }
-
         Material fromType = fromBlock.getType();
         if (fromType == Material.WATER || fromType == Material.STATIONARY_WATER || fromType == Material.LAVA || fromType == Material.STATIONARY_LAVA) {
-            if (!ProtectionListener.canBuildAt(fromBlock.getLocation(), toBlock.getLocation())) {
+            if (!ProtectionListener.canBuildAt(fromBlock.getLocation(), event.getToBlock().getLocation())) {
                 event.setCancelled(true);
             }
         }
@@ -353,14 +343,15 @@ public class ProtectionListener implements Listener {
                     Role role = playerFaction.getMember(player).getRole();
                     String hiddenAstrixedName = role.getAstrix() + (player.hasPotionEffect(PotionEffectType.INVISIBILITY) ? "???" : player.getName());
                     if (attackerFaction == playerFaction) {
-                        attacker.sendMessage(ConfigurationService.TEAMMATE_COLOUR + hiddenAstrixedName + ChatColor.YELLOW + " is in your faction.");
+                        attacker.sendMessage(plugin.getConfiguration().getRelationColourTeammate() + hiddenAstrixedName + ChatColor.YELLOW + " is in your faction.");
                         event.setCancelled(true);
                     } else if (attackerFaction.getAllied().contains(playerFaction.getUniqueID())) {
-                        if (true) { //TODO: prevent ally damage.
+                        ChatColor color = plugin.getConfiguration().getRelationColourAlly();
+                        if (plugin.getConfiguration().isPreventAllyAttackDamage()) {
                             event.setCancelled(true);
-                            attacker.sendMessage(ConfigurationService.ALLY_COLOUR + hiddenAstrixedName + ChatColor.YELLOW + " is an ally.");
+                            attacker.sendMessage(color + hiddenAstrixedName + ChatColor.YELLOW + " is an ally.");
                         } else {
-                            attacker.sendMessage(ChatColor.YELLOW + "Careful! " + ConfigurationService.ALLY_COLOUR + hiddenAstrixedName + ChatColor.YELLOW + " is an ally.");
+                            attacker.sendMessage(ChatColor.YELLOW + "Careful! " + color + hiddenAstrixedName + ChatColor.YELLOW + " is an ally.");
                         }
                     }
                 }

@@ -140,7 +140,7 @@ public class CombatLogListener implements Listener {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    LoggerEntity loggerEntity = new LoggerEntityHuman(player, location.getWorld());
+                    LoggerEntity loggerEntity = new LoggerEntityHuman(plugin, player, location.getWorld());
                     LoggerSpawnEvent calledEvent = new LoggerSpawnEvent(loggerEntity);
                     Bukkit.getPluginManager().callEvent(calledEvent);
                     if (calledEvent.isCancelled()) {

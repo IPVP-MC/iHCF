@@ -1,16 +1,15 @@
 package com.doctordark.hcf.faction.argument;
 
-import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.FactionMember;
 import com.doctordark.hcf.faction.struct.Role;
 import com.doctordark.hcf.faction.type.PlayerFaction;
+import com.doctordark.util.command.CommandArgument;
 import com.google.common.collect.ImmutableList;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.ipvp.util.command.CommandArgument;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -72,7 +71,7 @@ public class FactionUninviteArgument extends CommandArgument {
         }
 
         playerFaction.broadcast(ChatColor.YELLOW + factionMember.getRole().getAstrix() + sender.getName() + " has uninvited " +
-                ConfigurationService.ENEMY_COLOUR + args[1] + ChatColor.YELLOW + " from the faction.");
+                plugin.getConfiguration().getRelationColourEnemy() + args[1] + ChatColor.YELLOW + " from the faction.");
 
         return true;
     }

@@ -1,25 +1,25 @@
-package com.doctordark.hcfextra.command;
+package org.ipvp.hcfextra.command;
 
-import com.doctordark.hcfextra.HCFExtra;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.ipvp.hcfextra.HCFExtra;
 
 import java.util.Collections;
 import java.util.List;
 
-public class HelpCommand implements CommandExecutor, TabCompleter {
+public class CoordsCommand implements CommandExecutor, TabCompleter {
 
     private final HCFExtra plugin;
 
-    public HelpCommand(HCFExtra plugin) {
+    public CoordsCommand(HCFExtra plugin) {
         this.plugin = plugin;
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        sender.sendMessage(plugin.getConfiguration().getHelpMessage());
+        sender.sendMessage(plugin.getConfiguration().getCoordsMessage());
         return true;
     }
 

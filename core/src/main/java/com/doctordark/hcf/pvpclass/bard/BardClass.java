@@ -5,6 +5,8 @@ import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
 import com.doctordark.hcf.pvpclass.PvpClass;
+import com.doctordark.util.BukkitUtils;
+import com.doctordark.util.chat.Lang;
 import gnu.trove.map.TObjectLongMap;
 import gnu.trove.map.hash.TObjectLongHashMap;
 import org.bukkit.ChatColor;
@@ -24,8 +26,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.ipvp.util.BukkitUtils;
-import org.ipvp.util.chat.Lang;
 
 import java.util.Collection;
 import java.util.EnumMap;

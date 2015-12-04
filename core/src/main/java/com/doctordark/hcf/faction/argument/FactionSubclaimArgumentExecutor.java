@@ -9,10 +9,10 @@ import com.doctordark.hcf.faction.argument.subclaim.FactionSubclaimListArgument;
 import com.doctordark.hcf.faction.argument.subclaim.FactionSubclaimMembersArgument;
 import com.doctordark.hcf.faction.argument.subclaim.FactionSubclaimRenameArgument;
 import com.doctordark.hcf.faction.argument.subclaim.FactionSubclaimStartArgument;
+import com.doctordark.util.command.CommandArgument;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.ipvp.util.command.CommandArgument;
 
 import java.util.ArrayList;
 import java.util.Arrays;

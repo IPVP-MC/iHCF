@@ -1,17 +1,16 @@
 package com.doctordark.hcf.faction.argument;
 
-import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.FactionMember;
 import com.doctordark.hcf.faction.struct.Role;
 import com.doctordark.hcf.faction.type.PlayerFaction;
+import com.doctordark.util.command.CommandArgument;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.ipvp.util.command.CommandArgument;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,7 +52,7 @@ public class FactionKickArgument extends CommandArgument {
             return true;
         }
 
-        if (playerFaction.isRaidable() && !ConfigurationService.KIT_MAP && !plugin.getEotwHandler().isEndOfTheWorld()) {
+        if (playerFaction.isRaidable() && !plugin.getConfiguration().isKitMap() && !plugin.getEotwHandler().isEndOfTheWorld()) {
             sender.sendMessage(ChatColor.RED + "You cannot kick players whilst your faction is raidable.");
             return true;
         }
@@ -90,8 +89,8 @@ public class FactionKickArgument extends CommandArgument {
                 onlineTarget.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD + "You were kicked from the faction by " + sender.getName() + '.');
             }
 
-            playerFaction.broadcast(ConfigurationService.ENEMY_COLOUR + targetMember.getName() + ChatColor.YELLOW + " has been kicked by " +
-                    ConfigurationService.TEAMMATE_COLOUR + playerFaction.getMember(player).getRole().getAstrix() + sender.getName() + ChatColor.YELLOW + '.');
+            playerFaction.broadcast(plugin.getConfiguration().getRelationColourEnemy() + targetMember.getName() + ChatColor.YELLOW + " has been kicked by " +
+                    plugin.getConfiguration().getRelationColourTeammate() + playerFaction.getMember(player).getRole().getAstrix() + sender.getName() + ChatColor.YELLOW + '.');
         }
 
         return true;

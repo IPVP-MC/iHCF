@@ -1,6 +1,6 @@
 package com.doctordark.hcf.command;
 
-import com.doctordark.hcf.ConfigurationService;
+import com.doctordark.hcf.Configuration;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.struct.RegenStatus;
 import com.doctordark.hcf.faction.type.PlayerFaction;
@@ -50,8 +50,8 @@ public class RegenCommand implements CommandExecutor, TabCompleter {
             case REGENERATING:
                 sender.sendMessage(ChatColor.BLUE + "Your faction currently has " + ChatColor.YELLOW + regenStatus.getSymbol() + ' ' +
                         playerFaction.getDeathsUntilRaidable() + ChatColor.BLUE + " DTR and is regenerating at a rate of " + ChatColor.GOLD +
-                        ConfigurationService.DTR_INCREMENT_BETWEEN_UPDATES + ChatColor.BLUE + " every " + ChatColor.GOLD + ConfigurationService.DTR_WORDS_BETWEEN_UPDATES +
-                        ChatColor.BLUE + ". Your ETA for maximum DTR is " + ChatColor.LIGHT_PURPLE +
+                        plugin.getConfiguration().getFactionDtrUpdateIncrement() + ChatColor.BLUE + " every " + ChatColor.GOLD +
+                        plugin.getConfiguration().getFactionDtrUpdateTimeWords() + ChatColor.BLUE + ". Your ETA for maximum DTR is " + ChatColor.LIGHT_PURPLE +
                         DurationFormatUtils.formatDurationWords(getRemainingRegenMillis(playerFaction), true, true) + ChatColor.BLUE + '.');
 
                 return true;
@@ -64,7 +64,8 @@ public class RegenCommand implements CommandExecutor, TabCompleter {
     public long getRemainingRegenMillis(PlayerFaction faction) {
         long millisPassedSinceLastUpdate = System.currentTimeMillis() - faction.getLastDtrUpdateTimestamp();
         double dtrRequired = faction.getMaximumDeathsUntilRaidable() - faction.getDeathsUntilRaidable();
-        return (long) ((ConfigurationService.DTR_MILLIS_BETWEEN_UPDATES / ConfigurationService.DTR_INCREMENT_BETWEEN_UPDATES) * dtrRequired) - millisPassedSinceLastUpdate;
+        Configuration configuration = HCF.getPlugin().getConfiguration();
+        return (long) ((configuration.getFactionDtrUpdateMillis() / configuration.getFactionDtrUpdateIncrement()) * dtrRequired) - millisPassedSinceLastUpdate;
     }
 
     @Override

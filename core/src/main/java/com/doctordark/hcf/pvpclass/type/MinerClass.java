@@ -3,6 +3,7 @@ package com.doctordark.hcf.pvpclass.type;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.pvpclass.PvpClass;
 import com.doctordark.hcf.pvpclass.event.PvpClassEquipEvent;
+import com.doctordark.util.BukkitUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,7 +19,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.ipvp.util.BukkitUtils;
 
 import java.util.concurrent.TimeUnit;
 

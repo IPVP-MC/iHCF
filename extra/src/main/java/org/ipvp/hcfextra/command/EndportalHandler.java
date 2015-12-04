@@ -1,4 +1,4 @@
-package com.doctordark.hcfextra.command;
+package org.ipvp.hcfextra.command;
 
 import com.google.common.collect.Lists;
 import org.bukkit.ChatColor;

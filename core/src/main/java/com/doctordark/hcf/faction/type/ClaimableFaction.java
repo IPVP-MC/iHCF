@@ -6,15 +6,15 @@ import com.doctordark.hcf.faction.claim.Claim;
 import com.doctordark.hcf.faction.event.FactionClaimChangeEvent;
 import com.doctordark.hcf.faction.event.FactionClaimChangedEvent;
 import com.doctordark.hcf.faction.event.cause.ClaimChangeCause;
+import com.doctordark.util.BukkitUtils;
+import com.doctordark.util.GenericUtils;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
-import org.ipvp.util.BukkitUtils;
-import org.ipvp.util.GenericUtils;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -22,7 +22,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Represents a {@link Faction} that can claim land.
@@ -74,10 +73,27 @@ public class ClaimableFaction extends Faction {
     /**
      * Gets the {@link Claim}s owned by this {@link ClaimableFaction}.
      *
-     * @return an immutable set of {@link Claim}s
+     * @return an immutable list of {@link Claim}s
      */
-    public Set<Claim> getClaims() {
-        return ImmutableSet.copyOf(claims);
+    public List<Claim> getClaims() {
+        return ImmutableList.copyOf(this.claims);
+    }
+
+    /**
+     * Gets the {@link Claim}s owned by this {@link ClaimableFaction}
+     * in a specific world.
+     *
+     * @return an immutable list of {@link Claim}s
+     */
+    public List<Claim> getClaims(World world) {
+        List<Claim> ret = new ArrayList<>();
+        for (Claim claim : this.claims) {
+            if (world.equals(claim.getWorld())) {
+                ret.add(claim);
+            }
+        }
+
+        return ImmutableList.copyOf(ret);
     }
 
     /**

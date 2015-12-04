@@ -1,10 +1,10 @@
 package com.doctordark.hcf.faction.struct;
 
-import com.doctordark.hcf.ConfigurationService;
+import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.type.Faction;
+import com.doctordark.util.BukkitUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
-import org.ipvp.util.BukkitUtils;
 
 /**
  * Represents a relation between {@link Faction}s and {@link org.bukkit.entity.Player}s.
@@ -53,14 +53,15 @@ public enum Relation {
     }
 
     public ChatColor toChatColour() {
+        HCF plugin = HCF.getPlugin();
         switch (this) {
             case MEMBER:
-                return ConfigurationService.TEAMMATE_COLOUR;
+                return plugin.getConfiguration().getRelationColourTeammate();
             case ALLY:
-                return ConfigurationService.ALLY_COLOUR;
+                return plugin.getConfiguration().getRelationColourAlly();
             case ENEMY:
             default:
-                return ConfigurationService.ENEMY_COLOUR;
+                return plugin.getConfiguration().getRelationColourEnemy();
         }
     }
 

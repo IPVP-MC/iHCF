@@ -8,13 +8,8 @@ import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -34,7 +29,7 @@ public class EotwHandler {
     public static final long EOTW_WARMUP_WAIT_MILLIS = TimeUnit.SECONDS.toMillis(30L);
     public static final int EOTW_WARMUP_WAIT_SECONDS = (int) (TimeUnit.MILLISECONDS.toSeconds(EOTW_WARMUP_WAIT_MILLIS));
 
-    private static final long EOTW_CAPPABLE_WAIT_MILLIS = TimeUnit.MINUTES.toMillis(1L);
+    private static final long EOTW_CAPPABLE_WAIT_MILLIS = TimeUnit.MINUTES.toMillis(40L);
     private static final int WITHER_INTERVAL_SECONDS = 10;
 
     private EotwRunnable runnable;
@@ -79,7 +74,7 @@ public class EotwHandler {
         }
 
         if (yes) {
-            //runnable = new EotwRunnable(ConfigurationService.BORDER_SIZES.get(World.Environment.NORMAL));
+            runnable = new EotwRunnable();
             runnable.runTaskTimer(plugin, 20L, 20L);
         } else {
             if (runnable != null) {
@@ -91,30 +86,21 @@ public class EotwHandler {
 
     public static final class EotwRunnable extends BukkitRunnable {
 
-        private static final PotionEffect WITHER = new PotionEffect(PotionEffectType.WITHER, 200, 0);
-
-        // The set of players that should be given the Wither potion effect because they are outside of the border.
-        private final Set<Player> outsideBorder = new HashSet<>();
 
         private long startStamp;
         private int elapsedSeconds;
 
-        // The current World border size.
-        private int borderSize;
-
-        public EotwRunnable(int borderSize) {
-            this.borderSize = borderSize;
+        public EotwRunnable() {
             this.startStamp = System.currentTimeMillis() + EOTW_WARMUP_WAIT_MILLIS;
             this.elapsedSeconds = -EOTW_WARMUP_WAIT_SECONDS;
         }
 
         public void handleDisconnect(Player player) {
-            outsideBorder.remove(player);
         }
 
         //TODO: Cleanup these millisecond managements
         public long getMillisUntilStarting() {
-            long difference = System.currentTimeMillis() - startStamp;
+            long difference = System.currentTimeMillis() - this.startStamp;
             return difference > 0L ? -1L : Math.abs(difference);
         }
 
@@ -123,14 +109,14 @@ public class EotwHandler {
         }
 
         public long getElapsedMilliseconds() {
-            return System.currentTimeMillis() - startStamp;
+            return System.currentTimeMillis() - this.startStamp;
         }
 
         @Override
         public void run() {
-            elapsedSeconds++;
+            this.elapsedSeconds++;
 
-            if (elapsedSeconds == 0) {
+            if (this.elapsedSeconds == 0) {
                 for (Faction faction : HCF.getPlugin().getFactionManager().getFactions()) {
                     if (faction instanceof ClaimableFaction) {
                         ClaimableFaction claimableFaction = (ClaimableFaction) faction;
@@ -138,9 +124,8 @@ public class EotwHandler {
                     }
                 }
 
-                Bukkit.broadcastMessage(ChatColor.DARK_AQUA.toString() + ChatColor.BOLD + "EndOfTheWorld" + ChatColor.DARK_AQUA + " has began. Border will decrease by " +
-                        BORDER_DECREASE_AMOUNT + " blocks every " + BORDER_DECREASE_TIME_WORDS + " until at " + BORDER_DECREASE_MINIMUM + " blocks.");
-
+                Bukkit.broadcastMessage(ChatColor.DARK_AQUA.toString() + ChatColor.BOLD + "EndOfTheWorld" + ChatColor.DARK_AQUA + " has began.");
+                cancel();
                 return;
             }
 
@@ -152,37 +137,37 @@ public class EotwHandler {
             }
 
             // Wither those outside of the border every 10 seconds.
-            if (elapsedSeconds % WITHER_INTERVAL_SECONDS == 0) {
+            /*if (elapsedSeconds % WITHER_INTERVAL_SECONDS == 0) {
                 Iterator<Player> iterator = outsideBorder.iterator();
+                BorderData borderData = HCF.getPlugin().getWorldBorder().getWorldBorder("world");
                 while (iterator.hasNext()) {
                     Player player = iterator.next();
-                    //TODO
-                   /* if (BorderListener.isWithinBorder(player.getLocation())) {
+                    if (player.getWorld().getName().equals("world") && borderData.insideBorder(player.getLocation())) {
                         iterator.remove();
                         continue;
-                    }*/
+                    }
 
                     player.sendMessage(ChatColor.RED + "You are currently outside of the border during EOTW, so you were withered.");
                     player.addPotionEffect(WITHER, true);
                 }
-            }
+            }*/
 
-            int newBorderSize = borderSize - BORDER_DECREASE_AMOUNT;
+            /*int newRadiusX = radiusX - BORDER_DECREASE_AMOUNT;
+            int newRadiusZ = radiusZ - BORDER_DECREASE_AMOUNT;
             if (elapsedSeconds % BORDER_DECREASE_TIME_SECONDS == 0) {
-                //ConfigurationService.BORDER_SIZES.put(World.Environment.NORMAL, borderSize = newBorderSize);
+                ConfigurationService.BORDER_SIZES.put(World.Environment.NORMAL, borderSize = newBorderSize);
                 Bukkit.broadcastMessage(ChatColor.DARK_AQUA + "Border has been decreased to " + ChatColor.YELLOW + newBorderSize + ChatColor.DARK_AQUA + " blocks.");
 
                 // Update list of players outside of the border now it has shrunk.
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    //TODO:
-                    /*if (!BorderListener.isWithinBorder(player.getLocation())) {
+                    if (!BorderListener.isWithinBorder(player.getLocation())) {
                         outsideBorder.add(player);
-                    }*/
+                    }
                 }
             } else if (elapsedSeconds % BORDER_DECREASE_TIME_SECONDS_HALVED == 0) {
                 Bukkit.broadcastMessage(ChatColor.DARK_AQUA + "Border decreasing to " + ChatColor.YELLOW + newBorderSize + ChatColor.DARK_AQUA + " blocks in " +
                         ChatColor.YELLOW + BORDER_DECREASE_TIME_ALERT_WORDS + ChatColor.DARK_AQUA + '.');
-            }
+            }*/
         }
     }
 }

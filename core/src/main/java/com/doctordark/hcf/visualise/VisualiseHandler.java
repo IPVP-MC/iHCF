@@ -1,6 +1,7 @@
 package com.doctordark.hcf.visualise;
 
 import com.doctordark.hcf.VisualiseUtil;
+import com.doctordark.util.cuboid.Cuboid;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.collect.HashBasedTable;
@@ -12,7 +13,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.material.MaterialData;
-import org.ipvp.util.cuboid.Cuboid;
 import org.spigotmc.AsyncCatcher;
 
 import javax.annotation.Nullable;

@@ -3,14 +3,14 @@ package com.doctordark.hcf.eventgame.argument;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.eventgame.faction.EventFaction;
 import com.doctordark.hcf.faction.type.Faction;
+import com.doctordark.util.command.CommandArgument;
+import com.doctordark.util.cuboid.Cuboid;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.ipvp.util.command.CommandArgument;
-import org.ipvp.util.cuboid.Cuboid;
 
 import java.util.Collections;
 import java.util.List;

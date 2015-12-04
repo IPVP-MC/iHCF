@@ -1,6 +1,5 @@
 package com.doctordark.hcf.timer.type;
 
-import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.DurationFormatter;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.claim.Claim;
@@ -15,6 +14,7 @@ import com.doctordark.hcf.timer.PlayerTimer;
 import com.doctordark.hcf.timer.TimerCooldown;
 import com.doctordark.hcf.timer.event.TimerClearEvent;
 import com.doctordark.hcf.visualise.VisualType;
+import com.doctordark.util.BukkitUtils;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import net.minecraft.util.gnu.trove.map.TObjectLongMap;
@@ -42,7 +42,6 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
-import org.ipvp.util.BukkitUtils;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 import javax.annotation.Nullable;
@@ -318,6 +317,6 @@ public class InvincibilityTimer extends PlayerTimer implements Listener {
     }
 
     private boolean canApply() {
-        return !plugin.getEotwHandler().isEndOfTheWorld() && !ConfigurationService.KIT_MAP && plugin.getSotwTimer().getSotwRunnable() == null;
+        return !plugin.getEotwHandler().isEndOfTheWorld() && !HCF.getPlugin().getConfiguration().isKitMap() && plugin.getSotwTimer().getSotwRunnable() == null;
     }
 }

@@ -1,6 +1,5 @@
 package com.doctordark.hcf.faction.argument;
 
-import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.FactionMember;
 import com.doctordark.hcf.faction.struct.ChatChannel;
@@ -8,11 +7,11 @@ import com.doctordark.hcf.faction.struct.Relation;
 import com.doctordark.hcf.faction.struct.Role;
 import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
+import com.doctordark.util.command.CommandArgument;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.ipvp.util.command.CommandArgument;
 
 import java.util.Collections;
 import java.util.List;
@@ -68,8 +67,8 @@ public class FactionAcceptArgument extends CommandArgument {
 
         PlayerFaction targetFaction = (PlayerFaction) faction;
 
-        if (targetFaction.getMembers().size() >= ConfigurationService.MAX_MEMBERS_PER_FACTION) {
-            sender.sendMessage(faction.getDisplayName(sender) + ChatColor.RED + " is full. Faction limits are at " + ConfigurationService.MAX_MEMBERS_PER_FACTION + '.');
+        if (targetFaction.getMembers().size() >= plugin.getConfiguration().getFactionMaxMembers()) {
+            sender.sendMessage(faction.getDisplayName(sender) + ChatColor.RED + " is full. Faction limits are at " + plugin.getConfiguration().getFactionMaxMembers() + '.');
             return true;
         }
 

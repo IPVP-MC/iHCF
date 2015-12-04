@@ -1,6 +1,6 @@
 package com.doctordark.hcf.faction.type;
 
-import com.doctordark.hcf.ConfigurationService;
+import com.doctordark.hcf.HCF;
 import org.bukkit.command.CommandSender;
 
 import java.util.Map;
@@ -20,6 +20,6 @@ public class WarzoneFaction extends Faction {
 
     @Override
     public String getDisplayName(CommandSender sender) {
-        return ConfigurationService.WARZONE_COLOUR + getName();
+        return HCF.getPlugin().getConfiguration().getRelationColourWarzone() + getName();
     }
 }

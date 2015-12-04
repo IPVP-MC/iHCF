@@ -1,6 +1,6 @@
 package com.doctordark.hcf.listener;
 
-import com.doctordark.hcf.ConfigurationService;
+import com.doctordark.hcf.HCF;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -20,6 +20,12 @@ import org.bukkit.projectiles.ProjectileSource;
  */
 public class ExpMultiplierListener implements Listener {
 
+    private final HCF plugin;
+
+    public ExpMultiplierListener(HCF plugin) {
+        this.plugin = plugin;
+    }
+
     @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
     public void onEntityDeath(EntityDeathEvent event) {
         double amount = event.getDroppedExp();
@@ -29,7 +35,7 @@ public class ExpMultiplierListener implements Listener {
             if (stack != null && stack.getType() != Material.AIR) {
                 int enchantmentLevel = stack.getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS);
                 if (enchantmentLevel > 0L) {
-                    double multiplier = enchantmentLevel * ConfigurationService.EXP_MULTIPLIER_LOOTING_PER_LEVEL;
+                    double multiplier = enchantmentLevel * plugin.getConfiguration().getExpMultiplierLootingPerLevel();
                     int result = (int) Math.ceil(amount * multiplier);
                     event.setDroppedExp(result);
                 }
@@ -45,7 +51,7 @@ public class ExpMultiplierListener implements Listener {
         if (stack != null && stack.getType() != Material.AIR && amount > 0) {
             int enchantmentLevel = stack.getEnchantmentLevel(Enchantment.LOOT_BONUS_BLOCKS);
             if (enchantmentLevel > 0) {
-                double multiplier = enchantmentLevel * ConfigurationService.EXP_MULTIPLIER_FORTUNE_PER_LEVEL;
+                double multiplier = enchantmentLevel * plugin.getConfiguration().getExpMultiplierFortunePerLevel();
                 int result = (int) Math.ceil(amount * multiplier);
                 event.setExpToDrop(result);
             }
@@ -56,7 +62,7 @@ public class ExpMultiplierListener implements Listener {
     public void onPlayerPickupExp(PlayerExpChangeEvent event) {
         double amount = event.getAmount();
         if (amount > 0) {
-            int result = (int) Math.ceil(amount * ConfigurationService.EXP_MULTIPLIER_GENERAL);
+            int result = (int) Math.ceil(amount * plugin.getConfiguration().getExpMultiplierGlobal());
             event.setAmount(result);
         }
     }
@@ -65,13 +71,13 @@ public class ExpMultiplierListener implements Listener {
     public void onPlayerFish(PlayerFishEvent event) {
         double amount = event.getExpToDrop();
         if (amount > 0) {
-            amount = Math.ceil(amount * ConfigurationService.EXP_MULTIPLIER_FISHING);
+            amount = Math.ceil(amount * plugin.getConfiguration().getExpMultiplierFishing());
             ProjectileSource projectileSource = event.getHook().getShooter();
             if (projectileSource instanceof Player) {
                 ItemStack stack = ((Player) projectileSource).getItemInHand();
                 int enchantmentLevel = stack.getEnchantmentLevel(Enchantment.LUCK);
                 if (enchantmentLevel > 0L) {
-                    amount = Math.ceil(amount * (enchantmentLevel * ConfigurationService.EXP_MULTIPLIER_LUCK_PER_LEVEL));
+                    amount = Math.ceil(amount * (enchantmentLevel * plugin.getConfiguration().getExpMultiplierLuckPerLevel()));
                 }
             }
 
@@ -83,7 +89,7 @@ public class ExpMultiplierListener implements Listener {
     public void onFurnaceExtract(FurnaceExtractEvent event) {
         double amount = event.getExpToDrop();
         if (amount > 0) {
-            double multiplier = ConfigurationService.EXP_MULTIPLIER_SMELTING;
+            double multiplier = plugin.getConfiguration().getExpMultiplierSmelting();
             int result = (int) Math.ceil(amount * multiplier);
             event.setExpToDrop(result);
         }

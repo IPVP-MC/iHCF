@@ -3,7 +3,7 @@ package com.doctordark.hcf.timer;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.timer.argument.TimerCheckArgument;
 import com.doctordark.hcf.timer.argument.TimerSetArgument;
-import org.ipvp.util.command.ArgumentExecutor;
+import com.doctordark.util.command.ArgumentExecutor;
 
 /**
  * Handles the execution and tab completion of the timer command.

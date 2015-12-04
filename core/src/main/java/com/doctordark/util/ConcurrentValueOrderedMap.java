@@ -1,4 +1,4 @@
-package org.ipvp.util;
+package com.doctordark.util;
 
 import javax.annotation.Nonnull;
 import java.io.Serializable;

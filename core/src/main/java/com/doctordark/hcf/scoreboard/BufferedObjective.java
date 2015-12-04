@@ -2,7 +2,6 @@ package com.doctordark.hcf.scoreboard;
 
 import gnu.trove.map.hash.TIntObjectHashMap;
 import gnu.trove.procedure.TIntObjectProcedure;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
@@ -22,26 +21,18 @@ public class BufferedObjective {
     private static final int MAX_SUFFIX_LENGTH = 16;
 
     private final Scoreboard scoreboard;
-
-    private Set<String> previousLines = new HashSet<>();
+    private final String title;
     private final TIntObjectHashMap<SidebarEntry> contents = new TIntObjectHashMap<>();
 
+    private Set<String> previousLines = new HashSet<>();
     private AtomicBoolean requiresUpdate = new AtomicBoolean(false); // If the scoreboard needs an update.
-    private String title;
     private Objective current;
     private DisplaySlot displaySlot;
 
-    public BufferedObjective(Scoreboard scoreboard) {
+    public BufferedObjective(Scoreboard scoreboard, String title) {
         this.scoreboard = scoreboard;
-        this.title = RandomStringUtils.randomAlphabetic(4);
+        this.title = title;
         this.current = scoreboard.registerNewObjective("buffered", "dummy");
-    }
-
-    public void setTitle(String title) {
-        if (this.title == null || !this.title.equals(title)) {
-            this.title = title;
-            this.requiresUpdate.set(true);
-        }
     }
 
     public void setDisplaySlot(DisplaySlot slot) {

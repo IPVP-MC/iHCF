@@ -1,6 +1,5 @@
 package com.doctordark.hcf.faction.type;
 
-import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.DateTimeFormats;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.deathban.Deathban;
@@ -18,6 +17,10 @@ import com.doctordark.hcf.faction.struct.Relation;
 import com.doctordark.hcf.faction.struct.Role;
 import com.doctordark.hcf.timer.type.TeleportTimer;
 import com.doctordark.hcf.user.FactionUser;
+import com.doctordark.util.BukkitUtils;
+import com.doctordark.util.GenericUtils;
+import com.doctordark.util.JavaUtils;
+import com.doctordark.util.PersistableLocation;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
@@ -32,10 +35,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.ipvp.util.BukkitUtils;
-import org.ipvp.util.GenericUtils;
-import org.ipvp.util.JavaUtils;
-import org.ipvp.util.PersistableLocation;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -411,7 +410,7 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
             return 1.1;
         }
 
-        return Math.min(ConfigurationService.MAXIMUM_DTR, members.size() * 0.9);
+        return Math.min(HCF.getPlugin().getConfiguration().getFactionMaximumDtr(), members.size() * 0.9);
     }
 
     public double getDeathsUntilRaidable(boolean updateLastCheck) {
@@ -441,13 +440,12 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
         if (this.getRegenStatus() == RegenStatus.REGENERATING) {
             long now = System.currentTimeMillis();
             long millisPassed = now - this.lastDtrUpdateTimestamp;
-            if (millisPassed >= ConfigurationService.DTR_MILLIS_BETWEEN_UPDATES) {
-                long remainder = millisPassed % ConfigurationService.DTR_MILLIS_BETWEEN_UPDATES;  // the remaining time until the next update
-                int multiplier = (int) (((double) millisPassed + remainder) / ConfigurationService.DTR_MILLIS_BETWEEN_UPDATES);
-                double increase = multiplier * ConfigurationService.DTR_INCREMENT_BETWEEN_UPDATES;
-
+            long millisBetweenUpdates = HCF.getPlugin().getConfiguration().getFactionDtrUpdateMillis();
+            if (millisPassed >= millisBetweenUpdates) {
+                long remainder = millisPassed % millisBetweenUpdates;  // the remaining time until the next update
+                int multiplier = (int) (((double) millisPassed + remainder) / millisBetweenUpdates);
                 this.lastDtrUpdateTimestamp = now - remainder;
-                this.setDeathsUntilRaidable(this.deathsUntilRaidable + increase);
+                this.setDeathsUntilRaidable(this.deathsUntilRaidable + (multiplier * millisBetweenUpdates));
             }
         }
     }
@@ -497,7 +495,7 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
         this.regenCooldownTimestamp = systemMillis + millis;
 
         // needs to be multiplied by 2 because as soon as they lose regeneration delay, the timestamp will update
-        this.lastDtrUpdateTimestamp = systemMillis + (ConfigurationService.DTR_MILLIS_BETWEEN_UPDATES * 2);
+        this.lastDtrUpdateTimestamp = systemMillis + (HCF.getPlugin().getConfiguration().getFactionDtrUpdateMillis() * 2);
     }
 
     @Override
@@ -515,7 +513,7 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
     public void printDetails(CommandSender sender) {
         String leaderName = null;
 
-        Set<String> allyNames = new HashSet<>(ConfigurationService.MAX_ALLIES_PER_FACTION);
+        Set<String> allyNames = new HashSet<>();
         for (Map.Entry<UUID, Relation> entry : relations.entrySet()) {
             Faction faction = HCF.getPlugin().getFactionManager().getFaction(entry.getKey());
             if (faction instanceof PlayerFaction) {

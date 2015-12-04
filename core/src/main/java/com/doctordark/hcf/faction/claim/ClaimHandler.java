@@ -1,6 +1,5 @@
 package com.doctordark.hcf.faction.claim;
 
-import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.economy.EconomyManager;
 import com.doctordark.hcf.faction.FactionManager;
@@ -11,6 +10,9 @@ import com.doctordark.hcf.faction.type.PlayerFaction;
 import com.doctordark.hcf.faction.type.RoadFaction;
 import com.doctordark.hcf.faction.type.WildernessFaction;
 import com.doctordark.hcf.visualise.VisualType;
+import com.doctordark.util.ItemBuilder;
+import com.doctordark.util.cuboid.Cuboid;
+import com.doctordark.util.cuboid.CuboidDirection;
 import com.google.common.base.Preconditions;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -18,9 +20,6 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.ipvp.util.ItemBuilder;
-import org.ipvp.util.cuboid.Cuboid;
-import org.ipvp.util.cuboid.CuboidDirection;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -235,8 +234,8 @@ public class ClaimHandler {
         }
 
         if (!(plugin.getFactionManager().getFactionAt(location) instanceof WildernessFaction)) {
-            player.sendMessage(ChatColor.RED + "You can only claim land in the " + ConfigurationService.WILDERNESS_COLOUR + "Wilderness" + ChatColor.RED + ". " +
-                    "Make sure you are past " + ConfigurationService.WARZONE_RADIUS + " blocks from spawn..");
+            player.sendMessage(ChatColor.RED + "You can only claim land in the " + plugin.getConfiguration().getRelationColourWilderness() + "Wilderness" + ChatColor.RED + ". " +
+                    "Make sure you are past " + plugin.getConfiguration().getWarzoneRadius() + " blocks from spawn..");
 
             return false;
         }
@@ -253,8 +252,8 @@ public class ClaimHandler {
             return false;
         }
 
-        if (playerFaction.getClaims().size() >= ConfigurationService.MAX_CLAIMS_PER_FACTION) {
-            player.sendMessage(ChatColor.RED + "Your faction has maximum claims - " + ConfigurationService.MAX_CLAIMS_PER_FACTION);
+        if (playerFaction.getClaims().size() >= plugin.getConfiguration().getFactionMaxClaims()) {
+            player.sendMessage(ChatColor.RED + "Your faction has maximum claims possible, which is " + plugin.getConfiguration().getFactionMaxClaims() + ".");
             return false;
         }
 
@@ -262,10 +261,11 @@ public class ClaimHandler {
         int locZ = location.getBlockZ();
 
         final FactionManager factionManager = plugin.getFactionManager();
+        boolean flag = HCF.getPlugin().getConfiguration().isAllowClaimsBesidesRoads();
         for (int x = locX - CLAIM_BUFFER_RADIUS; x < locX + CLAIM_BUFFER_RADIUS; x++) {
             for (int z = locZ - CLAIM_BUFFER_RADIUS; z < locZ + CLAIM_BUFFER_RADIUS; z++) {
                 Faction factionAtNew = factionManager.getFactionAt(world, x, z);
-                if (!ConfigurationService.ALLOW_CLAIMING_BESIDES_ROADS && factionAtNew instanceof ClaimableFaction && playerFaction != factionAtNew && !(factionAtNew instanceof RoadFaction)) {
+                if (!flag && factionAtNew instanceof ClaimableFaction && playerFaction != factionAtNew && !(factionAtNew instanceof RoadFaction)) {
                     player.sendMessage(ChatColor.RED + "This position contains enemy claims within a " + CLAIM_BUFFER_RADIUS + " block buffer radius.");
                     return false;
                 }
@@ -303,8 +303,8 @@ public class ClaimHandler {
             return false;
         }
 
-        if (playerFaction.getClaims().size() >= ConfigurationService.MAX_CLAIMS_PER_FACTION) {
-            player.sendMessage(ChatColor.RED + "Your faction has maximum claims - " + ConfigurationService.MAX_CLAIMS_PER_FACTION);
+        if (playerFaction.getClaims().size() >= plugin.getConfiguration().getFactionMaxClaims()) {
+            player.sendMessage(ChatColor.RED + "Your faction has maximum claims possible, which is " + plugin.getConfiguration().getFactionMaxClaims() + ".");
             return false;
         }
 
@@ -345,10 +345,11 @@ public class ClaimHandler {
             }
         }
 
+        boolean flag = HCF.getPlugin().getConfiguration().isAllowClaimsBesidesRoads();
         for (int x = minimumX - CLAIM_BUFFER_RADIUS; x < maximumX + CLAIM_BUFFER_RADIUS; x++) {
             for (int z = minimumZ - CLAIM_BUFFER_RADIUS; z < maximumZ + CLAIM_BUFFER_RADIUS; z++) {
                 Faction factionAtNew = factionManager.getFactionAt(world, x, z);
-                if (!ConfigurationService.ALLOW_CLAIMING_BESIDES_ROADS && factionAtNew instanceof ClaimableFaction && playerFaction != factionAtNew && !(factionAtNew instanceof RoadFaction)) {
+                if (!flag && factionAtNew instanceof ClaimableFaction && playerFaction != factionAtNew && !(factionAtNew instanceof RoadFaction)) {
                     player.sendMessage(ChatColor.RED + "This claim contains enemy claims within a " + CLAIM_BUFFER_RADIUS + " block buffer radius.");
                     return false;
                 }

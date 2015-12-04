@@ -1,6 +1,7 @@
 package com.doctordark.hcf.deathban.lives.argument;
 
 import com.doctordark.hcf.HCF;
+import com.doctordark.util.command.CommandArgument;
 import gnu.trove.map.TObjectIntMap;
 import gnu.trove.procedure.TObjectIntProcedure;
 import org.bukkit.Bukkit;
@@ -9,7 +10,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.ipvp.util.command.CommandArgument;
 
 import java.util.Collections;
 import java.util.List;

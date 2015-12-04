@@ -1,6 +1,6 @@
 package com.doctordark.hcf.listener;
 
-import com.doctordark.hcf.ConfigurationService;
+import com.doctordark.hcf.HCF;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -17,14 +17,10 @@ public class PotionLimitListener implements Listener {
 
     private static final int EMPTY_BREW_TIME = 400;
 
-    /**
-     * Gets the new fixed level for a {@link PotionType}.
-     *
-     * @param type the {@link PotionType} to get for
-     * @return the maximum level of the {@link PotionType}
-     */
-    public int getMaxLevel(PotionType type) {
-        return ConfigurationService.POTION_LIMITS.getOrDefault(type, type.getMaxLevel());
+    private final HCF plugin;
+
+    public PotionLimitListener(HCF plugin) {
+        this.plugin = plugin;
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
@@ -77,7 +73,7 @@ public class PotionLimitListener implements Listener {
                     continue;
                 }
 
-                if (potion.getLevel() > getMaxLevel(type)) {
+                if (potion.getLevel() > plugin.getConfiguration().getPotionLimit(type)) {
                     return false;
                 }
             }

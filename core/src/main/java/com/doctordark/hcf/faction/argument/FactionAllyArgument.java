@@ -1,18 +1,17 @@
 package com.doctordark.hcf.faction.argument;
 
-import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.event.FactionRelationCreateEvent;
 import com.doctordark.hcf.faction.struct.Relation;
 import com.doctordark.hcf.faction.struct.Role;
 import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
+import com.doctordark.util.command.CommandArgument;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.ipvp.util.command.CommandArgument;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,7 +45,7 @@ public class FactionAllyArgument extends CommandArgument {
             return true;
         }
 
-        if (ConfigurationService.MAX_ALLIES_PER_FACTION <= 0) {
+        if (plugin.getConfiguration().getFactionMaxAllies() <= 0) {
             sender.sendMessage(ChatColor.RED + "Allies are disabled this map.");
             return true;
         }
@@ -85,13 +84,15 @@ public class FactionAllyArgument extends CommandArgument {
 
         Collection<UUID> allied = playerFaction.getAllied();
 
-        if (allied.size() >= ConfigurationService.MAX_ALLIES_PER_FACTION) {
-            sender.sendMessage(ChatColor.RED + "Your faction already has reached the alliance limit, which is " + ConfigurationService.MAX_ALLIES_PER_FACTION + '.');
+        if (allied.size() >= plugin.getConfiguration().getFactionMaxAllies()) {
+            sender.sendMessage(ChatColor.RED + "Your faction already has reached the alliance limit, which is " + plugin.getConfiguration().getFactionMaxAllies() + '.');
             return true;
         }
 
-        if (targetFaction.getAllied().size() >= ConfigurationService.MAX_ALLIES_PER_FACTION) {
-            sender.sendMessage(targetFaction.getDisplayName(sender) + ChatColor.RED + " has reached their maximum alliance limit, which is " + ConfigurationService.MAX_ALLIES_PER_FACTION + '.');
+        if (targetFaction.getAllied().size() >= plugin.getConfiguration().getFactionMaxAllies()) {
+            sender.sendMessage(targetFaction.getDisplayName(sender) + ChatColor.RED + " has reached their maximum alliance limit, which is " +
+                    plugin.getConfiguration().getFactionMaxAllies() + '.');
+
             return true;
         }
 
@@ -128,7 +129,7 @@ public class FactionAllyArgument extends CommandArgument {
         // Handle the request.
         playerFaction.broadcast(targetFaction.getDisplayName(playerFaction) + ChatColor.YELLOW + " were informed that you wish to be " + RELATION.getDisplayName() + ChatColor.YELLOW + '.');
         targetFaction.broadcast(playerFaction.getDisplayName(targetFaction) + ChatColor.YELLOW + " has sent a request to be " + RELATION.getDisplayName() + ChatColor.YELLOW +
-                ". Use " + ConfigurationService.ALLY_COLOUR + "/faction " + getName() + ' ' + playerFaction.getName() + ChatColor.YELLOW + " to accept.");
+                ". Use " + plugin.getConfiguration().getRelationColourAlly() + "/faction " + getName() + ' ' + playerFaction.getName() + ChatColor.YELLOW + " to accept.");
 
         return true;
     }

@@ -6,6 +6,7 @@ import com.doctordark.hcf.faction.type.ClaimableFaction;
 import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.RoadFaction;
 import com.doctordark.hcf.timer.Timer;
+import com.doctordark.util.cuboid.Cuboid;
 import com.google.common.base.Predicate;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -21,7 +22,6 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
-import org.ipvp.util.cuboid.Cuboid;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -97,13 +97,17 @@ public class WallBorderListener implements Listener {
     private void handlePositionChanged(Player player, World toWorld, int toX, int toY, int toZ) {
         final VisualType visualType;
         final Timer relevantTimer;
-        if (plugin.getTimerManager().getCombatTimer().getRemaining(player) > 0L) {
+
+        boolean flag; // TRUE is is in combat, FALSE is has invincibility timer
+        if (flag = (plugin.getTimerManager().getCombatTimer().getRemaining(player) > 0L)) {
             visualType = VisualType.SPAWN_BORDER;
             relevantTimer = plugin.getTimerManager().getCombatTimer();
         } else if (plugin.getTimerManager().getInvincibilityTimer().getRemaining(player) > 0L) {
             visualType = VisualType.CLAIM_BORDER;
             relevantTimer = plugin.getTimerManager().getInvincibilityTimer();
-        } else return;
+        } else {
+            return;
+        }
 
         // Clear any visualises that are no longer within distance.
         plugin.getVisualiseHandler().clearVisualBlocks(player, visualType, new Predicate<VisualBlock>() {
@@ -128,23 +132,19 @@ public class WallBorderListener implements Listener {
         for (int x = minX; x < maxX; x++) {
             for (int z = minZ; z < maxZ; z++) {
                 Faction faction = plugin.getFactionManager().getFactionAt(toWorld, x, z);
-                if (!(faction instanceof ClaimableFaction)) continue;
-
-                // Special case for these.
-                if (visualType == VisualType.SPAWN_BORDER) {
-                    if (!faction.isSafezone()) {
-                        continue;
+                if (faction instanceof ClaimableFaction) {
+                    // Special case for these.
+                    if (flag) {
+                        if (!faction.isSafezone()) continue;
+                    } else {
+                        if (faction instanceof RoadFaction || faction.isSafezone()) continue;
                     }
-                } else if (visualType == VisualType.CLAIM_BORDER) {
-                    if (faction instanceof RoadFaction || faction.isSafezone()) {
-                        continue;
-                    }
-                }
 
-                Collection<Claim> claims = ((ClaimableFaction) faction).getClaims();
-                for (Claim claim : claims) {
-                    if (toWorld.equals(claim.getWorld())) {
-                        added.add(claim);
+                    Collection<Claim> claims = ((ClaimableFaction) faction).getClaims();
+                    for (Claim claim : claims) {
+                        if (toWorld.equals(claim.getWorld())) {
+                            added.add(claim);
+                        }
                     }
                 }
             }

@@ -1,6 +1,5 @@
 package com.doctordark.hcf.faction;
 
-import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.claim.Claim;
 import com.doctordark.hcf.faction.event.FactionClaimChangedEvent;
@@ -20,6 +19,8 @@ import com.doctordark.hcf.faction.type.RoadFaction;
 import com.doctordark.hcf.faction.type.SpawnFaction;
 import com.doctordark.hcf.faction.type.WarzoneFaction;
 import com.doctordark.hcf.faction.type.WildernessFaction;
+import com.doctordark.util.Config;
+import com.doctordark.util.JavaUtils;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.ImmutableList;
@@ -37,8 +38,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.ipvp.util.Config;
-import org.ipvp.util.JavaUtils;
 import org.spigotmc.CaseInsensitiveMap;
 
 import java.util.ArrayList;
@@ -135,7 +134,7 @@ public class FlatFileFactionManager implements Listener, FactionManager {
         }
 
         // Nether Warzone should be 8 times smaller allowing for Gold Farms to actually be efficient.
-        int warzoneRadius = ConfigurationService.WARZONE_RADIUS;
+        int warzoneRadius = plugin.getConfiguration().getWarzoneRadius();
         if (environment == World.Environment.NETHER) {
             warzoneRadius /= 8;
         }

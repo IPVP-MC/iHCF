@@ -12,7 +12,7 @@ import com.doctordark.hcf.eventgame.argument.EventSetCapzoneArgument;
 import com.doctordark.hcf.eventgame.argument.EventSetLootArgument;
 import com.doctordark.hcf.eventgame.argument.EventStartArgument;
 import com.doctordark.hcf.eventgame.argument.EventUptimeArgument;
-import org.ipvp.util.command.ArgumentExecutor;
+import com.doctordark.util.command.ArgumentExecutor;
 
 /**
  * Handles the execution and tab completion of the event command.

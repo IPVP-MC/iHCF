@@ -1,7 +1,7 @@
 package com.doctordark.hcf.timer;
 
+import com.doctordark.util.Config;
 import lombok.Getter;
-import org.ipvp.util.Config;
 
 /**
  * Represents a {@link Timer}, used to manage cooldowns.

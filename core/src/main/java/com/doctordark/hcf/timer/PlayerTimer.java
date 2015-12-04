@@ -4,12 +4,12 @@ import com.doctordark.hcf.timer.event.TimerClearEvent;
 import com.doctordark.hcf.timer.event.TimerExtendEvent;
 import com.doctordark.hcf.timer.event.TimerPauseEvent;
 import com.doctordark.hcf.timer.event.TimerStartEvent;
+import com.doctordark.util.Config;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
-import org.ipvp.util.Config;
 
 import javax.annotation.Nullable;
 import java.util.LinkedHashMap;

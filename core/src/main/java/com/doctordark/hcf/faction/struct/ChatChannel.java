@@ -1,6 +1,6 @@
 package com.doctordark.hcf.faction.struct;
 
-import com.doctordark.hcf.ConfigurationService;
+import com.doctordark.hcf.HCF;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -27,48 +27,22 @@ public enum ChatChannel {
     }
 
     public String getDisplayName() {
-        final String prefix;
+        final HCF plugin = HCF.getPlugin();
+        String prefix;
         switch (this) {
             case FACTION:
-                prefix = ConfigurationService.TEAMMATE_COLOUR.toString();
+                prefix = plugin.getConfiguration().getRelationColourTeammate().toString();
                 break;
             case ALLIANCE:
-                prefix = ConfigurationService.ALLY_COLOUR.toString();
+                prefix = plugin.getConfiguration().getRelationColourAlly().toString();
                 break;
             case PUBLIC:
             default:
-                prefix = ConfigurationService.ENEMY_COLOUR.toString();
+                prefix = plugin.getConfiguration().getRelationColourEnemy().toString();
                 break;
         }
 
         return prefix + name;
-    }
-
-    /**
-     * Gets the short name of this {@link ChatChannel}.
-     *
-     * @return the short name
-     */
-    public String getShortName() {
-        switch (this) {
-            case FACTION:
-                return "FC";
-            case ALLIANCE:
-                return "AC";
-            case PUBLIC:
-            default:
-                return "PC";
-        }
-    }
-
-    /**
-     * Parse an {@link ChatChannel} from an id.
-     *
-     * @param id the id to search
-     * @return the parsed {@link ChatChannel} or {@link ChatChannel#PUBLIC} if not found
-     */
-    public static ChatChannel parse(String id) {
-        return parse(id, PUBLIC);
     }
 
     /**
@@ -116,7 +90,7 @@ public enum ChatChannel {
             case FACTION:
                 return PUBLIC;
             case PUBLIC:
-                return ConfigurationService.MAX_ALLIES_PER_FACTION > 0 ? ALLIANCE : FACTION;
+                return HCF.getPlugin().getConfiguration().getFactionMaxAllies() > 0 ? ALLIANCE : FACTION;
             case ALLIANCE:
                 return FACTION;
             default:
@@ -125,11 +99,15 @@ public enum ChatChannel {
     }
 
     public String getRawFormat(Player player) {
+        final HCF plugin = HCF.getPlugin();
+        ChatColor colour;
         switch (this) {
             case FACTION:
-                return ConfigurationService.TEAMMATE_COLOUR + "(" + getDisplayName() + ConfigurationService.TEAMMATE_COLOUR + ") " + player.getName() + ChatColor.GRAY + ": " + ChatColor.YELLOW + "%2$s";
+                colour = plugin.getConfiguration().getRelationColourTeammate();
+                return colour + "(" + getDisplayName() + colour + ") " + player.getName() + ChatColor.GRAY + ": " + ChatColor.YELLOW + "%2$s";
             case ALLIANCE:
-                return ConfigurationService.ALLY_COLOUR + "(" + getDisplayName() + ConfigurationService.ALLY_COLOUR + ") " + player.getName() + ChatColor.GRAY + ": " + ChatColor.YELLOW + "%2$s";
+                colour = plugin.getConfiguration().getRelationColourTeammate();
+                return colour + "(" + getDisplayName() + colour + ") " + player.getName() + ChatColor.GRAY + ": " + ChatColor.YELLOW + "%2$s";
             default:
                 throw new IllegalArgumentException("Cannot get the raw format for public chat channel");
         }

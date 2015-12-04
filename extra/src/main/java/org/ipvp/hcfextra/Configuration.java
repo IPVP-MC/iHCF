@@ -1,4 +1,4 @@
-package com.doctordark.hcfextra;
+package org.ipvp.hcfextra;
 
 import com.google.common.collect.Iterables;
 import lombok.Getter;

@@ -1,0 +1,168 @@
+// iHCF Configuration File
+// This is in a new custom format **NOT YAML**
+// Be sure to double-check your config
+// Credits - Techcable's Configuration API
+
+// Timezone to use for events and stuff
+serverTimeZone = EST
+
+// The speed at which items in furnaces cook, set to 1 for default.
+furnaceCookSpeedMultiplier = 6.0
+
+// If you should be able to bottle exp by crafting a glass bottle.
+bottledExp = true
+
+// If you should be able to de-enchant books by right clicking enchant tables.
+bookDeenchanting = true
+
+// If death signs should spawn upon deaths.
+deathSigns = true
+
+// If death signs should thaw upon deaths.
+deathLightning = true
+
+// The current number of the map.
+mapNumber = 1
+
+// If the server is in a kit map mode.
+kitMap = false
+
+// If ally damage should be prevented or just warn the attacker.
+preventAllyDamage = true
+
+economy {
+    // The amount of money a player starts off with.
+    startingBalance = 250
+}
+
+spawners {
+    preventBreakingNether = true
+    preventPlacingNether = true
+}
+
+expMultiplier {
+    // The multipliers to set for experience, set to 1.0 to normalise as vanilla.
+    global = 2.0
+    fishing = 2.0
+    smelting = 2.0
+    lootingPerLevel = 1.5
+    luckPerLevel = 1.5
+    fortunePerLevel = 1.5
+}
+
+roads {
+    // If players are allowed to claim next to roads
+    allowClaimsBesides = true
+}
+
+scoreboard {
+    sidebar {
+        title = "&a&lHCF &c[Map {MAP_NUMBER}]"
+        enabled = true
+    }
+
+    nametags {
+        enabled = true
+    }
+}
+
+combatlog {
+    enabled = true
+
+    // The ticks for when a combat logger NPC should despawn.
+    despawnDelayTicks = 600
+}
+
+conquest {
+    pointLossPerDeath = 20
+    requiredVictoryPoints = 300
+    allowNegativePoints = true
+}
+
+warzone {
+    radius = 800
+}
+
+factions {
+    disallowedFactionNames = [
+        "EOTW",
+        "KOHI"
+    ]
+
+    nameMinCharacters = 3
+    nameMaxCharacters = 16
+    maxMembers = 25
+    maxClaims = 8
+    maxAllies = 1
+
+    dtr {
+        minimum = -50
+        maximum = 6
+        millisecondsBetweenUpdates = 45000
+        incrementBetweenUpdates = 0.1
+    }
+}
+
+subclaims {
+    minNameCharacters = 3
+    maxNameCharacters = 16
+}
+
+relationColours {
+    wilderness = "DARK_GREEN"
+    warzone = "LIGHT_PURPLE"
+    teammate = "GREEN"
+    ally = "GOLD"
+    enemy = "RED"
+    road = "YELLOW"
+    safezone = "AQUA"
+}
+
+deathban {
+    baseDurationMinutes = 60
+    respawnScreenSecondsBeforeKick = 15
+}
+
+enchantmentLimits = [
+    "PROTECTION_ENVIRONMENTAL = 3",
+    "PROTECTION_FIRE = 3",
+    "SILK_TOUCH = 1",
+    "DURABILITY = 3",
+    "PROTECTION_EXPLOSIONS = 3",
+    "LOOT_BONUS_BLOCKS = 3",
+    "PROTECTION_PROJECTILE = 3",
+    "OXYGEN = 3",
+    "WATER_WORKER = 1",
+    "THORNS = 0",
+    "DAMAGE_ALL = 3",
+    "ARROW_KNOCKBACK = 1",
+    "KNOCKBACK = 1",
+    "FIRE_ASPECT = 1",
+    "LOOT_BONUS_MOBS = 3",
+    "LUCK = 3",
+    "LURE = 3"
+]
+
+potionLimits = [
+    "STRENGTH = 0",
+    "INVISIBILITY = 0",
+    "REGEN = 0",
+    "WEAKNESS = 0",
+    "INSTANT_DAMAGE = 0",
+    "SLOWNESS = 1",
+    "POISON = 1"
+]
+
+end {
+    open = true
+    exitLocation = "world,0.5,75,0.5,0,0"
+    extinguishFireOnExit = true
+    removeStrengthOnEntrance = true
+}
+
+eotw {
+    chatSymbolPrefix = " \u2605"
+    chatSymbolSuffix = ""
+    lastMapCapperUuids = [
+    ]
+}

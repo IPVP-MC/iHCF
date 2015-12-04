@@ -1,12 +1,12 @@
 package com.doctordark.hcf.economy;
 
+import com.doctordark.util.Config;
 import gnu.trove.impl.Constants;
 import gnu.trove.map.TObjectIntMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
 import gnu.trove.procedure.TObjectIntProcedure;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.ipvp.util.Config;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

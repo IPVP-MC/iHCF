@@ -1,16 +1,15 @@
 package com.doctordark.hcf.eventgame.conquest;
 
-import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.eventgame.EventType;
 import com.doctordark.hcf.eventgame.tracker.ConquestTracker;
 import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
+import com.doctordark.util.JavaUtils;
+import com.doctordark.util.command.CommandArgument;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.ipvp.util.JavaUtils;
-import org.ipvp.util.command.CommandArgument;
 
 public class ConquestSetpointsArgument extends CommandArgument {
 
@@ -47,8 +46,8 @@ public class ConquestSetpointsArgument extends CommandArgument {
             return true;
         }
 
-        if (amount > ConfigurationService.CONQUEST_REQUIRED_WIN_POINTS) {
-            sender.sendMessage(ChatColor.RED + "Maximum points for Conquest is " + ConfigurationService.CONQUEST_REQUIRED_WIN_POINTS + '.');
+        if (amount > plugin.getConfiguration().getConquestRequiredVictoryPoints()) {
+            sender.sendMessage(ChatColor.RED + "Maximum points for Conquest is " + plugin.getConfiguration().getConquestRequiredVictoryPoints() + '.');
             return true;
         }
 

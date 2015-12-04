@@ -1,6 +1,5 @@
 package com.doctordark.hcf.combatlog.type;
 
-import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.combatlog.event.LoggerRemovedEvent;
 import net.minecraft.server.v1_7_R4.Entity;
@@ -34,11 +33,11 @@ public class LoggerEntityHuman extends EntityPlayer implements LoggerEntity {
 
     protected BukkitTask removalTask;
 
-    public LoggerEntityHuman(Player player, World world) {
-        this(player, ((CraftWorld) world).getHandle());
+    public LoggerEntityHuman(HCF plugin, Player player, World world) {
+        this(plugin, player, ((CraftWorld) world).getHandle());
     }
 
-    private LoggerEntityHuman(Player player, WorldServer world) {
+    private LoggerEntityHuman(HCF plugin, Player player, WorldServer world) {
         super(MinecraftServer.getServer(), world, new GameProfile(player.getUniqueId(), player.getName()), new PlayerInteractManager(world));
 
         // Assign variables first.
@@ -69,7 +68,7 @@ public class LoggerEntityHuman extends EntityPlayer implements LoggerEntity {
                 playerlist.sendAll(packet);
                 finalLogger.destroy();
             }
-        }.runTaskLater(HCF.getPlugin(), ConfigurationService.COMBAT_LOG_DESPAWN_TICKS);
+        }.runTaskLater(plugin, plugin.getConfiguration().getCombatlogDespawnDelayTicks());
     }
 
     private static class FakePlayerConnection extends PlayerConnection {

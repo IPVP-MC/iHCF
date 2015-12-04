@@ -3,13 +3,13 @@ package com.doctordark.hcf.eventgame.argument;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.eventgame.EventType;
 import com.doctordark.hcf.eventgame.crate.EventKey;
+import com.doctordark.util.command.CommandArgument;
 import net.minecraft.util.com.google.common.primitives.Ints;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.ipvp.util.command.CommandArgument;
 
 import java.util.ArrayList;
 import java.util.Collections;

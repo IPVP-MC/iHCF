@@ -1,10 +1,12 @@
 package com.doctordark.hcf.listener;
 
-import com.doctordark.hcf.ConfigurationService;
+import com.doctordark.base.GuavaCompat;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.FactionMember;
 import com.doctordark.hcf.faction.claim.Claim;
 import com.doctordark.hcf.faction.type.PlayerFaction;
+import com.doctordark.util.ItemBuilder;
+import com.doctordark.util.ParticleEffect;
 import com.google.common.base.Optional;
 import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.ChatColor;
@@ -27,9 +29,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.ipvp.base.GuavaCompat;
-import org.ipvp.util.ItemBuilder;
-import org.ipvp.util.ParticleEffect;
 
 import java.util.List;
 
@@ -123,7 +122,8 @@ public class CrowbarListener implements Listener {
                             if (informFaction) {
                                 FactionMember factionMember = playerFaction.getMember(player);
                                 String astrix = factionMember.getRole().getAstrix();
-                                playerFaction.broadcast(astrix + ConfigurationService.TEAMMATE_COLOUR + " has used a Crowbar de-activating one of the factions' end portals.", player.getUniqueId());
+                                playerFaction.broadcast(astrix + plugin.getConfiguration().getRelationColourTeammate() +
+                                        " has used a Crowbar de-activating one of the factions' end portals.", player.getUniqueId());
                             }
                         }
                     }

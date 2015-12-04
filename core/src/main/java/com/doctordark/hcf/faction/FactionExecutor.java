@@ -47,10 +47,10 @@ import com.doctordark.hcf.faction.argument.staff.FactionRemoveArgument;
 import com.doctordark.hcf.faction.argument.staff.FactionSetDeathbanMultiplierArgument;
 import com.doctordark.hcf.faction.argument.staff.FactionSetDtrArgument;
 import com.doctordark.hcf.faction.argument.staff.FactionSetDtrRegenArgument;
+import com.doctordark.util.command.ArgumentExecutor;
+import com.doctordark.util.command.CommandArgument;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.ipvp.util.command.ArgumentExecutor;
-import org.ipvp.util.command.CommandArgument;
 
 /**
  * Class to handle the command and tab completion for the faction command.

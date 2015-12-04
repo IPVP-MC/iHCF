@@ -36,13 +36,17 @@ public class CoreListener implements Listener {
     public void onPlayerSpawn(PlayerSpawnLocationEvent event) {
         Player player = event.getPlayer();
         if (!player.hasPlayedBefore()) {
-            plugin.getEconomyManager().addBalance(player.getUniqueId(), 250);    // give player some starting money
+            plugin.getEconomyManager().addBalance(player.getUniqueId(), plugin.getConfiguration().getEconomyStartingBalance());
             event.setSpawnLocation(Bukkit.getWorld(CoreListener.DEFAULT_WORLD_NAME).getSpawnLocation().add(0.5, 0, 0.5));
         }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
+        if (!plugin.getConfiguration().isSpawnersPreventBreakingNether()) {
+            return;
+        }
+
         Player player = event.getPlayer();
         if (player.getWorld().getEnvironment() == World.Environment.NETHER && event.getBlock().getState() instanceof CreatureSpawner &&
                 !player.hasPermission(ProtectionListener.PROTECTION_BYPASS_PERMISSION)) {
@@ -54,6 +58,10 @@ public class CoreListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onBlockPlace(BlockPlaceEvent event) {
+        if (!plugin.getConfiguration().isSpawnersPreventPlacingNether()) {
+            return;
+        }
+
         Player player = event.getPlayer();
         if (player.getWorld().getEnvironment() == World.Environment.NETHER && event.getBlock().getState() instanceof CreatureSpawner &&
                 !player.hasPermission(ProtectionListener.PROTECTION_BYPASS_PERMISSION)) {

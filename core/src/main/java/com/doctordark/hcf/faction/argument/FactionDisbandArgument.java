@@ -1,14 +1,13 @@
 package com.doctordark.hcf.faction.argument;
 
-import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.struct.Role;
 import com.doctordark.hcf.faction.type.PlayerFaction;
+import com.doctordark.util.command.CommandArgument;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.ipvp.util.command.CommandArgument;
 
 public class FactionDisbandArgument extends CommandArgument {
 
@@ -39,7 +38,7 @@ public class FactionDisbandArgument extends CommandArgument {
             return true;
         }
 
-        if (playerFaction.isRaidable() && !ConfigurationService.KIT_MAP && !plugin.getEotwHandler().isEndOfTheWorld()) {
+        if (playerFaction.isRaidable() && !plugin.getConfiguration().isKitMap() && !plugin.getEotwHandler().isEndOfTheWorld()) {
             sender.sendMessage(ChatColor.RED + "You cannot disband your faction while it is raidable.");
             return true;
         }

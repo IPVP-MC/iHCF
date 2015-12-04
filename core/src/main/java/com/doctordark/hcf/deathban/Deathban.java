@@ -1,9 +1,9 @@
 package com.doctordark.hcf.deathban;
 
+import com.doctordark.util.PersistableLocation;
 import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.ipvp.util.PersistableLocation;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

@@ -2,6 +2,7 @@ package com.doctordark.hcf.eventgame.crate;
 
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.eventgame.EventType;
+import com.doctordark.util.InventoryUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -24,7 +25,6 @@ import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.ipvp.util.InventoryUtils;
 
 import java.util.List;
 

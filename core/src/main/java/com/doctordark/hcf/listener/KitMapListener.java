@@ -1,6 +1,5 @@
 package com.doctordark.hcf.listener;
 
-import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.event.FactionClaimChangeEvent;
 import com.doctordark.hcf.faction.event.cause.ClaimChangeCause;
@@ -23,7 +22,7 @@ public class KitMapListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onFactionClaimChange(FactionClaimChangeEvent event) {
-        if (event.getCause() == ClaimChangeCause.CLAIM && ConfigurationService.KIT_MAP && event.getClaimableFaction() instanceof PlayerFaction) {
+        if (event.getCause() == ClaimChangeCause.CLAIM && plugin.getConfiguration().isKitMap() && event.getClaimableFaction() instanceof PlayerFaction) {
             event.setCancelled(true);
             event.getSender().sendMessage(ChatColor.RED + "Player based land cannot be claimed during a kit map.");
         }
@@ -31,21 +30,21 @@ public class KitMapListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
-        if (ConfigurationService.KIT_MAP) {
+        if (plugin.getConfiguration().isKitMap()) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onPlayerDropItem(PlayerDropItemEvent event) {
-        if (ConfigurationService.KIT_MAP && plugin.getFactionManager().getFactionAt(event.getItemDrop().getLocation()).isSafezone()) {
+        if (plugin.getConfiguration().isKitMap() && plugin.getFactionManager().getFactionAt(event.getItemDrop().getLocation()).isSafezone()) {
             event.getItemDrop().remove();
         }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onItemSpawn(ItemSpawnEvent event) {
-        if (ConfigurationService.KIT_MAP && plugin.getFactionManager().getFactionAt(event.getLocation()).isSafezone()) {
+        if (plugin.getConfiguration().isKitMap() && plugin.getFactionManager().getFactionAt(event.getLocation()).isSafezone()) {
             event.getEntity().remove();
         }
     }

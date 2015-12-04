@@ -1,15 +1,14 @@
 package com.doctordark.hcf.faction.argument;
 
-import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
+import com.doctordark.util.JavaUtils;
+import com.doctordark.util.command.CommandArgument;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.ipvp.util.JavaUtils;
-import org.ipvp.util.command.CommandArgument;
 
 /**
  * Faction argument used to create a new {@link Faction}.
@@ -42,18 +41,22 @@ public class FactionCreateArgument extends CommandArgument {
 
         String name = args[1];
 
-        if (ConfigurationService.DISALLOWED_FACTION_NAMES.contains(name.toLowerCase())) {
+        if (plugin.getConfiguration().getFactionDisallowedNames().contains(name.toLowerCase())) {
             sender.sendMessage(ChatColor.RED + "'" + name + "' is a blocked faction name.");
             return true;
         }
 
-        if (name.length() < ConfigurationService.FACTION_NAME_CHARACTERS_MIN) {
-            sender.sendMessage(ChatColor.RED + "Faction names must have at least " + ConfigurationService.FACTION_NAME_CHARACTERS_MIN + " characters.");
+        int value = plugin.getConfiguration().getFactionNameMinCharacters();
+
+        if (name.length() < value) {
+            sender.sendMessage(ChatColor.RED + "Faction names must have at least " + value + " characters.");
             return true;
         }
 
-        if (name.length() > ConfigurationService.FACTION_NAME_CHARACTERS_MAX) {
-            sender.sendMessage(ChatColor.RED + "Faction names cannot be longer than " + ConfigurationService.FACTION_NAME_CHARACTERS_MAX + " characters.");
+        value = plugin.getConfiguration().getFactionNameMaxCharacters();
+
+        if (name.length() > value) {
+            sender.sendMessage(ChatColor.RED + "Faction names cannot be longer than " + value + " characters.");
             return true;
         }
 

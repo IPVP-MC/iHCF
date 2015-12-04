@@ -9,9 +9,9 @@ import com.doctordark.hcf.timer.PlayerTimer;
 import com.doctordark.hcf.timer.TimerCooldown;
 import com.doctordark.hcf.timer.event.TimerStartEvent;
 import com.doctordark.hcf.visualise.VisualType;
+import com.doctordark.util.BukkitUtils;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
-import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
@@ -21,7 +21,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.ipvp.util.BukkitUtils;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -134,8 +133,7 @@ public class CombatTimer extends PlayerTimer implements Listener {
             Optional<Player> optional = event.getPlayer();
             if (optional.isPresent()) {
                 Player player = optional.get();
-                player.sendMessage(ChatColor.AQUA + "You are now " + getDisplayName() + ChatColor.AQUA + " tagged for " + ChatColor.YELLOW +
-                        DurationFormatUtils.formatDurationWords(event.getDuration(), true, true) + ChatColor.AQUA + '.');
+                player.sendMessage(ChatColor.RED + "You are now in combat.");
             }
         }
     }
