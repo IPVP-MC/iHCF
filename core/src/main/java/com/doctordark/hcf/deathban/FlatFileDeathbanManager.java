@@ -73,13 +73,19 @@ public class FlatFileDeathbanManager implements DeathbanManager {
         Location location = player.getLocation();
         Faction factionAt = plugin.getFactionManager().getFactionAt(location);
 
-        long duration = plugin.getConfiguration().getDeathbanBaseDurationMinutes() * 1000L;
-        if (!factionAt.isDeathban()) {
-            duration /= 2L; // non-deathban factions should be 50% quicker
+        long duration;
+        if (plugin.getEotwHandler().isEndOfTheWorld()) {
+            duration = MAX_DEATHBAN_TIME;
+        } else {
+            duration = plugin.getConfiguration().getDeathbanBaseDurationMinutes() * 1000L;
+            if (!factionAt.isDeathban()) {
+                duration /= 2L; // non-deathban factions should be 50% quicker
+            }
+
+            duration *= this.getDeathBanMultiplier(player);
+            duration *= factionAt.getDeathbanMultiplier();
         }
 
-        duration *= getDeathBanMultiplier(player);
-        duration *= factionAt.getDeathbanMultiplier();
         return applyDeathBan(player.getUniqueId(), new Deathban(reason, Math.min(MAX_DEATHBAN_TIME, duration), new PersistableLocation(location)));
     }
 

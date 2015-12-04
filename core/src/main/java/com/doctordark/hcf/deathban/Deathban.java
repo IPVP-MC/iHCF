@@ -20,11 +20,15 @@ public class Deathban implements ConfigurationSerializable {
 
     private final PersistableLocation deathPoint;
 
-    public Deathban(String reason, long duration, PersistableLocation deathPoint) {
+    @Getter
+    private final boolean eotwDeathban;
+
+    public Deathban(String reason, long duration, PersistableLocation deathPoint, boolean eotwDeathban) {
         this.reason = reason;
         this.creationMillis = System.currentTimeMillis();
         this.expiryMillis = this.creationMillis + duration;
         this.deathPoint = deathPoint;
+        this.eotwDeathban = eotwDeathban;
     }
 
     public Deathban(Map<String, Object> map) {
@@ -34,6 +38,7 @@ public class Deathban implements ConfigurationSerializable {
 
         Object object = map.get("deathPoint");
         this.deathPoint = object instanceof PersistableLocation ? (PersistableLocation) object : null;
+        this.eotwDeathban = (Boolean) map.get("eotwDeathban");
     }
 
     @Override
@@ -46,6 +51,7 @@ public class Deathban implements ConfigurationSerializable {
             map.put("deathPoint", this.deathPoint);
         }
 
+        map.put("eotwDeathban", this.eotwDeathban);
         return map;
     }
 
@@ -64,7 +70,7 @@ public class Deathban implements ConfigurationSerializable {
      * @return true if is active
      */
     public boolean isActive() {
-        return this.getRemaining() > 0L;
+        return !this.eotwDeathban && this.getRemaining() > 0L;
     }
 
     /**

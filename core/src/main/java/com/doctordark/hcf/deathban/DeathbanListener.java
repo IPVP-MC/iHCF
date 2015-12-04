@@ -54,7 +54,7 @@ public class DeathbanListener implements Listener {
             return;
         }
 
-        if (this.plugin.getEotwHandler().isEndOfTheWorld()) {
+        if (deathban.isEotwDeathban()) {
             event.disallow(PlayerLoginEvent.Result.KICK_OTHER, ChatColor.RED + "Deathbanned for the entirety of the map due to EOTW.\nCome back tomorrow for SOTW.");
             return;
         }
