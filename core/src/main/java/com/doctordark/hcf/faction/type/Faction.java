@@ -177,7 +177,7 @@ public abstract class Faction implements ConfigurationSerializable {
      */
     public void setDeathban(boolean deathban) {
         if (deathban != isDeathban()) {
-            this.deathbanMultiplier = deathban ? 1.0 : 0.0;
+            this.deathbanMultiplier = deathban ? 1.0D : 0.5D;
         }
     }
 
