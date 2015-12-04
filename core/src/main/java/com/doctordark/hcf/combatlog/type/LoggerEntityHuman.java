@@ -51,6 +51,7 @@ public class LoggerEntityHuman extends EntityPlayer implements LoggerEntity {
         originPlayer.copyTo(this, true);
         this.lastDamager = originPlayer.lastDamager;
         this.invulnerableTicks = originPlayer.invulnerableTicks;
+        this.combatTracker = originPlayer.combatTracker;
 
         // Next set the values
         new FakePlayerConnection(this); // also assigns to the EntityPlayer
@@ -99,6 +100,10 @@ public class LoggerEntityHuman extends EntityPlayer implements LoggerEntity {
     }
 
     @Override
+    public void closeInventory() {
+    }
+
+    @Override
     public void die() {
         super.die();
 
@@ -108,11 +113,6 @@ public class LoggerEntityHuman extends EntityPlayer implements LoggerEntity {
             this.removalTask.cancel();
             this.removalTask = null;
         }
-
-        /*PlayerList playerlist = MinecraftServer.getServer().getPlayerList();
-        playerlist.players.remove(this);
-        playerlist.playersByName.remove(this.getName());
-        playerlist.uuidMap.remove(this.playerUUID);*/
     }
 
     @Override

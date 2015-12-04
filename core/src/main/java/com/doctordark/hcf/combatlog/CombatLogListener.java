@@ -9,7 +9,6 @@ import com.doctordark.hcf.combatlog.type.LoggerEntityHuman;
 import net.minecraft.server.v1_7_R4.EntityPlayer;
 import net.minecraft.server.v1_7_R4.WorldServer;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftHumanEntity;
@@ -77,10 +76,7 @@ public class CombatLogListener implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
         EntityPlayer entityPlayer = ((CraftPlayer) event.getEntity()).getHandle();
         if (entityPlayer instanceof LoggerEntityHuman) {
-            String deathMessage = event.getDeathMessage();
-            if (deathMessage != null) {
-                event.setDeathMessage(ChatColor.GOLD + "(" + ChatColor.WHITE + "CombatLogger" + ChatColor.GOLD + ") " + ChatColor.WHITE + deathMessage);
-            }
+            entityPlayer.getBukkitEntity().saveData();
         }
     }
 
@@ -95,18 +91,7 @@ public class CombatLogListener implements Listener {
         if (currentLogger != null) {
             CraftLivingEntity loggerEntity = currentLogger.getBukkitEntity();
             currentLogger.destroy();
-
             Player player = event.getPlayer();
-
-            // Apply some attributes back to the player.
-            event.setSpawnLocation(loggerEntity.getLocation());
-            player.setFallDistance(loggerEntity.getFallDistance());
-            player.setRemainingAir(loggerEntity.getRemainingAir());
-            player.setHealth(Math.min(player.getMaxHealth(), loggerEntity.getHealth()));
-            if (loggerEntity.getTicksLived() > 20) {
-                player.setTicksLived(loggerEntity.getTicksLived());
-            }
-
             new BukkitRunnable() {
                 @Override
                 public void run() {
