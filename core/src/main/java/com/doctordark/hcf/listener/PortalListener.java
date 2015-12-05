@@ -89,7 +89,7 @@ public class PortalListener implements Listener {
             Player player = event.getPlayer();
 
             // Prevent entering the end if it's closed.
-            if (plugin.getConfiguration().isEndOpen()) {
+            if (!plugin.getConfiguration().isEndOpen()) {
                 message(player, ChatColor.RED + "The End is currently closed.");
                 event.setCancelled(true);
                 return;
