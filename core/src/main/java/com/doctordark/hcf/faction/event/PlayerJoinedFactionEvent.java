@@ -20,7 +20,6 @@ public class PlayerJoinedFactionEvent extends FactionEvent {
 
     private static final HandlerList handlers = new HandlerList();
 
-    private boolean cancelled;
     private Optional<Player> player; // lazy-load
 
     @Getter

@@ -5,10 +5,12 @@ import org.bukkit.World;
 import java.util.EnumMap;
 import java.util.Map;
 
-//TODO: Remove.
+//TODO: This needs to be removed.
 @Deprecated
 public final class ConfigurationService {
 
+    public static final int END_PORTAL_RADIUS = 20;
+    public static final int END_PORTAL_CENTER = 500;
     public static final Map<World.Environment, Integer> ROAD_LENGTHS = new EnumMap<>(World.Environment.class);
     public static final Map<World.Environment, Integer> SPAWN_RADIUS_MAP = new EnumMap<>(World.Environment.class);
 
@@ -20,11 +22,4 @@ public final class ConfigurationService {
         SPAWN_RADIUS_MAP.put(World.Environment.NETHER, 25);
         SPAWN_RADIUS_MAP.put(World.Environment.THE_END, 15);
     }
-
-    public static final int SUBCLAIM_NAME_CHARACTERS_MIN = 3;
-    public static final int SUBCLAIM_NAME_CHARACTERS_MAX = 16;
-
-    public static final int END_PORTAL_RADIUS = 20;
-    public static final int END_PORTAL_CENTER = 500;
-    public static final boolean COMBAT_LOG_PREVENTION_ENABLED = true;
 }

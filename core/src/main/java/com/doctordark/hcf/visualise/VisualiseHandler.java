@@ -117,7 +117,7 @@ public class VisualiseHandler {
                 int count = 0;
                 Map<Location, MaterialData> updatedBlocks = new HashMap<>();
                 for (Location location : locations) {
-                    if (!canOverwrite && storedVisualises.contains(player.getUniqueId(), location)) {
+                    if (!canOverwrite && this.storedVisualises.contains(player.getUniqueId(), location)) {
                         continue;
                     }
 
@@ -129,7 +129,7 @@ public class VisualiseHandler {
                     VisualBlockData visualBlockData = filled.get(count++);
                     results.put(location, visualBlockData);
                     updatedBlocks.put(location, visualBlockData);
-                    storedVisualises.put(player.getUniqueId(), location, new VisualBlock(visualType, visualBlockData, location));
+                    this.storedVisualises.put(player.getUniqueId(), location, new VisualBlock(visualType, visualBlockData, location));
                 }
 
                 try {

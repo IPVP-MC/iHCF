@@ -1,6 +1,5 @@
 package com.doctordark.hcf.timer.type;
 
-import com.doctordark.hcf.DurationFormatter;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.claim.Claim;
 import com.doctordark.hcf.faction.event.FactionClaimChangedEvent;
@@ -15,6 +14,7 @@ import com.doctordark.hcf.timer.TimerCooldown;
 import com.doctordark.hcf.timer.event.TimerClearEvent;
 import com.doctordark.hcf.visualise.VisualType;
 import com.doctordark.util.BukkitUtils;
+import com.doctordark.util.DurationFormatter;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import net.minecraft.util.gnu.trove.map.TObjectLongMap;

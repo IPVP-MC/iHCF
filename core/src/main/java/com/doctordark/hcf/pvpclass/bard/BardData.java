@@ -51,7 +51,6 @@ public class BardData {
     }
 
     public double getEnergy() {
-        //TODO: double check
         return Math.round(this.getEnergyMillis() / 100.0) / 10.0;
     }
 

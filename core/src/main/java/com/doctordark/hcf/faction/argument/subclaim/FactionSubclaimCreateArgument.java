@@ -1,6 +1,5 @@
 package com.doctordark.hcf.faction.argument.subclaim;
 
-import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.claim.Claim;
 import com.doctordark.hcf.faction.claim.ClaimHandler;
@@ -61,13 +60,13 @@ public class FactionSubclaimCreateArgument extends CommandArgument {
             return true;
         }
 
-        if (args[2].length() < ConfigurationService.SUBCLAIM_NAME_CHARACTERS_MIN) {
-            sender.sendMessage(ChatColor.RED + "Subclaim names must have at least " + ConfigurationService.SUBCLAIM_NAME_CHARACTERS_MIN + " characters.");
+        if (args[2].length() < plugin.getConfiguration().getFactionSubclaimNameMinCharacters()) {
+            sender.sendMessage(ChatColor.RED + "Subclaim names must have at least " + plugin.getConfiguration().getFactionSubclaimNameMinCharacters() + " characters.");
             return true;
         }
 
-        if (args[2].length() > ConfigurationService.SUBCLAIM_NAME_CHARACTERS_MAX) {
-            sender.sendMessage(ChatColor.RED + "Subclaim names cannot be longer than " + ConfigurationService.SUBCLAIM_NAME_CHARACTERS_MAX + " characters.");
+        if (args[2].length() > plugin.getConfiguration().getFactionNameMaxCharacters()) {
+            sender.sendMessage(ChatColor.RED + "Subclaim names cannot be longer than " + plugin.getConfiguration().getFactionSubclaimNameMaxCharacters() + " characters.");
             return true;
         }
 

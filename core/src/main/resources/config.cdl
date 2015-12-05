@@ -3,15 +3,13 @@
 // Be sure to double-check your config
 // Credits - Techcable's Configuration API
 
-// The maximum height to set a faction home, use -1 to ignore this.
-maxHeightFactionHome = -1
-
+// If beds cannot be placed in the Nether.
 preventPlacingBedsNether = true
 
 // Timezone to use for events and stuff
 serverTimeZone = EST
 
-// The speed at which items in furnaces cook, set to 1 for default.
+// The speed at which items in furnaces cook, set to 1.0 for default.
 furnaceCookSpeedMultiplier = 6.0
 
 // If you should be able to bottle exp by crafting a glass bottle.
@@ -41,7 +39,10 @@ economy {
 }
 
 spawners {
+    // If players should not be able to break spawners in the Nether.
     preventBreakingNether = true
+
+    // If players should not be able to place spawners in the Nether.
     preventPlacingNether = true
 }
 
@@ -55,79 +56,143 @@ expMultiplier {
     fortunePerLevel = 1.5
 }
 
-roads {
-    // If players are allowed to claim next to roads
-    allowClaimsBesides = true
-}
-
 scoreboard {
     sidebar {
+        // The title of the sidebar, use {MAP_NUMBER} as a
+        // placeholder with & as colour codes.
         title = "&a&lHCF &c[Map {MAP_NUMBER}]"
+
+        // If this plugin utilises the sidebar.
         enabled = true
     }
 
     nametags {
+        // If this plugin will utilise nametags.
         enabled = true
     }
 }
 
 combatlog {
+    // If this plugin will protect from combat-logging.
     enabled = true
 
     // The ticks for when a combat logger NPC should despawn.
     despawnDelayTicks = 600
 }
 
-conquest {
-    pointLossPerDeath = 20
-    requiredVictoryPoints = 300
-    allowNegativePoints = true
-}
-
 warzone {
+    // The radius of the warzone.
     radius = 800
 }
 
 factions {
+    conquest {
+        // How much points should a faction lose when a player dies in Conquest.
+        pointLossPerDeath = 20
+
+        // How much points should a faction need to win Conquest.
+        requiredVictoryPoints = 300
+
+        // If negative points are possible during conquest.
+        allowNegativePoints = true
+    }
+
+    roads {
+        // If players are allowed to claim next to roads
+        allowClaimsBesides = true
+    }
+
+    // List of faction names that cannot be used.
     disallowedFactionNames = [
         "EOTW",
         "KOHI"
     ]
 
+    // The maximum height to set a faction home, use -1 to ignore this.
+    maxHomeHeight = -1
+
+    // Minimum amount of characters a faction name must be.
     nameMinCharacters = 3
+
+    // Maximum amount of characters a faction name must be.
     nameMaxCharacters = 16
+
+    // Maximum amount of members a faction can own.
     maxMembers = 25
+
+    // Maximum amount of claims a faction can own.
     maxClaims = 8
+
+    // Maximum amount of allies a faction can have.
     maxAllies = 1
 
+    subclaim {
+        // The minimum characters a player can name a subclaim.
+        nameMinCharacters = 3
+
+        // The maximum characters a player can name a subclaim.
+        nameMaxCharacters = 16
+    }
+
     dtr {
+        // The minimum DTR a faction can have.
         minimum = -50
+
+        // The maximum DTR a faction will regenerate to.
         maximum = 6
+
+        // Time in milliseconds between a DTR update.
         millisecondsBetweenUpdates = 45000
+
+        // The DTR again when DTR updates.
         incrementBetweenUpdates = 0.1
+    }
+
+    relationColours {
+        // The nametag and chat colours to show for faction relations.
+        wilderness = "DARK_GREEN"
+        warzone = "LIGHT_PURPLE"
+        teammate = "GREEN"
+        ally = "GOLD"
+        enemy = "RED"
+        road = "YELLOW"
+        safezone = "AQUA"
     }
 }
 
-subclaims {
-    minNameCharacters = 3
-    maxNameCharacters = 16
-}
-
-relationColours {
-    wilderness = "DARK_GREEN"
-    warzone = "LIGHT_PURPLE"
-    teammate = "GREEN"
-    ally = "GOLD"
-    enemy = "RED"
-    road = "YELLOW"
-    safezone = "AQUA"
-}
-
 deathban {
+    // The regular deathban duration.
     baseDurationMinutes = 60
+
+    // The seconds before kicking after showing the user
+    // the respawn screen from a deathban.
     respawnScreenSecondsBeforeKick = 15
 }
 
+end {
+    // If the end should be opened.
+    open = true
+
+    // The location of the spawn point when leaving end by End Portal.
+    exitLocation = "world,0.5,75,0.5,0,0"
+
+    // If fire should be extinguished when leaving the end through an End Portal.
+    extinguishFireOnExit = true
+
+    // If strength should be removed when entering the end through an End Portal.
+    removeStrengthOnEntrance = true
+}
+
+eotw {
+    chatSymbolPrefix = " \u2605"
+    chatSymbolSuffix = ""
+
+    // List of UUIDs that capped last maps EOTW.
+    lastMapCapperUuids = [
+    ]
+}
+
+// The maximum levels an enchantment can be.
 enchantmentLimits = [
     "PROTECTION_ENVIRONMENTAL = 3",
     "PROTECTION_FIRE = 3",
@@ -148,6 +213,7 @@ enchantmentLimits = [
     "LURE = 3"
 ]
 
+// The maximum levels a potion can be brewed to.
 potionLimits = [
     "STRENGTH = 0",
     "INVISIBILITY = 0",
@@ -157,17 +223,3 @@ potionLimits = [
     "SLOWNESS = 1",
     "POISON = 1"
 ]
-
-end {
-    open = true
-    exitLocation = "world,0.5,75,0.5,0,0"
-    extinguishFireOnExit = true
-    removeStrengthOnEntrance = true
-}
-
-eotw {
-    chatSymbolPrefix = " \u2605"
-    chatSymbolSuffix = ""
-    lastMapCapperUuids = [
-    ]
-}

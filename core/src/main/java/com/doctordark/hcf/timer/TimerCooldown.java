@@ -25,7 +25,7 @@ public class TimerCooldown {
 
     @Getter
     @Setter(AccessLevel.PROTECTED)
-    private long pauseMillis;        // milliseconds that were remaining when was paused
+    private long pauseMillis;        // the milliseconds that were remaining when was paused
 
     protected TimerCooldown(Timer timer, long duration) {
         this.owner = null;

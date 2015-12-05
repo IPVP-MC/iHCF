@@ -192,15 +192,13 @@ public class FactionListener implements Listener {
             return;
         }
 
-        Faction faction = event.getFaction();
-        if (faction instanceof PlayerFaction) {
-            Optional<Player> optional = event.getPlayer();
-            if (optional.isPresent()) {
-                Player player = optional.get();
-                if (plugin.getFactionManager().getFactionAt(player.getLocation()) == faction) {
-                    event.setCancelled(true);
-                    player.sendMessage(ChatColor.RED + "You cannot leave your faction whilst you remain in its' territory.");
-                }
+        PlayerFaction playerFaction = event.getFaction();
+        Optional<Player> optional = event.getPlayer();
+        if (optional.isPresent()) {
+            Player player = optional.get();
+            if (plugin.getFactionManager().getFactionAt(player.getLocation()) == playerFaction) {
+                event.setCancelled(true);
+                player.sendMessage(ChatColor.RED + "You cannot leave your faction whilst you remain in its' territory.");
             }
         }
     }

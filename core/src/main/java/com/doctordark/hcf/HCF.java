@@ -170,26 +170,37 @@ public class HCF extends JavaPlugin {
     @Getter
     private WorldEditPlugin worldEdit;
 
+    private boolean configurationLoaded = true;
+
     @Override
     public void onEnable() {
-        HCF.plugin = this;
-        ProtocolLibHook.hook(this);
+        this.registerConfiguration();
+        if (!this.configurationLoaded) {
+            getLogger().severe("Disabling plugin..");
+            setEnabled(false);
+            return;
+        }
 
-        Plugin wep = getServer().getPluginManager().getPlugin("WorldEdit");
+        HCF.plugin = this;
+        ProtocolLibHook.hook(this);                                          // Initialise ProtocolLib hook.
+        DateTimeFormats.load(this.configuration.getServerTimeZone());        // Initialise the static fields.
+        ///////////////////////////
+        Plugin wep = getServer().getPluginManager().getPlugin("WorldEdit");  // Initialise WorldEdit hook.
         this.worldEdit = wep instanceof WorldEditPlugin && wep.isEnabled() ? (WorldEditPlugin) wep : null;
 
-        this.effectRestorer = new EffectRestorer(this);
-        this.registerConfiguration();
+        this.registerSerialization();
         this.registerCommands();
         this.registerManagers();
         this.registerListeners();
 
+        //TODO: More reliable, SQL based.
+        long dataSaveInterval = TimeUnit.MINUTES.toMillis(20L);
         new BukkitRunnable() {
             @Override
             public void run() {
                 saveData();
             }
-        }.runTaskTimerAsynchronously(plugin, TimeUnit.MINUTES.toMillis(20L), TimeUnit.MINUTES.toMillis(20L));
+        }.runTaskTimerAsynchronously(this, dataSaveInterval, dataSaveInterval);
     }
 
     private void saveData() {
@@ -203,26 +214,47 @@ public class HCF extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (!this.configurationLoaded) {
+            // Ignore everything.
+            return;
+        }
+
+        try {
+            String configFileName = "config.cdl";
+            this.configuration.save(new File(getDataFolder(), configFileName), HCF.class.getResource("/" + configFileName));
+        } catch (IOException | InvalidConfigurationException ex) {
+            getLogger().warning("Unable to save config.");
+            ex.printStackTrace();
+        }
+
         this.combatLogListener.removeCombatLoggers();
         this.pvpClassManager.onDisable();
         this.scoreboardHandler.clearBoards();
         this.saveData();
 
-        HCF.plugin = null; // always initialise last
+        HCF.plugin = null; // Always initialise last.
     }
 
     private void registerConfiguration() {
         this.configuration = new Configuration();
         try {
             String configFileName = "config.cdl";
-            this.configuration.load(new File(getDataFolder(), configFileName), HCF.class.getResource("/" + configFileName));
-        } catch (IOException | InvalidConfigurationException ex) {
-            getLogger().severe("Failed to load configuration ");
-            ex.printStackTrace();
-        } finally {
-            DateTimeFormats.load(this.configuration.getServerTimeZone());
-        }
+            File file = new File(getDataFolder(), configFileName);
+            if (!file.exists()) {
+                this.saveResource(configFileName, false);
+            }
 
+            this.configuration.load(file, HCF.class.getResource("/" + configFileName));
+            this.configuration.updateFields();
+        } catch (IOException | InvalidConfigurationException ex) {
+            getLogger().severe("Failed to load configuration.");
+            ex.printStackTrace();
+            this.configurationLoaded = false;
+        }
+    }
+
+    //TODO: Very unstable.
+    private void registerSerialization() {
         ConfigurationSerialization.registerClass(CaptureZone.class);
         ConfigurationSerialization.registerClass(Deathban.class);
         ConfigurationSerialization.registerClass(Claim.class);
@@ -324,13 +356,14 @@ public class HCF extends JavaPlugin {
         this.claimHandler = new ClaimHandler(this);
         this.deathbanManager = new FlatFileDeathbanManager(this);
         this.economyManager = new FlatFileEconomyManager(this);
+        this.effectRestorer = new EffectRestorer(this);
         this.eotwHandler = new EotwHandler(this);
         this.eventScheduler = new EventScheduler(this);
         this.factionManager = new FlatFileFactionManager(this);
         this.keyManager = new KeyManager(this);
         this.pvpClassManager = new PvpClassManager(this);
         this.sotwTimer = new SotwTimer();
-        this.timerManager = new TimerManager(this); // needs to be registered before ScoreboardHandler
+        this.timerManager = new TimerManager(this); // Needs to be registered before ScoreboardHandler.
         this.scoreboardHandler = new ScoreboardHandler(this);
         this.userManager = new UserManager(this);
         this.visualiseHandler = new VisualiseHandler();

@@ -1,4 +1,4 @@
-package com.doctordark.hcf;
+package com.doctordark.util;
 
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;

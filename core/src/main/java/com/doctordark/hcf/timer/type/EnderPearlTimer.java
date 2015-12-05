@@ -1,9 +1,9 @@
 package com.doctordark.hcf.timer.type;
 
-import com.doctordark.hcf.DurationFormatter;
 import com.doctordark.hcf.timer.PlayerTimer;
 import com.doctordark.hcf.timer.TimerCooldown;
 import com.doctordark.util.Config;
+import com.doctordark.util.DurationFormatter;
 import net.minecraft.server.v1_7_R4.EntityPlayer;
 import net.minecraft.server.v1_7_R4.PacketPlayOutSetSlot;
 import net.minecraft.server.v1_7_R4.PlayerInventory;

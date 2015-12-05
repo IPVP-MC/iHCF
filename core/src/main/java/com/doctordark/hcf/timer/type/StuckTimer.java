@@ -1,10 +1,10 @@
 package com.doctordark.hcf.timer.type;
 
-import com.doctordark.hcf.DurationFormatter;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.LandMap;
 import com.doctordark.hcf.timer.PlayerTimer;
 import com.doctordark.hcf.timer.TimerCooldown;
+import com.doctordark.util.DurationFormatter;
 import com.google.common.base.Predicate;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;

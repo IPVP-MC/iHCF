@@ -1,5 +1,6 @@
 package com.doctordark.hcf;
 
+import com.doctordark.util.PersistableLocation;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,13 +12,9 @@ import net.techcable.techutils.config.AnnotationConfig;
 import net.techcable.techutils.config.Setting;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.potion.PotionType;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,24 +24,14 @@ import java.util.logging.Level;
 @Getter
 public class Configuration extends AnnotationConfig {
 
-    @Setter
-    @Setting("deathban.baseDurationMinutes")
-    private int deathbanBaseDurationMinutes = 60;
-
     @Setting("preventPlacingBedsNether")
     private boolean preventPlacingBedsNether = false;
 
-    @Setting("maxHeightFactionHome")
-    private int maxHeightFactionHome = -1;
-
-    @Setting("end.open")
-    private boolean endOpen = true;
-
-    @Setting("end.extinguishFireOnExit")
-    private boolean endExtinguishFireOnExit = true;
-
-    @Setting("end.removeStrengthOnEntrance")
-    private boolean endRemoveStrengthOnEntrance = true;
+    @Getter(AccessLevel.NONE)
+    @Setting("serverTimeZone")
+    private String serverTimeZoneName = "EST";
+    private TimeZone serverTimeZone;
+    private ZoneId serverTimeZoneID;
 
     @Setting("furnaceCookSpeedMultiplier")
     private float furnaceCookSpeedMultiplier = 6.0F;
@@ -55,27 +42,17 @@ public class Configuration extends AnnotationConfig {
     @Setting("bookDeenchanting")
     private boolean bookDeenchanting = true;
 
-    @Setting("eotw.chatSymbolPrefix")
-    private String eotwChatSymbolPrefix = " \u2605";
-
-    @Setting("eotw.chatSymbolSuffix")
-    private String eotwChatSymbolSuffix = "";
-
-    //TODO: UUID list not UUID string list
-    @Setting("eotw.lastMapCapperUuids")
-    private List<String> eotwLastMapCapperUuids = new ArrayList<>();
-
     @Setting("deathSigns")
     private boolean deathSigns = true;
 
     @Setting("deathLightning")
     private boolean deathLightning = true;
 
-    @Setting("kitMap")
-    private boolean kitMap = false;
-
     @Setting("mapNumber")
     private int mapNumber = 1;
+
+    @Setting("kitMap")
+    private boolean kitMap = false;
 
     @Setting("preventAllyDamage")
     private boolean preventAllyAttackDamage = true;
@@ -107,9 +84,6 @@ public class Configuration extends AnnotationConfig {
     @Setting("expMultiplier.fortunePerLevel")
     private float expMultiplierFortunePerLevel = 1.0F;
 
-    @Setting("roads.allowClaimsBesides")
-    private boolean allowClaimsBesidesRoads = true;
-
     @Setting("scoreboard.sidebar.title")
     private String scoreboardSidebarTitle = "&a&lHCF &c[Map {MAP_NUMBER}]";
 
@@ -120,26 +94,32 @@ public class Configuration extends AnnotationConfig {
     private boolean scoreboardNametagsEnabled = true;
 
     @Setting("combatlog.enabled")
-    private boolean combatlogEnabled = true;
+    private boolean handleCombatLogging = true;
 
     @Setting("combatlog.despawnDelayTicks")
     private int combatlogDespawnDelayTicks = 600;
 
-    @Setting("conquest.pointLossPerDeath")
+    @Setting("warzone.radius")
+    private int warzoneRadius = 800;
+
+    @Setting("factions.conquest.pointLossPerDeath")
     private int conquestPointLossPerDeath = 20;
 
-    @Setting("conquest.requiredVictoryPoints")
+    @Setting("factions.conquest.requiredVictoryPoints")
     private int conquestRequiredVictoryPoints = 300;
 
-    @Setting("conquest.allowNegativePoints")
+    @Setting("factions.conquest.allowNegativePoints")
     private boolean conquestAllowNegativePoints = true;
 
-    @Setting("warzone.radius")
-    private int warzoneRadius = 850;
+    @Setting("factions.roads.allowClaimsBesides")
+    private boolean allowClaimsBesidesRoads = true;
 
     //TODO: CaseInsensitiveList
     @Setting("factions.disallowedFactionNames")
     private List<String> factionDisallowedNames = new ArrayList<>();
+
+    @Setting("factions.maxHomeHeight")
+    private int maxHeightFactionHome = -1;
 
     @Setting("factions.nameMinCharacters")
     private int factionNameMinCharacters = 3;
@@ -156,6 +136,12 @@ public class Configuration extends AnnotationConfig {
     @Setting("factions.maxAllies")
     private int factionMaxAllies = 1;
 
+    @Setting("factions.subclaim.nameMinCharacters")
+    private int factionSubclaimNameMinCharacters = 3;
+
+    @Setting("factions.subclaim.nameMaxCharacters")
+    private int factionSubclaimNameMaxCharacters = 16;
+
     @Setting("factions.dtr.minimum")
     private int factionMinimumDtr = -50;
 
@@ -170,46 +156,70 @@ public class Configuration extends AnnotationConfig {
     private float factionDtrUpdateIncrement = 0.1F;
 
     @Getter(AccessLevel.NONE)
-    @Setting("relationColours.wilderness")
-    private String relationColourWildernessName = "DARK_GREEN";
-    private ChatColor relationColourWilderness = ChatColor.DARK_GREEN;
-
-    @Getter(AccessLevel.NONE)
-    @Setting("relationColours.warzone")
+    @Setting("factions.relationColours.warzone")
     private String relationColourWarzoneName = "LIGHT_PURPLE";
     private ChatColor relationColourWarzone = ChatColor.LIGHT_PURPLE;
 
     @Getter(AccessLevel.NONE)
-    @Setting("relationColours.teammate")
+    @Setting("factions.relationColours.wilderness")
+    private String relationColourWildernessName = "DARK_GREEN";
+    private ChatColor relationColourWilderness = ChatColor.DARK_GREEN;
+
+    @Getter(AccessLevel.NONE)
+    @Setting("factions.relationColours.teammate")
     private String relationColourTeammateName = "GREEN";
     private ChatColor relationColourTeammate = ChatColor.GREEN;
 
     @Getter(AccessLevel.NONE)
-    @Setting("relationColours.ally")
+    @Setting("factions.relationColours.ally")
     private String relationColourAllyName = "GOLD";
     private ChatColor relationColourAlly = ChatColor.GOLD;
 
     @Getter(AccessLevel.NONE)
-    @Setting("relationColours.enemy")
-    private String relationColourAllyEnemy = "RED";
+    @Setting("factions.relationColours.enemy")
+    private String relationColourEnemyName = "RED";
     private ChatColor relationColourEnemy = ChatColor.RED;
 
     @Getter(AccessLevel.NONE)
-    @Setting("relationColours.road")
+    @Setting("factions.relationColours.road")
     private String relationColourRoadName = "YELLOW";
     private ChatColor relationColourRoad = ChatColor.YELLOW;
 
     @Getter(AccessLevel.NONE)
-    @Setting("relationColours.safezone")
+    @Setting("factions.relationColours.safezone")
     private String relationColourSafezoneName = "AQUA";
     private ChatColor relationColourSafezone = ChatColor.AQUA;
 
-    @Getter(AccessLevel.NONE)
-    @Setting("serverTimeZone")
-    private String serverTimeZoneName = "EST";
+    @Setter
+    @Setting("deathban.baseDurationMinutes")
+    private int deathbanBaseDurationMinutes = 60;
 
-    private TimeZone serverTimeZone;
-    private ZoneId serverTimeZoneID;
+    @Setter
+    @Setting("deathban.respawnScreenSecondsBeforeKick")
+    private int respawnScreenSecondsBeforeKick = 15;
+
+    @Setting("end.open")
+    private boolean endOpen = true;
+
+    @Setting("end.exitLocation")
+    private String endExitLocationRaw = "world,0.5,75,0.5,0,0";
+    private PersistableLocation endExitLocation = new PersistableLocation(Bukkit.getWorld("world"), 0.5, 75, 0.5);
+
+    @Setting("end.extinguishFireOnExit")
+    private boolean endExtinguishFireOnExit = true;
+
+    @Setting("end.removeStrengthOnEntrance")
+    private boolean endRemoveStrengthOnEntrance = true;
+
+    @Setting("eotw.chatSymbolPrefix")
+    private String eotwChatSymbolPrefix = " \u2605";
+
+    @Setting("eotw.chatSymbolSuffix")
+    private String eotwChatSymbolSuffix = "";
+
+    //TODO: UUID list not UUID string list
+    @Setting("eotw.lastMapCapperUuids")
+    private List<String> eotwLastMapCapperUuids = new ArrayList<>();
 
     @SuppressWarnings("ALL")
     @Setting("potionLimits")
@@ -232,22 +242,43 @@ public class Configuration extends AnnotationConfig {
         return maxLevel == -1 ? potionEffectType.getMaxLevel() : maxLevel;
     }
 
-    @Override
-    public void load(File configFile, URL defaultConfigUrl) throws IOException, InvalidConfigurationException {
-        super.load(configFile, defaultConfigUrl);
-
+    protected void updateFields() {
+        this.serverTimeZone = TimeZone.getTimeZone(this.serverTimeZoneName);
+        this.serverTimeZoneID = this.serverTimeZone.toZoneId();
         this.scoreboardSidebarTitle = ChatColor.translateAlternateColorCodes('&', this.scoreboardSidebarTitle.replace("{MAP_NUMBER}", Integer.toString(this.mapNumber)));
         this.factionDtrUpdateTimeWords = DurationFormatUtils.formatDurationWords(this.factionDtrUpdateMillis, true, true);
         this.relationColourWarzone = ChatColor.valueOf(this.relationColourWarzoneName.replace(" ", "_").toUpperCase());
         this.relationColourWilderness = ChatColor.valueOf(this.relationColourWildernessName.replace(" ", "_").toUpperCase());
+        this.relationColourTeammate = ChatColor.valueOf(this.relationColourTeammateName.replace(" ", "_").toUpperCase());
+        this.relationColourAlly = ChatColor.valueOf(this.relationColourAllyName.replace(" ", "_").toUpperCase());
+        this.relationColourEnemy = ChatColor.valueOf(this.relationColourEnemyName.replace(" ", "_").toUpperCase());
+        this.relationColourRoad = ChatColor.valueOf(this.relationColourRoadName.replace(" ", "_").toUpperCase());
+        this.relationColourSafezone = ChatColor.valueOf(this.relationColourSafezoneName.replace(" ", "_").toUpperCase());
 
-        this.serverTimeZone = TimeZone.getTimeZone(this.serverTimeZoneName);
-        this.serverTimeZoneID = this.serverTimeZone.toZoneId();
+        String[] split = this.endExitLocationRaw.split(",");
+        if (split.length == 6) {
+            try {
+                String worldName = split[0];
+                if (Bukkit.getWorld(worldName) != null) {
+                    Integer x = Integer.parseInt(split[0]);
+                    Integer y = Integer.parseInt(split[1]);
+                    Integer z = Integer.parseInt(split[2]);
+                    Float yaw = Float.parseFloat(split[3]);
+                    Float pitch = Float.parseFloat(split[3]);
+
+                    this.endExitLocation = new PersistableLocation(worldName, x, y, z);
+                    this.endExitLocation.setYaw(yaw);
+                    this.endExitLocation.setPitch(pitch);
+                }
+            } catch (IllegalArgumentException ignored) {
+            }
+        }
+
 
         String splitter = " = ";
         for (String entry : this.potionLimitsUnstored) {
             if (entry.contains(splitter)) {
-                String[] split = entry.split(splitter);
+                split = entry.split(splitter);
                 String key = split[0];
                 Integer value = Integer.parseInt(split[1]);
 
@@ -263,7 +294,7 @@ public class Configuration extends AnnotationConfig {
 
         for (String entry : this.enchantmentLimitsUnstored) {
             if (entry.contains(splitter)) {
-                String[] split = entry.split(splitter);
+                split = entry.split(splitter);
                 String key = split[0];
                 Integer value = Integer.parseInt(split[1]);
 

@@ -2,7 +2,6 @@ package com.doctordark.hcf.visualise;
 
 import com.google.common.collect.Iterables;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -11,14 +10,6 @@ import java.util.ArrayList;
  * Represents how visual blocks are filled.
  */
 abstract class BlockFiller {
-
-    /**
-     * @deprecated recommended to use version with location constructor
-     */
-    @Deprecated
-    VisualBlockData generate(Player player, World world, int x, int y, int z) {
-        return generate(player, new Location(world, x, y, z));
-    }
 
     abstract VisualBlockData generate(Player player, Location location);
 

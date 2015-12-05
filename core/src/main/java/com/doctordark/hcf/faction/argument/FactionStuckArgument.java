@@ -1,8 +1,8 @@
 package com.doctordark.hcf.faction.argument;
 
-import com.doctordark.hcf.DurationFormatter;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.timer.type.StuckTimer;
+import com.doctordark.util.DurationFormatter;
 import com.doctordark.util.command.CommandArgument;
 import org.bukkit.ChatColor;
 import org.bukkit.World;

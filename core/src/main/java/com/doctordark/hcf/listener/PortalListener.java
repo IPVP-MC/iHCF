@@ -1,8 +1,8 @@
 package com.doctordark.hcf.listener;
 
-import com.doctordark.hcf.DurationFormatter;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.timer.PlayerTimer;
+import com.doctordark.util.DurationFormatter;
 import gnu.trove.map.TObjectLongMap;
 import gnu.trove.map.hash.TObjectLongHashMap;
 import org.bukkit.Bukkit;
@@ -25,8 +25,6 @@ import java.util.UUID;
 public class PortalListener implements Listener {
 
     private static final long PORTAL_MESSAGE_DELAY_THRESHOLD = 2500L;
-
-    private final Location endExit = new Location(Bukkit.getWorld("world"), 0, 67.5, 200); //TODO: configurable
 
     private final TObjectLongMap<UUID> messageDelays = new TObjectLongHashMap<>();
     private final HCF plugin;
@@ -59,7 +57,7 @@ public class PortalListener implements Listener {
             World fromWorld = event.getFrom().getWorld();
             if (fromWorld != null && fromWorld.getEnvironment() == World.Environment.THE_END) {
                 event.useTravelAgent(false);
-                event.setTo(endExit);
+                event.setTo(plugin.getConfiguration().getEndExitLocation().getLocation());
             }
         }
     }

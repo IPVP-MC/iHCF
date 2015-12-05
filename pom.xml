@@ -72,17 +72,11 @@
                 <directory>${basedir}/src/main/resources/</directory>
 
                 <includes>
-                    <include>plugin.yml</include>
-                    <include>**/*.properties</include>
-                    <include>**/*.xml</include>
+                    <include>gopple-art.png</include>
+                    <include>**/*.cdl</include>
                     <include>**/*.txt</include>
+                    <include>**/*.yml</include>
                 </includes>
-            </resource>
-
-            <resource>
-                <targetPath>.</targetPath>
-                <filtering>false</filtering>
-                <directory>${basedir}/src/main/resources/</directory>
             </resource>
         </resources>
 

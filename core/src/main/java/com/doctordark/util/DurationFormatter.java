@@ -1,5 +1,6 @@
-package com.doctordark.hcf;
+package com.doctordark.util;
 
+import com.doctordark.hcf.DateTimeFormats;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
 import java.util.concurrent.TimeUnit;

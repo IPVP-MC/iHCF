@@ -1,7 +1,7 @@
 package com.doctordark.hcf.timer.type;
 
-import com.doctordark.hcf.DurationFormatter;
 import com.doctordark.hcf.timer.PlayerTimer;
+import com.doctordark.util.DurationFormatter;
 import com.doctordark.util.imagemessage.ImageChar;
 import com.doctordark.util.imagemessage.ImageMessage;
 import com.google.common.base.Predicate;

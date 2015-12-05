@@ -1,6 +1,5 @@
 package com.doctordark.hcf.combatlog;
 
-import com.doctordark.hcf.ConfigurationService;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.combatlog.event.LoggerRemovedEvent;
 import com.doctordark.hcf.combatlog.event.LoggerSpawnEvent;
@@ -108,7 +107,7 @@ public class CombatLogListener implements Listener {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
         boolean result = this.safelyDisconnected.remove(uuid);
-        if (!ConfigurationService.COMBAT_LOG_PREVENTION_ENABLED) {
+        if (!plugin.getConfiguration().isHandleCombatLogging()) {
             return;
         }
 

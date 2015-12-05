@@ -86,7 +86,8 @@ public class FlatFileDeathbanManager implements DeathbanManager {
             duration *= factionAt.getDeathbanMultiplier();
         }
 
-        return applyDeathBan(player.getUniqueId(), new Deathban(reason, Math.min(MAX_DEATHBAN_TIME, duration), new PersistableLocation(location)));
+        return applyDeathBan(player.getUniqueId(), new Deathban(reason, Math.min(MAX_DEATHBAN_TIME, duration),
+                new PersistableLocation(location), plugin.getEotwHandler().isEndOfTheWorld()));
     }
 
     @Override

@@ -5,7 +5,6 @@ import com.google.common.collect.ImmutableList;
 import org.bukkit.Bukkit;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -37,7 +36,6 @@ public class EventScheduler implements IEventScheduler {
             Bukkit.getLogger().warning("Less than 2 koths defined");
         } else {
             Bukkit.getLogger().info("Defining hardcoded schedules");
-            ZoneId zoneId = this.plugin.getConfiguration().getServerTimeZoneID();
             LocalDateTime now = LocalDateTime.now(this.plugin.getConfiguration().getServerTimeZoneID());
 
             int assigned = 0;

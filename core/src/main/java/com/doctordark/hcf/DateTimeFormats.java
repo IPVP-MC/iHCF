@@ -12,9 +12,6 @@ public final class DateTimeFormats {
 
     private static final AtomicBoolean loaded = new AtomicBoolean(false);
 
-    private DateTimeFormats() {
-    }
-
     public static FastDateFormat DAY_MTH_HR_MIN_SECS;
     public static FastDateFormat DAY_MTH_YR_HR_MIN_AMPM;
     public static FastDateFormat DAY_MTH_HR_MIN_AMPM;
@@ -22,6 +19,9 @@ public final class DateTimeFormats {
     public static FastDateFormat HR_MIN_AMPM_TIMEZONE;
     public static FastDateFormat HR_MIN;
     public static FastDateFormat KOTH_FORMAT;
+
+    private DateTimeFormats() {
+    }
 
     public static void load(TimeZone timeZone) throws IllegalStateException {
         Preconditions.checkArgument(!loaded.getAndSet(true), "Already loaded");

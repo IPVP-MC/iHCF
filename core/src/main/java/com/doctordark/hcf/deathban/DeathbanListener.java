@@ -1,9 +1,9 @@
 package com.doctordark.hcf.deathban;
 
-import com.doctordark.hcf.DelayedMessageRunnable;
-import com.doctordark.hcf.DurationFormatter;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.user.FactionUser;
+import com.doctordark.util.DelayedMessageRunnable;
+import com.doctordark.util.DurationFormatter;
 import net.minecraft.util.gnu.trove.map.TObjectIntMap;
 import net.minecraft.util.gnu.trove.map.TObjectLongMap;
 import net.minecraft.util.gnu.trove.map.hash.TObjectIntHashMap;
@@ -92,15 +92,14 @@ public class DeathbanListener implements Listener {
         }
 
         // The user has lives, but just in case they didn't want them to use, tell them to join again in the next 30 seconds.
-        String reason = deathban.getReason();
         this.lastAttemptedJoinMap.put(uuid, millis + LIFE_USE_DELAY_MILLIS);
 
         event.disallow(PlayerLoginEvent.Result.KICK_OTHER, ChatColor.AQUA + "You have been killed " +
                 ChatColor.GREEN + "(" + ChatColor.WHITE + deathban.getReason() + ChatColor.GREEN + ")" +
                 ChatColor.AQUA + " at " + ChatColor.GOLD + "(" + deathbanLocation.getBlockX() + ", " + deathbanLocation.getBlockY() + ", " + deathbanLocation.getBlockZ() + ")" +
                 ChatColor.AQUA + ". You're deathbanned for " + ChatColor.GREEN + formattedRemaining + ChatColor.AQUA + ". " +
-                ChatColor.RED + "You currently have " + (lives <= 0 ? "no" : lives) + " lives.\n\n" +
-                "You may use a life by reconnecting within " + ChatColor.YELLOW + DeathbanListener.LIFE_USE_DELAY_WORDS + ChatColor.RED + "."
+                ChatColor.RED + "You currently have " + lives + " lives.\n\nYou may use one by reconnecting within " +
+                ChatColor.YELLOW + DeathbanListener.LIFE_USE_DELAY_WORDS + ChatColor.RED + "."
         );
     }
 
