@@ -83,6 +83,13 @@ public class FactionHomeArgument extends CommandArgument {
             return true;
         }
 
+        if (home.getY() > plugin.getConfiguration().getMaxHeightFactionHome()) {
+            sender.sendMessage(ChatColor.RED + "Your faction home height is above the limit which is " + plugin.getConfiguration().getMaxHeightFactionHome() +
+                    ", travel to your current home location at (x. " + home.getBlockX() + ", z. " + home.getBlockZ() + ") and re-set it at a lower height to fix this.");
+
+            return true;
+        }
+
         Faction factionAt = plugin.getFactionManager().getFactionAt(player.getLocation());
 
         if (factionAt instanceof EventFaction) {

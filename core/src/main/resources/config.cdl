@@ -3,6 +3,9 @@
 // Be sure to double-check your config
 // Credits - Techcable's Configuration API
 
+// The maximum height to set a faction home, use -1 to ignore this.
+maxHeightFactionHome = -1
+
 // Timezone to use for events and stuff
 serverTimeZone = EST
 
