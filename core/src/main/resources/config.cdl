@@ -6,6 +6,8 @@
 // The maximum height to set a faction home, use -1 to ignore this.
 maxHeightFactionHome = -1
 
+preventPlacingBedsNether = true
+
 // Timezone to use for events and stuff
 serverTimeZone = EST
 

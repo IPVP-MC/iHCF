@@ -1,8 +1,9 @@
 package com.doctordark.hcf.listener;
 
 import com.doctordark.hcf.HCF;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.entity.Player;
@@ -58,16 +59,19 @@ public class CoreListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (!plugin.getConfiguration().isSpawnersPreventPlacingNether()) {
-            return;
-        }
-
         Player player = event.getPlayer();
-        if (player.getWorld().getEnvironment() == World.Environment.NETHER && event.getBlock().getState() instanceof CreatureSpawner &&
-                !player.hasPermission(ProtectionListener.PROTECTION_BYPASS_PERMISSION)) {
+        if (plugin.getConfiguration().isPreventPlacingBedsNether()) {
+            if (player.getWorld().getEnvironment() == World.Environment.NETHER && event.getItemInHand() != null && event.getItemInHand().getType() == Material.BED) {
+                event.setCancelled(true);
+                player.sendMessage(ChatColor.RED + "You cannot place beds in the nether.");
+            }
+        } else if (plugin.getConfiguration().isSpawnersPreventPlacingNether()) {
+            if (player.getWorld().getEnvironment() == World.Environment.NETHER && event.getBlock().getState() instanceof CreatureSpawner &&
+                    !player.hasPermission(ProtectionListener.PROTECTION_BYPASS_PERMISSION)) {
 
-            event.setCancelled(true);
-            player.sendMessage(ChatColor.RED + "You cannot place spawners in the nether.");
+                event.setCancelled(true);
+                player.sendMessage(ChatColor.RED + "You cannot place spawners in the nether.");
+            }
         }
     }
 

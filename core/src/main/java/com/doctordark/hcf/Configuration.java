@@ -31,6 +31,9 @@ public class Configuration extends AnnotationConfig {
     @Setting("deathban.baseDurationMinutes")
     private int deathbanBaseDurationMinutes = 60;
 
+    @Setting("preventPlacingBedsNether")
+    private boolean preventPlacingBedsNether = false;
+
     @Setting("maxHeightFactionHome")
     private int maxHeightFactionHome = -1;
 
