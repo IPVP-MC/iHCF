@@ -215,9 +215,9 @@ public class HCF extends JavaPlugin {
         this.configuration = new Configuration();
         try {
             String configFileName = "config.cdl";
-            this.configuration.load(new File(plugin.getDataFolder(), configFileName), HCF.class.getResource("/" + configFileName));
+            this.configuration.load(new File(getDataFolder(), configFileName), HCF.class.getResource("/" + configFileName));
         } catch (IOException | InvalidConfigurationException ex) {
-            getLogger().info("Failed to load configuration ");
+            getLogger().severe("Failed to load configuration ");
             ex.printStackTrace();
         } finally {
             DateTimeFormats.load(this.configuration.getServerTimeZone());
