@@ -40,8 +40,6 @@ public class DeathListener implements Listener {
         }
     }
 
-    private static final long BASE_REGEN_DELAY = TimeUnit.MINUTES.toMillis(40L);
-
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
@@ -53,7 +51,8 @@ public class DeathListener implements Listener {
             double newDtr = playerFaction.setDeathsUntilRaidable(playerFaction.getDeathsUntilRaidable() - dtrLoss);
 
             Role role = playerFaction.getMember(player.getUniqueId()).getRole();
-            playerFaction.setRemainingRegenerationTime(BASE_REGEN_DELAY + (playerFaction.getOnlinePlayers().size() * TimeUnit.MINUTES.toMillis(2L)));
+            long baseDelay = plugin.getConfiguration().getFactionDtrRegenFreezeBaseMilliseconds();
+            playerFaction.setRemainingRegenerationTime(baseDelay + (playerFaction.getOnlinePlayers().size() * plugin.getConfiguration().getFactionDtrRegenFreezeMillisecondsPerMember()));
             playerFaction.broadcast(ChatColor.GOLD + "Member Death: " + plugin.getConfiguration().getRelationColourTeammate() +
                     role.getAstrix() + player.getName() + ChatColor.GOLD + ". " +
                     "DTR: (" + ChatColor.WHITE + JavaUtils.format(newDtr, 2) + '/' + JavaUtils.format(playerFaction.getMaximumDeathsUntilRaidable(), 2) + ChatColor.GOLD + ").");

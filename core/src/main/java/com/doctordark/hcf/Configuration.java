@@ -19,6 +19,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 @Getter
@@ -160,6 +161,16 @@ public class Configuration extends AnnotationConfig {
     @Setting("factions.subclaim.nameMaxCharacters")
     private int factionSubclaimNameMaxCharacters = 16;
 
+    @Getter(AccessLevel.NONE)
+    @Setting("factions.dtr.regenFreeze.baseMinutes")
+    private int factionDtrRegenFreezeBaseMinutes = 40;
+    private long factionDtrRegenFreezeBaseMilliseconds;
+
+    @Getter(AccessLevel.NONE)
+    @Setting("factions.dtr.regenFreeze.minutesPerMember")
+    private int factionDtrRegenFreezeMinutesPerMember = 2;
+    private long factionDtrRegenFreezeMillisecondsPerMember;
+
     @Setting("factions.dtr.minimum")
     private int factionMinimumDtr = -50;
 
@@ -167,7 +178,7 @@ public class Configuration extends AnnotationConfig {
     private int factionMaximumDtr = 6;
 
     @Setting("factions.dtr.millisecondsBetweenUpdates")
-    private int factionDtrUpdateMillis = 45000;
+    private int factionDtrUpdateMillis = 45000; // 45 seconds
     private String factionDtrUpdateTimeWords;
 
     @Setting("factions.dtr.incrementBetweenUpdates")
@@ -272,6 +283,8 @@ public class Configuration extends AnnotationConfig {
         this.relationColourEnemy = ChatColor.valueOf(this.relationColourEnemyName.replace(" ", "_").toUpperCase());
         this.relationColourRoad = ChatColor.valueOf(this.relationColourRoadName.replace(" ", "_").toUpperCase());
         this.relationColourSafezone = ChatColor.valueOf(this.relationColourSafezoneName.replace(" ", "_").toUpperCase());
+        this.factionDtrRegenFreezeBaseMilliseconds = TimeUnit.MINUTES.convert(this.factionDtrRegenFreezeBaseMinutes, TimeUnit.MILLISECONDS);
+        this.factionDtrRegenFreezeMillisecondsPerMember = TimeUnit.MINUTES.convert(this.factionDtrRegenFreezeMinutesPerMember, TimeUnit.MILLISECONDS);
 
         String[] split = this.endExitLocationRaw.split(",");
         if (split.length == 6) {

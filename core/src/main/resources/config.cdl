@@ -156,6 +156,16 @@ factions {
     }
 
     dtr {
+        regenFreeze {
+            // The minutes for faction DTR regen freeze to
+            // end not including any multipliers, etc.
+            baseMinutes = 40
+
+            // How much longer the DTR freeze should be for factions with
+            // more members. Set to 0 to disable.
+            minutesPerMember = 2
+        }
+
         // The minimum DTR a faction can have.
         minimum = -50
 
