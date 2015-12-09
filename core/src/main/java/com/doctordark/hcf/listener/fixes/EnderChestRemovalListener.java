@@ -1,5 +1,6 @@
 package com.doctordark.hcf.listener.fixes;
 
+import com.doctordark.hcf.HCF;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -18,20 +19,25 @@ import java.util.Iterator;
  */
 public class EnderChestRemovalListener implements Listener {
 
-    public EnderChestRemovalListener() {
-        this.removeRecipe();
+    private final HCF plugin;
+
+    public EnderChestRemovalListener(HCF plugin) {
+        this.plugin = plugin;
+        if (plugin.getConfiguration().isDisableEnderchests()) {
+            this.removeRecipe();
+        }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onEnderChestOpen(PlayerInteractEvent event) {
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock().getType() == Material.ENDER_CHEST) {
+        if (plugin.getConfiguration().isDisableEnderchests() && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock().getType() == Material.ENDER_CHEST) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onInventoryOpen(InventoryOpenEvent event) {
-        if (event.getInventory() instanceof EnderChest) {
+        if (plugin.getConfiguration().isDisableEnderchests() && event.getInventory() instanceof EnderChest) {
             event.setCancelled(true);
         }
     }

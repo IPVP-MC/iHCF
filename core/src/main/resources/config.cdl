@@ -3,6 +3,9 @@
 // Be sure to double-check your config
 // Credits - Techcable's Configuration API
 
+// If enderchests should be disabled.
+disableEnderchests = true
+
 // If beds cannot be placed in the Nether.
 preventPlacingBedsNether = true
 

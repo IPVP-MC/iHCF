@@ -24,6 +24,9 @@ import java.util.logging.Level;
 @Getter
 public class Configuration extends AnnotationConfig {
 
+    @Setting("disableEnderchests")
+    private boolean disableEnderchests = true;
+
     @Setting("preventPlacingBedsNether")
     private boolean preventPlacingBedsNether = false;
 
