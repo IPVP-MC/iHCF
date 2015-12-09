@@ -98,7 +98,7 @@ public final class ProtocolLibHook {
                                 player.sendBlockChange(location, data.getBlockType(), data.getData());
                             } else if (status == STARTED_DIGGING) { // we check this because Blocks that broke pretty much straight away do not send a FINISHED for some weird reason.
                                 EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
-                                if (player.getGameMode() == GameMode.CREATIVE || entityPlayer.world.getType(x, y, z).getDamage(entityPlayer, entityPlayer.world, x, y, z) > 1.0F) {
+                                if (player.getGameMode() == GameMode.CREATIVE || entityPlayer.world.getType(x, y, z).getDamage(entityPlayer, entityPlayer.world, x, y, z) >= 1.0F) {
                                     player.sendBlockChange(location, data.getBlockType(), data.getData());
                                 }
                             }
