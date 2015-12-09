@@ -6,6 +6,9 @@
 // The maximum Beacon strength level
 beaconStrengthLevelLimit = 1
 
+// If boats should not be allowed to be placed on land.
+disableBoatPlacementOnLand = true
+
 enderpearlGlitching {
      // If this plugin should try and block Enderpearl glitching.
      enabled = true

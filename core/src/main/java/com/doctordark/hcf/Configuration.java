@@ -27,6 +27,9 @@ public class Configuration extends AnnotationConfig {
     @Setting("beaconStrengthLevelLimit")
     private int beaconStrengthLevelLimit = 1;
 
+    @Setting("disableBoatPlacementOnLand")
+    private boolean disableBoatPlacementOnLand = true;
+
     @Setting("enderpearlGlitching.enabled")
     private boolean enderpearlGlitchingEnabled = true;
 

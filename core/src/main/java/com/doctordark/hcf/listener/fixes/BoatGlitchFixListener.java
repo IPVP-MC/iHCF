@@ -1,5 +1,6 @@
 package com.doctordark.hcf.listener.fixes;
 
+import com.doctordark.hcf.HCF;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Boat;
@@ -14,15 +15,22 @@ import org.bukkit.event.vehicle.VehicleCreateEvent;
  */
 public class BoatGlitchFixListener implements Listener {
 
-    // Makes it so boats can only be placed on water.
+    private final HCF plugin;
+
+    public BoatGlitchFixListener(HCF plugin) {
+        this.plugin = plugin;
+    }
+
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onVehicleCreate(VehicleCreateEvent event) {
-        Vehicle vehicle = event.getVehicle();
-        if (vehicle instanceof Boat) {
-            Boat boat = (Boat) vehicle;
-            Block belowBlock = boat.getLocation().add(0, -1, 0).getBlock();
-            if (belowBlock.getType() != Material.WATER && belowBlock.getType() != Material.STATIONARY_WATER) {
-                boat.remove();
+        if (plugin.getConfiguration().isDisableBoatPlacementOnLand()) {
+            Vehicle vehicle = event.getVehicle();
+            if (vehicle instanceof Boat) {
+                Boat boat = (Boat) vehicle;
+                Block belowBlock = boat.getLocation().add(0, -1, 0).getBlock();
+                if (belowBlock.getType() != Material.WATER && belowBlock.getType() != Material.STATIONARY_WATER) {
+                    boat.remove();
+                }
             }
         }
     }
