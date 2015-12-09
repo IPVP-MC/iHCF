@@ -1,5 +1,6 @@
 package com.doctordark.hcf.listener.fixes;
 
+import com.doctordark.hcf.HCF;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftArrow;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -14,13 +15,21 @@ import org.bukkit.event.entity.ProjectileHitEvent;
  */
 public class InfinityArrowFixListener implements Listener {
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    private final HCF plugin;
+
+    public InfinityArrowFixListener(HCF plugin) {
+        this.plugin = plugin;
+    }
+
+    @EventHandler(ignoreCancelled = false, priority = EventPriority.NORMAL)
     public void onProjectileHit(ProjectileHitEvent event) {
-        Entity entity = event.getEntity();
-        if (entity instanceof Arrow) {
-            Arrow arrow = (Arrow) entity;
-            if (!(arrow.getShooter() instanceof Player) || ((CraftArrow) arrow).getHandle().fromPlayer == 2) {
-                arrow.remove();
+        if (plugin.getConfiguration().isRemoveInfinityArrowsOnLand()) {
+            Entity entity = event.getEntity();
+            if (entity instanceof Arrow) {
+                Arrow arrow = (Arrow) entity;
+                if (!(arrow.getShooter() instanceof Player) || ((CraftArrow) arrow).getHandle().fromPlayer == 2) {
+                    arrow.remove();
+                }
             }
         }
     }

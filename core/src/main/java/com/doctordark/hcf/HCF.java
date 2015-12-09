@@ -301,7 +301,7 @@ public class HCF extends JavaPlugin {
         manager.registerEvents(new ExpMultiplierListener(this), this);
         manager.registerEvents(new FactionListener(this), this);
         manager.registerEvents(new FurnaceSmeltSpeederListener(this), this);
-        manager.registerEvents(new InfinityArrowFixListener(), this);
+        manager.registerEvents(new InfinityArrowFixListener(this), this);
         manager.registerEvents(new KeyListener(this), this);
         manager.registerEvents(new KitMapListener(this), this);
         manager.registerEvents(new PearlGlitchListener(this), this);

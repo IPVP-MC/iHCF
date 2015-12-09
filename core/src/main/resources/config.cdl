@@ -3,6 +3,10 @@
 // Be sure to double-check your config
 // Credits - Techcable's Configuration API
 
+// If arrows shot from a bow with infinity should be removed
+// when they land to reduce entity lag.
+removeInfinityArrowsOnLand = true
+
 // The maximum Beacon strength level
 beaconStrengthLevelLimit = 1
 

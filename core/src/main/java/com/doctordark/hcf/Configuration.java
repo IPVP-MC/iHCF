@@ -24,6 +24,9 @@ import java.util.logging.Level;
 @Getter
 public class Configuration extends AnnotationConfig {
 
+    @Setting("removeInfinityArrowsOnLand")
+    private boolean removeInfinityArrowsOnLand = true;
+
     @Setting("beaconStrengthLevelLimit")
     private int beaconStrengthLevelLimit = 1;
 
