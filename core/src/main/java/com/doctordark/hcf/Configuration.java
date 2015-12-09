@@ -25,6 +25,9 @@ import java.util.logging.Level;
 @Getter
 public class Configuration extends AnnotationConfig {
 
+    @Setting("handleEntityLimiting")
+    private boolean handleEntityLimiting = true;
+
     @Setting("removeInfinityArrowsOnLand")
     private boolean removeInfinityArrowsOnLand = true;
 
