@@ -24,6 +24,9 @@ import java.util.logging.Level;
 @Getter
 public class Configuration extends AnnotationConfig {
 
+    @Setting("beaconStrengthLevelLimit")
+    private int beaconStrengthLevelLimit = 1;
+
     @Setting("enderpearlGlitching.enabled")
     private boolean enderpearlGlitchingEnabled = true;
 

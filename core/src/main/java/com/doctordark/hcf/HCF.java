@@ -281,7 +281,7 @@ public class HCF extends JavaPlugin {
         PluginManager manager = this.getServer().getPluginManager();
         manager.registerEvents(new BlockHitFixListener(), this);
         manager.registerEvents(new BlockJumpGlitchFixListener(), this);
-        manager.registerEvents(new BoatGlitchFixListener(), this);
+        manager.registerEvents(new BoatGlitchFixListener(this), this);
         manager.registerEvents(new BookDeenchantListener(this), this);
         manager.registerEvents(new BottledExpListener(this), this);
         manager.registerEvents(new ChatListener(this), this);
@@ -313,7 +313,7 @@ public class HCF extends JavaPlugin {
         manager.registerEvents(new ShopSignListener(this), this);
         manager.registerEvents(new SkullListener(this), this);
         manager.registerEvents(new SotwListener(this), this);
-        manager.registerEvents(new BeaconStrengthFixListener(), this);
+        manager.registerEvents(new BeaconStrengthFixListener(this), this);
         manager.registerEvents(new VoidGlitchFixListener(), this);
         manager.registerEvents(new WallBorderListener(this), this);
         manager.registerEvents(new WorldListener(), this);

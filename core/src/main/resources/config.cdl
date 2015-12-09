@@ -3,6 +3,9 @@
 // Be sure to double-check your config
 // Credits - Techcable's Configuration API
 
+// The maximum Beacon strength level
+beaconStrengthLevelLimit = 1
+
 enderpearlGlitching {
      // If this plugin should try and block Enderpearl glitching.
      enabled = true
