@@ -295,7 +295,7 @@ public class HCF extends JavaPlugin {
         manager.registerEvents(new DeathbanListener(this), this);
         manager.registerEvents(new EnchantLimitListener(this), this);
         manager.registerEvents(new EnderChestRemovalListener(this), this);
-        manager.registerEvents(new EntityLimitListener(), this);
+        manager.registerEvents(new EntityLimitListener(this), this);
         manager.registerEvents(new EotwListener(this), this);
         manager.registerEvents(new EventSignListener(), this);
         manager.registerEvents(new ExpMultiplierListener(this), this);
