@@ -24,6 +24,12 @@ import java.util.logging.Level;
 @Getter
 public class Configuration extends AnnotationConfig {
 
+    @Setting("enderpearlGlitching.enabled")
+    private boolean enderpearlGlitchingEnabled = true;
+
+    @Setting("enderpearlGlitching.refund")
+    private boolean enderpearlGlitchingRefund = true;
+
     @Setting("disableEnderchests")
     private boolean disableEnderchests = true;
 

@@ -3,6 +3,14 @@
 // Be sure to double-check your config
 // Credits - Techcable's Configuration API
 
+enderpearlGlitching {
+     // If this plugin should try and block Enderpearl glitching.
+     enabled = true
+
+     // If the enderpearl should be refunded if the player was detected.
+     refund = true
+}
+
 // If enderchests should be disabled.
 disableEnderchests = true
 

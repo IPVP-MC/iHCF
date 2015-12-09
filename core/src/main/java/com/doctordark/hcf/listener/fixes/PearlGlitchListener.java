@@ -37,7 +37,8 @@ public class PearlGlitchListener implements Listener {
             Material.SANDSTONE_STAIRS,
             Material.SMOOTH_STAIRS,
             Material.SPRUCE_WOOD_STAIRS,
-            Material.WOOD_STAIRS);
+            Material.WOOD_STAIRS
+    );
 
     private final HCF plugin;
 
@@ -65,12 +66,18 @@ public class PearlGlitchListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
     public void onPearlClip(PlayerTeleportEvent event) {
+        if (!plugin.getConfiguration().isEnderpearlGlitchingRefund()) {
+            return;
+        }
+
         if (event.getCause() == PlayerTeleportEvent.TeleportCause.ENDER_PEARL) {
             Location to = event.getTo();
-            if (blockedPearlTypes.contains(to.getBlock().getType())) {
+            if (this.blockedPearlTypes.contains(to.getBlock().getType())) {
                 Player player = event.getPlayer();
-                player.sendMessage(ChatColor.YELLOW + "Pearl glitching detected, used Enderpearl has been refunded.");
-                plugin.getTimerManager().getEnderPearlTimer().refund(player);
+                boolean refund = plugin.getConfiguration().isEnderpearlGlitchingRefund();
+
+                player.sendMessage(ChatColor.YELLOW + "Pearl glitching detected" + (refund ? ", used Enderpearl has been refunded" : "") + ".");
+                if (refund) plugin.getTimerManager().getEnderPearlTimer().refund(player);
 
                 event.setCancelled(true);
                 return;
