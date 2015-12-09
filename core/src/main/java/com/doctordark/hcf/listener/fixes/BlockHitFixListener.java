@@ -3,6 +3,8 @@ package com.doctordark.hcf.listener.fixes;
 import com.doctordark.util.BukkitUtils;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import gnu.trove.map.TObjectLongMap;
+import gnu.trove.map.hash.TObjectLongHashMap;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,8 +17,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -27,7 +27,7 @@ public class BlockHitFixListener implements Listener {
 
     private static final long THRESHOLD = 850L;
 
-    private final Map<UUID, Long> lastInteractTimes = new HashMap<>();
+    private final TObjectLongMap<UUID> lastInteractTimes = new TObjectLongHashMap<>();
 
     private static final ImmutableSet<Material> NON_TRANSPARENT_ATTACK_BREAK_TYPES = Sets.immutableEnumSet(
             Material.GLASS,
@@ -44,10 +44,8 @@ public class BlockHitFixListener implements Listener {
 
     @EventHandler(ignoreCancelled = false, priority = EventPriority.HIGH)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (event.hasBlock() && event.getAction() != Action.PHYSICAL) {
-            if (NON_TRANSPARENT_ATTACK_INTERACT_TYPES.contains(event.getClickedBlock().getType())) {
-                cancelAttackingMillis(event.getPlayer().getUniqueId(), THRESHOLD);
-            }
+        if (event.hasBlock() && event.getAction() != Action.PHYSICAL && NON_TRANSPARENT_ATTACK_INTERACT_TYPES.contains(event.getClickedBlock().getType())) {
+            cancelAttackingMillis(event.getPlayer().getUniqueId(), THRESHOLD);
         }
     }
 
@@ -62,8 +60,8 @@ public class BlockHitFixListener implements Listener {
     public void onEntityDamageByEntity(EntityDamageEvent event) {
         Player attacker = BukkitUtils.getFinalAttacker(event, true);
         if (attacker != null) {
-            Long lastInteractTime = lastInteractTimes.get(attacker.getUniqueId());
-            if (lastInteractTime != null && lastInteractTime - System.currentTimeMillis() > 0L) {
+            long lastInteractTime = this.lastInteractTimes.get(attacker.getUniqueId());
+            if (lastInteractTime != this.lastInteractTimes.getNoEntryValue() && lastInteractTime - System.currentTimeMillis() > 0L) {
                 event.setCancelled(true);
             }
         }
@@ -71,12 +69,12 @@ public class BlockHitFixListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerLogout(PlayerQuitEvent event) {
-        lastInteractTimes.remove(event.getPlayer().getUniqueId());
+        this.lastInteractTimes.remove(event.getPlayer().getUniqueId());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerKick(PlayerKickEvent event) {
-        lastInteractTimes.remove(event.getPlayer().getUniqueId());
+        this.lastInteractTimes.remove(event.getPlayer().getUniqueId());
     }
 
     /**
@@ -87,6 +85,6 @@ public class BlockHitFixListener implements Listener {
      * @param delay the milliseconds to cancel for
      */
     public void cancelAttackingMillis(UUID uuid, long delay) {
-        lastInteractTimes.put(uuid, System.currentTimeMillis() + delay);
+        this.lastInteractTimes.put(uuid, System.currentTimeMillis() + delay);
     }
 }

@@ -113,7 +113,8 @@ public class ProtectionListener implements Listener {
             Material.WORKBENCH,
             Material.ANVIL,
             Material.LEVER,
-            Material.FIRE);
+            Material.FIRE
+    );
 
     private final HCF plugin;
 
@@ -626,11 +627,6 @@ public class ProtectionListener implements Listener {
         if (player != null && player.getGameMode() == GameMode.CREATIVE && player.hasPermission(PROTECTION_BYPASS_PERMISSION)) {
             return true;
         }
-
-        /*if (ConfigurationService.KIT_MAP) {
-            if (player != null) player.sendMessage(ChatColor.RED + "You cannot build during a kit map.");
-            return false;
-        }*/
 
         if (player != null && player.getWorld().getEnvironment() == World.Environment.THE_END) {
             player.sendMessage(ChatColor.RED + "You cannot build in the end.");

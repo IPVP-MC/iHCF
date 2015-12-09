@@ -45,6 +45,7 @@ public class SignSubclaimListener implements Listener {
     private static final String SUBCLAIM_CONVERSION_PREFIX = ChatColor.DARK_RED.toString() + ChatColor.BOLD + "[Subclaim]";
     private static final List<String> SUBCLAIM_ALIASES = Arrays.asList("SUBCLAIM", "PRIVATE");
     private static final Pattern SQUARE_PATTERN_REPLACER = Pattern.compile("\\[|\\]");
+
     private static final BlockFace[] SIGN_FACES = new BlockFace[]{
             BlockFace.NORTH,
             BlockFace.EAST,
