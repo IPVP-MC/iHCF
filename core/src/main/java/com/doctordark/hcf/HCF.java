@@ -182,7 +182,6 @@ public class HCF extends JavaPlugin {
         }
 
         HCF.plugin = this;
-        ProtocolLibHook.hook(this);                                          // Initialise ProtocolLib hook.
         DateTimeFormats.load(this.configuration.getServerTimeZone());        // Initialise the static fields.
         ///////////////////////////
         Plugin wep = getServer().getPluginManager().getPlugin("WorldEdit");  // Initialise WorldEdit hook.
@@ -201,6 +200,8 @@ public class HCF extends JavaPlugin {
                 saveData();
             }
         }.runTaskTimerAsynchronously(this, dataSaveInterval, dataSaveInterval);
+
+        ProtocolLibHook.hook(this); // Initialise ProtocolLib hook.
     }
 
     private void saveData() {
