@@ -87,6 +87,7 @@ public class ProtectionListener implements Listener {
             put(Material.IRON_HOE, Material.GRASS).
             put(Material.STONE_HOE, Material.GRASS).
             put(Material.WOOD_HOE, Material.GRASS).
+            put(Material.EYE_OF_ENDER, Material.ENDER_PORTAL_FRAME).
             build();
 
     private static final ImmutableSet<Material> BLOCK_RIGHT_CLICK_DENY = Sets.immutableEnumSet(
