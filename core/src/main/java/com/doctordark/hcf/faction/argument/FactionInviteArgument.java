@@ -5,9 +5,10 @@ import com.doctordark.hcf.faction.struct.Relation;
 import com.doctordark.hcf.faction.struct.Role;
 import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
-import com.doctordark.util.chat.ClickAction;
-import com.doctordark.util.chat.Text;
 import com.doctordark.util.command.CommandArgument;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -19,6 +20,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
+
+import static com.doctordark.util.SpigotUtils.toBungee;
 
 /**
  * Faction argument used to invite players into {@link Faction}s.
@@ -91,13 +94,18 @@ public class FactionInviteArgument extends CommandArgument {
         Player target = Bukkit.getPlayer(name);
         if (target != null) {
             name = target.getName(); // fix casing.
-            Text text = new Text(sender.getName()).setColor(Relation.ENEMY.toChatColour()).append(new Text(" has invited you to join ").setColor(ChatColor.YELLOW));
-            text.append(new Text(playerFaction.getName()).setColor(Relation.ENEMY.toChatColour())).append(new Text(". ").setColor(ChatColor.YELLOW));
-            text.append(new Text("Click here").setColor(ChatColor.GREEN).
-                    setClick(ClickAction.RUN_COMMAND, '/' + label + " accept " + playerFaction.getName()).
-                    setHoverText(ChatColor.AQUA + "Click to join " + playerFaction.getDisplayName(target) + ChatColor.AQUA + '.')).
-                    append(new Text(" to accept this invitation.").setColor(ChatColor.YELLOW));
-            text.send(target);
+
+            net.md_5.bungee.api.ChatColor enemyRelationColor = toBungee(Relation.ENEMY.toChatColour());
+            ComponentBuilder builder = new ComponentBuilder(sender.getName()).color(enemyRelationColor);
+            builder.append(" has invited you to join ", ComponentBuilder.FormatRetention.NONE).color(net.md_5.bungee.api.ChatColor.YELLOW);
+            builder.append(playerFaction.getName()).color(enemyRelationColor).append(". ", ComponentBuilder.FormatRetention.NONE).color(net.md_5.bungee.api.ChatColor.YELLOW);
+            builder.append("Click here").color(net.md_5.bungee.api.ChatColor.GREEN).
+                    event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/" + label + " accept " + playerFaction.getName())).
+                    event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click to join ").color(net.md_5.bungee.api.ChatColor.AQUA).
+                            append(playerFaction.getName(), ComponentBuilder.FormatRetention.NONE).color(enemyRelationColor).
+                            append(".", ComponentBuilder.FormatRetention.NONE).color(net.md_5.bungee.api.ChatColor.AQUA).create()));
+            builder.append(" to accept this invitation.", ComponentBuilder.FormatRetention.NONE).color(net.md_5.bungee.api.ChatColor.YELLOW);
+            target.spigot().sendMessage(builder.create());
         }
 
         playerFaction.broadcast(Relation.MEMBER.toChatColour() + sender.getName() + ChatColor.YELLOW + " has invited " + Relation.ENEMY.toChatColour() + name + ChatColor.YELLOW + " into the faction.");
