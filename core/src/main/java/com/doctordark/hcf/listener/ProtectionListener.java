@@ -87,7 +87,6 @@ public class ProtectionListener implements Listener {
             put(Material.IRON_HOE, Material.GRASS).
             put(Material.STONE_HOE, Material.GRASS).
             put(Material.WOOD_HOE, Material.GRASS).
-            put(Material.EYE_OF_ENDER, Material.ENDER_PORTAL_FRAME).
             build();
 
     private static final ImmutableSet<Material> BLOCK_RIGHT_CLICK_DENY = Sets.immutableEnumSet(
@@ -451,24 +450,30 @@ public class ProtectionListener implements Listener {
                 event.setCancelled(true);
             }
         } else if (action == Action.RIGHT_CLICK_BLOCK) {
-            boolean canRightClick = !BLOCK_RIGHT_CLICK_DENY.contains(block.getType());
+            boolean canRightClick;
+            MaterialData blockData;
+            Material blockType = block.getType();
+
+            // Firstly, check if this block is not on the explicit blacklist.
+            canRightClick = !BLOCK_RIGHT_CLICK_DENY.contains(blockType);
             if (canRightClick) {
                 Material itemType = event.hasItem() ? event.getItem().getType() : null;
-                if (itemType != null && ITEM_ON_BLOCK_RIGHT_CLICK_DENY.get(itemType).contains(event.getClickedBlock().getType())) {
-                    MaterialData materialData = block.getState().getData();
-                    if (materialData instanceof Cauldron) {
-                        // Only prevent right clicking cauldron if has water and player is using a Glass Bottle.
-                        Cauldron cauldron = (Cauldron) materialData;
-                        if (!cauldron.isEmpty() && event.hasItem() && event.getItem().getType() == Material.GLASS_BOTTLE) {
-                            canRightClick = false;
-                        }
-                    } else {
-                        // Player clicked a block that they were not allowed to with current tool
-                        canRightClick = false;
-                    }
+
+                if (Material.EYE_OF_ENDER == itemType && Material.ENDER_PORTAL_FRAME == blockType && block.getData() != 4) {
+                    // If the player is right clicking an Ender Portal Frame with an Ender Portal Eye and it is empty.
+                    canRightClick = false;
+
+                } else if (Material.GLASS_BOTTLE == itemType && (blockData = block.getState().getData()) instanceof Cauldron && !((Cauldron) blockData).isEmpty()) {
+                    // If the player is right clicking a Cauldron that contains liquid with a Glass Bottle.
+                    canRightClick = false;
+
+                } else if (itemType != null && ITEM_ON_BLOCK_RIGHT_CLICK_DENY.get(itemType).contains(block.getType())) {
+                    // Finally, check if this block is not blacklisted with the item the player right clicked it with.
+                    canRightClick = false;
+
                 }
-                // Allow workbench use in safezones.
             } else if (block.getType() == Material.WORKBENCH && plugin.getFactionManager().getFactionAt(block.getLocation()).isSafezone()) {
+                // Allow workbench use in safezones.
                 canRightClick = true;
             }
 
