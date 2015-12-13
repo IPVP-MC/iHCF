@@ -20,7 +20,7 @@ public class EventScheduler implements IEventScheduler {
     private long lastQuery;
     */
 
-    private final ImmutableList<String> kothNames = ImmutableList.of("Cave", "Nether", "Barn", "Demolition");
+    private final ImmutableList<String> kothNames = ImmutableList.of("SG", "Nether", "City", "Ravel");
     private final Map<LocalDateTime, String> scheduleMap = new LinkedHashMap<>();
     private final HCF plugin;
 
