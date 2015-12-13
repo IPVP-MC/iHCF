@@ -53,7 +53,7 @@ public class KothNextArgument extends CommandArgument {
 
             String monthName = scheduleDateTime.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
             String weekName = scheduleDateTime.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
-            sender.sendMessage(ChatColor.DARK_AQUA + WordUtils.capitalizeFully(entry.getValue()) + ChatColor.GRAY + " is the next event: " +
+            sender.sendMessage(ChatColor.DARK_AQUA + WordUtils.capitalize(entry.getValue()) + ChatColor.GRAY + " is the next event: " +
                     ChatColor.AQUA + weekName + ' ' + scheduleDateTime.getDayOfMonth() + ' ' + monthName +
                     ChatColor.DARK_AQUA + " (" + DateTimeFormats.HR_MIN_AMPM.format(TimeUnit.HOURS.toMillis(scheduleDateTime.getHour()) +
                     TimeUnit.MINUTES.toMillis(scheduleDateTime.getMinute())) + ')');

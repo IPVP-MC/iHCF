@@ -65,7 +65,7 @@ public class KothScheduleArgument extends CommandArgument {
 
                 ChatColor colour = dayDifference == 0 ? ChatColor.GREEN : ChatColor.AQUA;
                 long remainingMillis = now.until(scheduleDateTime, ChronoUnit.MILLIS);
-                shownEvents.add("  " + colour + WordUtils.capitalizeFully(entry.getValue()) + ": " + ChatColor.YELLOW +
+                shownEvents.add("  " + colour + WordUtils.capitalize(entry.getValue()) + ": " + ChatColor.YELLOW +
                         ChatColor.translateAlternateColorCodes('&', eachKothTimeFormat.format(remainingMillis).replace("'", "")) +
                         ChatColor.GRAY + " - " + ChatColor.GOLD + DurationFormatUtils.formatDuration(remainingMillis, TIME_UNTIL_PATTERN));
             }
