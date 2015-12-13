@@ -117,8 +117,18 @@ public class SignSubclaimListener implements Listener {
                     }
 
                     boolean leaderChest = lines[1].equals(Role.LEADER.getAstrix()) || lines[1].equalsIgnoreCase("LEADER");
+                    boolean captainChest = lines[1].equals(Role.CAPTAIN.getAstrix()) || lines[1].equalsIgnoreCase("CAPTAIN");
 
-                    if (leaderChest) {
+                    if (captainChest) {
+                        if (playerFaction.getMember(player).getRole() != Role.CAPTAIN) {
+                            player.sendMessage(ChatColor.RED + "Only faction leaders can create captain subclaimed objects.");
+                            return;
+                        }
+
+                        // Clear the other lines.
+                        event.setLine(2, null);
+                        event.setLine(3, null);
+                    } else if (leaderChest) {
                         if (playerFaction.getMember(player).getRole() != Role.LEADER) {
                             player.sendMessage(ChatColor.RED + "Only faction leaders can create leader subclaimed objects.");
                             return;
@@ -136,7 +146,7 @@ public class SignSubclaimListener implements Listener {
                     playerFaction.broadcast(plugin.getConfiguration().getRelationColourTeammate() + player.getName() +
                             ChatColor.YELLOW + " has created a subclaim on block type " + ChatColor.AQUA + attachedBlock.getName() +
                             ChatColor.YELLOW + " at " + ChatColor.WHITE + '(' + attachedBlock.getX() + ", " + attachedBlock.getZ() + ')' + ChatColor.YELLOW +
-                            " for " + (leaderChest ? "leaders" : actualMembers.isEmpty() ? "captains" : "members " + ChatColor.RED + '[' +
+                            " for " + (leaderChest ? "leaders" : captainChest ? "captains" : actualMembers.isEmpty() ? "captains" : "members " + ChatColor.RED + '[' +
                             StringUtils.join(actualMembers, ", ") + ']'));
                 }
             }
