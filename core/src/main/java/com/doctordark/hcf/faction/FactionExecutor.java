@@ -42,6 +42,7 @@ import com.doctordark.hcf.faction.argument.staff.FactionForceJoinArgument;
 import com.doctordark.hcf.faction.argument.staff.FactionForceKickArgument;
 import com.doctordark.hcf.faction.argument.staff.FactionForceLeaderArgument;
 import com.doctordark.hcf.faction.argument.staff.FactionForcePromoteArgument;
+import com.doctordark.hcf.faction.argument.staff.FactionForceUnclaimHereArgument;
 import com.doctordark.hcf.faction.argument.staff.FactionMuteArgument;
 import com.doctordark.hcf.faction.argument.staff.FactionRemoveArgument;
 import com.doctordark.hcf.faction.argument.staff.FactionSetDeathbanMultiplierArgument;
@@ -82,6 +83,7 @@ public class FactionExecutor extends ArgumentExecutor {
         addArgument(new FactionForceKickArgument(plugin));
         addArgument(new FactionForceLeaderArgument(plugin));
         addArgument(new FactionForcePromoteArgument(plugin));
+        addArgument(new FactionForceUnclaimHereArgument(plugin));
         addArgument(helpArgument = new FactionHelpArgument(this));
         addArgument(new FactionHomeArgument(this, plugin));
         addArgument(new FactionInviteArgument(plugin));
