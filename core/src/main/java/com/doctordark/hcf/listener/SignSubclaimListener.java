@@ -146,7 +146,7 @@ public class SignSubclaimListener implements Listener {
                     playerFaction.broadcast(plugin.getConfiguration().getRelationColourTeammate() + player.getName() +
                             ChatColor.YELLOW + " has created a subclaim on block type " + ChatColor.AQUA + attachedBlock.getName() +
                             ChatColor.YELLOW + " at " + ChatColor.WHITE + '(' + attachedBlock.getX() + ", " + attachedBlock.getZ() + ')' + ChatColor.YELLOW +
-                            " for " + (leaderChest ? "leaders" : captainChest ? "captains" : actualMembers.isEmpty() ? "captains" : "members " + ChatColor.RED + '[' +
+                            " for " + (leaderChest ? "leaders" : captainChest || actualMembers.isEmpty() ? "captains" : "members " + ChatColor.RED + '[' +
                             StringUtils.join(actualMembers, ", ") + ']'));
                 }
             }
