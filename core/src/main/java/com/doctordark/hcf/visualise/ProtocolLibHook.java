@@ -69,7 +69,6 @@ public final class ProtocolLibHook {
                         }
 
                         if (hcf.getVisualiseHandler().getVisualBlockAt(player, placedLocation) == null) {
-                            event.setCancelled(true);
                             player.sendBlockChange(placedLocation, Material.AIR, (byte) 0);
                             player.setItemInHand(player.getItemInHand()); // send held slot packet again as the client still decrements.
                         }
