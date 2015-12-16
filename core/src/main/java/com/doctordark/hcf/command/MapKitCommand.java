@@ -52,7 +52,7 @@ public class MapKitCommand implements CommandExecutor, TabCompleter, Listener {
             int maxLevel = plugin.getConfiguration().getEnchantmentLimit(enchantment);
             ItemBuilder builder = new ItemBuilder(Material.ENCHANTED_BOOK);
             builder.displayName(ChatColor.YELLOW + Lang.fromEnchantment(enchantment) + ": " + ChatColor.GREEN + (maxLevel == 0 ? "Disabled" : maxLevel));
-            builder.lore(SEPARATOR_LINE, ChatColor.WHITE + "  No Extra Data", SEPARATOR_LINE);
+            //builder.lore(SEPARATOR_LINE, ChatColor.WHITE + "  No Extra Data", SEPARATOR_LINE);
             items.add(builder.build());
         }
 
@@ -60,7 +60,7 @@ public class MapKitCommand implements CommandExecutor, TabCompleter, Listener {
             int maxLevel = plugin.getConfiguration().getPotionLimit(potionType);
             ItemBuilder builder = new ItemBuilder(new Potion(potionType).toItemStack(1));
             builder.displayName(ChatColor.YELLOW + WordUtils.capitalizeFully(potionType.name().replace('_', ' ')) + ": " + ChatColor.GREEN + (maxLevel == 0 ? "Disabled" : maxLevel));
-            builder.lore(SEPARATOR_LINE, ChatColor.WHITE + "  No Extra Data", SEPARATOR_LINE);
+            //builder.lore(SEPARATOR_LINE, ChatColor.WHITE + "  No Extra Data", SEPARATOR_LINE);
             items.add(builder.build());
         }
 
