@@ -56,6 +56,12 @@ public class LoggerEntityHuman extends EntityPlayer implements LoggerEntity {
         this.combatTracker = originPlayer.combatTracker;
     }
 
+    @Override
+    protected boolean d(final DamageSource damagesource, float f) {
+        this.setHealth(0.0001F); // instant kill
+        return super.d(damagesource, f);
+    }
+
     public void postSpawn(HCF plugin) {
         if (world.addEntity(this)) {
             Bukkit.getConsoleSender().sendMessage(String.format(ChatColor.GOLD + "Combat logger of " + getName() + " has spawned at %.2f, %.2f, %.2f", locX, locY, locZ));
