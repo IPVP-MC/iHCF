@@ -4,6 +4,8 @@ import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.struct.Role;
 import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
+import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.ChatColor;
@@ -30,7 +32,6 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.material.MaterialData;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -41,11 +42,44 @@ import java.util.stream.Collectors;
 
 public class SignSubclaimListener implements Listener {
 
-    private static final int MAX_SIGN_LINE_CHARS = 16;
-    private static final String SUBCLAIM_CONVERSION_PREFIX = ChatColor.DARK_RED.toString() + ChatColor.BOLD + "[Subclaim]";
-    private static final List<String> SUBCLAIM_ALIASES = Arrays.asList("SUBCLAIM", "PRIVATE");
-    private static final Pattern SQUARE_PATTERN_REPLACER = Pattern.compile("\\[|\\]");
+    private enum SubclaimType {
 
+        LEADER(ImmutableList.of("LEADER", Role.LEADER.getAstrix()),
+                ChatColor.DARK_RED.toString() + ChatColor.BOLD + "Leader", Role.LEADER, "Leader"),
+
+        CAPTAIN(ImmutableList.of("CAPTAIN", "OFFICER", Role.CAPTAIN.getAstrix()),
+                ChatColor.DARK_RED.toString() + ChatColor.BOLD + "Captain", Role.CAPTAIN, "Captain"),
+
+        MEMBER(ImmutableList.of("PRIVATE", "PERSONAL", "SUBCLAIM", "MEMBER"),
+                ChatColor.DARK_RED.toString() + ChatColor.BOLD + "Subclaim", Role.MEMBER, "Member");
+
+        private final List<String> aliases;
+        private final String outputText;
+        private final String displayName;
+
+        SubclaimType(List<String> aliases, String outputText, Role role, String displayName) {
+            this.aliases = aliases;
+            this.outputText = outputText;
+            this.displayName = displayName;
+        }
+
+        //TODO: Configurable
+        public boolean isEnabled() {
+            switch (this) {
+                case LEADER:
+                    return false;
+                case CAPTAIN:
+                    return true;
+                case MEMBER:
+                    return false;
+                default:
+                    return false;
+            }
+        }
+    }
+
+    private static final int MAX_SIGN_LINE_CHARS = 16;
+    private static final Pattern SQUARE_PATTERN_REPLACER = Pattern.compile("\\[|\\]");
     private static final BlockFace[] SIGN_FACES = new BlockFace[]{
             BlockFace.NORTH,
             BlockFace.EAST,
@@ -60,38 +94,48 @@ public class SignSubclaimListener implements Listener {
         this.plugin = plugin;
     }
 
+    private SubclaimType getSubclaimType(String value) {
+        String typeString = SQUARE_PATTERN_REPLACER.matcher(value.toUpperCase()).replaceAll("");
+        for (SubclaimType type : SubclaimType.values()) {
+            if (type.aliases.contains(typeString)) {
+                return type;
+            }
+        }
+
+        return null;
+    }
+
     private boolean isSubclaimable(Block block) {
         Material type = block.getType();
         return type == Material.FENCE_GATE || type == Material.TRAP_DOOR || block.getState() instanceof InventoryHolder;
     }
 
-    private boolean isSubclaimed(Block block) {
+    private SubclaimType getSubclaimType(Sign sign) {
+        SubclaimType subclaimType = this.getSubclaimType(sign.getLine(0));
+        return subclaimType != null && subclaimType.isEnabled() ? subclaimType : null;
+    }
+
+    private SubclaimType getSubclaimType(Block block) {
         if (isSubclaimable(block)) {
-            Collection<Sign> attachedSigns = getAttachedSigns(block);
+            Collection<Sign> attachedSigns = this.getAttachedSigns(block);
             for (Sign attachedSign : attachedSigns) {
-                if (attachedSign.getLine(0).equals(SignSubclaimListener.SUBCLAIM_CONVERSION_PREFIX)) {
-                    return false;
-                }
+                SubclaimType subclaimType = this.getSubclaimType(attachedSign);
+                if (subclaimType != null) return subclaimType;
             }
         }
 
-        return false;
+        return null;
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
         String[] lines = event.getLines();
-        if (!SignSubclaimListener.SUBCLAIM_ALIASES.contains(SignSubclaimListener.SQUARE_PATTERN_REPLACER.matcher(lines[0].toUpperCase()).replaceAll(""))) {
-            return; // is not a subclaim written sign
-        }
-
         Block block = event.getBlock();
         MaterialData materialData = block.getState().getData();
         if (materialData instanceof org.bukkit.material.Sign) {
             org.bukkit.material.Sign sign = (org.bukkit.material.Sign) materialData;
             Block attachedBlock = block.getRelative(sign.getAttachedFace());
-
-            if (this.isSubclaimable(attachedBlock)) {
+            if (isSubclaimable(attachedBlock)) {
                 Player player = event.getPlayer();
                 PlayerFaction playerFaction = plugin.getFactionManager().getPlayerFaction(player);
                 if (playerFaction == null) {
@@ -100,54 +144,69 @@ public class SignSubclaimListener implements Listener {
 
                 Faction factionAt = plugin.getFactionManager().getFactionAt(block.getLocation());
                 if (playerFaction == factionAt) {
-                    if (this.isSubclaimed(attachedBlock)) {
-                        player.sendMessage(ChatColor.RED + "There is already a subclaim sign on this " + attachedBlock.getName() + '.');
+                    SubclaimType subclaimType = this.getSubclaimType(attachedBlock);
+                    if (subclaimType != null) {
+                        player.sendMessage(ChatColor.RED + "There is already a " + subclaimType.displayName + " subclaim sign on this " + attachedBlock.getName() + '.');
                         return;
                     }
 
-                    List<String> memberList = new ArrayList<>(3);
-                    for (int i = 1; i < lines.length; i++) {
-                        String line = lines[i];
-                        if (StringUtils.isNotBlank(line)) memberList.add(line);
-                    }
-
-                    if (memberList.isEmpty()) {
-                        player.sendMessage(ChatColor.RED + "Subclaim signs need to have at least 1 player name inserted.");
+                    subclaimType = this.getSubclaimType(lines[0]);
+                    if (subclaimType == null || !subclaimType.isEnabled()) {
                         return;
                     }
 
-                    boolean leaderChest = lines[1].equals(Role.LEADER.getAstrix()) || lines[1].equalsIgnoreCase("LEADER");
-                    boolean captainChest = lines[1].equals(Role.CAPTAIN.getAstrix()) || lines[1].equalsIgnoreCase("CAPTAIN");
+                    List<String> memberList = null;
+                    if (subclaimType == SubclaimType.MEMBER) {
+                        memberList = new ArrayList<>(3);
+                        for (int i = 1; i < lines.length; i++) {
+                            String line = lines[i];
+                            if (StringUtils.isNotBlank(line)) {
+                                memberList.add(line);
+                            }
+                        }
 
-                    if (captainChest) {
-                        if (playerFaction.getMember(player).getRole() != Role.CAPTAIN) {
-                            player.sendMessage(ChatColor.RED + "Only faction leaders can create captain subclaimed objects.");
+                        if (memberList.isEmpty()) {
+                            player.sendMessage(ChatColor.RED + "Subclaim signs need to have at least 1 player name inserted.");
+                            return;
+                        }
+                    } else if (subclaimType == SubclaimType.CAPTAIN) {
+                        if (playerFaction.getMember(player).getRole() == Role.MEMBER) {
+                            player.sendMessage(ChatColor.RED + "Only faction officers can create captain subclaimed objects.");
                             return;
                         }
 
                         // Clear the other lines.
+                        event.setLine(1, null);
                         event.setLine(2, null);
                         event.setLine(3, null);
-                    } else if (leaderChest) {
+                    } else if (subclaimType == SubclaimType.LEADER) {
                         if (playerFaction.getMember(player).getRole() != Role.LEADER) {
                             player.sendMessage(ChatColor.RED + "Only faction leaders can create leader subclaimed objects.");
                             return;
                         }
 
                         // Clear the other lines.
+                        event.setLine(1, null);
                         event.setLine(2, null);
                         event.setLine(3, null);
                     }
 
-                    event.setLine(0, SignSubclaimListener.SUBCLAIM_CONVERSION_PREFIX); // officialise this as a Subclaim chest.
-
-                    // the lines may contain a name of a user not in the faction.
-                    List<String> actualMembers = memberList.stream().filter(member -> playerFaction.getMember(member) != null).collect(Collectors.toList());
-                    playerFaction.broadcast(plugin.getConfiguration().getRelationColourTeammate() + player.getName() +
+                    // Finalise the subclaim.
+                    event.setLine(0, subclaimType.outputText);
+                    StringBuilder builder = new StringBuilder(plugin.getConfiguration().getRelationColourTeammate() + player.getName() +
                             ChatColor.YELLOW + " has created a subclaim on block type " + ChatColor.AQUA + attachedBlock.getName() +
-                            ChatColor.YELLOW + " at " + ChatColor.WHITE + '(' + attachedBlock.getX() + ", " + attachedBlock.getZ() + ')' + ChatColor.YELLOW +
-                            " for " + (leaderChest ? "leaders" : captainChest || actualMembers.isEmpty() ? "captains" : "members " + ChatColor.RED + '[' +
-                            StringUtils.join(actualMembers, ", ") + ']'));
+                            ChatColor.YELLOW + " at " + ChatColor.WHITE + '(' + attachedBlock.getX() + ", " + attachedBlock.getZ() + ')' + ChatColor.YELLOW + " for ");
+
+                    if (subclaimType == SubclaimType.LEADER) {
+                        builder.append("leaders");
+                    } else if (subclaimType == SubclaimType.CAPTAIN) {
+                        builder.append("captains");
+                    } else if (memberList != null) { // Should never be null, but best safe; SubclaimType.PRIVATE
+                        builder.append("members ").append(ChatColor.RED).append('[');
+                        builder.append(Joiner.on(", ").join(memberList.stream().filter(string -> playerFaction.getMember(string) != null).collect(Collectors.toList()))).append("]");
+                    }
+
+                    playerFaction.broadcast(builder.toString());
                 }
             }
         }
@@ -155,7 +214,9 @@ public class SignSubclaimListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
-        if (plugin.getEotwHandler().isEndOfTheWorld()) return;
+        if (plugin.getEotwHandler().isEndOfTheWorld()) {
+            return;
+        }
 
         Player player = event.getPlayer();
         if (player.getGameMode() == GameMode.CREATIVE && player.hasPermission(ProtectionListener.PROTECTION_BYPASS_PERMISSION)) {
@@ -185,11 +246,13 @@ public class SignSubclaimListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onInventoryMoveItem(InventoryMoveItemEvent event) {
-        if (plugin.getEotwHandler().isEndOfTheWorld()) return;
-        InventoryHolder holder = event.getSource().getHolder();
+        if (plugin.getEotwHandler().isEndOfTheWorld()) {
+            return;
+        }
 
         // Have to do this hackery since Bukkit doesn't
         // provide an API for us to do this
+        InventoryHolder holder = event.getSource().getHolder();
         Collection<Block> sourceBlocks;
         if (holder instanceof Chest) {
             sourceBlocks = Collections.singletonList(((Chest) holder).getBlock());
@@ -201,15 +264,9 @@ public class SignSubclaimListener implements Listener {
         }
 
         for (Block block : sourceBlocks) {
-            if (isSubclaimable(block)) {
-                Collection<Sign> attachedSigns = getAttachedSigns(block);
-                for (Sign attachedSign : attachedSigns) {
-                    String[] lines = attachedSign.getLines();
-                    if (lines[0].equals(SignSubclaimListener.SUBCLAIM_CONVERSION_PREFIX)) {
-                        event.setCancelled(true);
-                        break;
-                    }
-                }
+            if (this.getSubclaimType(block) != null) {
+                event.setCancelled(true);
+                break;
             }
         }
     }
@@ -224,25 +281,21 @@ public class SignSubclaimListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            Player player = event.getPlayer();
+            if (player.getGameMode() == GameMode.CREATIVE && player.hasPermission(ProtectionListener.PROTECTION_BYPASS_PERMISSION)) {
+                return;
+            }
 
-        Player player = event.getPlayer();
-        if (player.getGameMode() == GameMode.CREATIVE && player.hasPermission(ProtectionListener.PROTECTION_BYPASS_PERMISSION)) {
-            return;
-        }
+            if (plugin.getEotwHandler().isEndOfTheWorld() || plugin.getConfiguration().isKitMap()) {
+                return;
+            }
 
-        if (plugin.getEotwHandler().isEndOfTheWorld() || plugin.getConfiguration().isKitMap()) {
-            return;
-        }
-
-        Block block = event.getClickedBlock();
-        if (!this.isSubclaimable(block)) {
-            return;
-        }
-
-        if (!this.checkSubclaimIntegrity(player, block)) {
-            event.setCancelled(true);
-            player.sendMessage(ChatColor.RED + "You do not have access to this subclaimed " + block.getName() + '.');
+            Block block = event.getClickedBlock();
+            if (!checkSubclaimIntegrity(player, block)) {
+                event.setCancelled(true);
+                player.sendMessage(ChatColor.RED + "You do not have access to this subclaimed " + block.getName() + '.');
+            }
         }
     }
 
@@ -254,54 +307,56 @@ public class SignSubclaimListener implements Listener {
      * @return true if allowed to open
      */
     private boolean checkSubclaimIntegrity(Player player, Block subclaimObject) {
-        if (!this.isSubclaimable(subclaimObject)) {
-            return true;
+        if (!isSubclaimable(subclaimObject)) {
+            return true; // Not even subclaimed.
         }
 
         PlayerFaction playerFaction = plugin.getFactionManager().getPlayerFaction(player);
         if (playerFaction == null || playerFaction.isRaidable()) {
-            return true; // just let the player open it from the start.
+            return true; // If the faction is raidable, just allow it.
         }
 
         Role role = playerFaction.getMember(player).getRole();
         if (role == Role.LEADER) {
-            return true; // let leaders open regardless.
+            return true; // Let leaders open regardless.
         }
 
         if (playerFaction != plugin.getFactionManager().getFactionAt(subclaimObject)) {
-            return true;
+            return true; // Let enemies be able to open
         }
 
-        Collection<Sign> attachedSigns = this.getAttachedSigns(subclaimObject);
+        Collection<Sign> attachedSigns = getAttachedSigns(subclaimObject);
         if (attachedSigns.isEmpty()) {
             return true;
         }
 
-        boolean hasLooped = false;
-        String search = this.getShortenedName(player.getName());
+        String search = null; // lazy-loaded
         for (Sign attachedSign : attachedSigns) {
-            String[] lines = attachedSign.getLines();
-            if (!lines[0].equals(SUBCLAIM_CONVERSION_PREFIX)) {
-                continue; // It is not a Subclaim sign, ignore
+            SubclaimType subclaimType = getSubclaimType(attachedSign);
+            if (subclaimType == null) {
+                continue;
             }
 
-            hasLooped = true;
-            if (Role.LEADER.getAstrix().equals(lines[1])) {
-                continue; // This is a leader only subclaim, and the player is not a leader.
-            }
+            // No need to conditional check leaders as they can open anything.
+            if (subclaimType == SubclaimType.CAPTAIN) {
+                if (role == Role.MEMBER) {
+                    continue;
+                }
 
-            if (role == Role.CAPTAIN) {
-                return true; // The players' name wasn't found, but allow captains regardless as it isn't leader only.
-            }
+                return true;
+            } else if (subclaimType == SubclaimType.MEMBER) {
+                if (search == null) search = this.getShortenedName(player.getName());
 
-            for (int i = 1; i < lines.length; i++) {
-                if (lines[i].contains(search)) {
-                    return true; // Member is allowed to use
+                String[] lines = attachedSign.getLines();
+                for (int i = 1; i < lines.length; i++) {
+                    if (lines[i].contains(search)) {
+                        return true;
+                    }
                 }
             }
         }
 
-        return !hasLooped;
+        return false;
     }
 
     /**
