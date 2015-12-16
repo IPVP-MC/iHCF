@@ -259,3 +259,18 @@ potionLimits = [
     "SLOWNESS = 1",
     "POISON = 1"
 ]
+
+subclaimSigns {
+    // Protects against members that are not on the sign opening.
+    private = false
+
+    // Protects against any non-officer opening.
+    captain = true
+
+    // Protects against any non-leader opening.
+    leader = false
+
+    // If subclaim protected objects should be protected from hopper
+    // items too, disabling this may increase performance.
+    hopperCheck = true
+}

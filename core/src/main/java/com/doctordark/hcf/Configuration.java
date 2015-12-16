@@ -264,6 +264,18 @@ public class Configuration extends AnnotationConfig {
     @Setting("enchantmentLimits")
     private final List<String> enchantmentLimitsUnstored = new ArrayList<>();
 
+    @Setting("subclaimSigns.private")
+    private boolean subclaimSignPrivate = false;
+
+    @Setting("subclaimSigns.captain")
+    private boolean subclaimSignCaptain = false;
+
+    @Setting("subclaimSigns.leader")
+    private boolean subclaimSignLeader = false;
+
+    @Setting("subclaimSigns.hopperCheck")
+    private boolean subclaimHopperCheck = false;
+
     private final TObjectIntMap<Enchantment> enchantmentLimits = new TObjectIntHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, -1);
     private final TObjectIntMap<PotionType> potionLimits = new TObjectIntHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, -1);
 

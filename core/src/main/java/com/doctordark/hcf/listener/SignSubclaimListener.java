@@ -63,15 +63,14 @@ public class SignSubclaimListener implements Listener {
             this.displayName = displayName;
         }
 
-        //TODO: Configurable
         public boolean isEnabled() {
             switch (this) {
                 case LEADER:
-                    return false;
+                    return HCF.getPlugin().getConfiguration().isSubclaimSignLeader();
                 case CAPTAIN:
-                    return true;
+                    return HCF.getPlugin().getConfiguration().isSubclaimSignCaptain();
                 case MEMBER:
-                    return false;
+                    return HCF.getPlugin().getConfiguration().isSubclaimSignPrivate();
                 default:
                     return false;
             }
@@ -246,7 +245,7 @@ public class SignSubclaimListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onInventoryMoveItem(InventoryMoveItemEvent event) {
-        if (plugin.getEotwHandler().isEndOfTheWorld()) {
+        if (plugin.getEotwHandler().isEndOfTheWorld() || !plugin.getConfiguration().isSubclaimHopperCheck()) {
             return;
         }
 

@@ -16,6 +16,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class FlatFileDeathbanManager implements DeathbanManager {
 
@@ -77,7 +78,7 @@ public class FlatFileDeathbanManager implements DeathbanManager {
         if (plugin.getEotwHandler().isEndOfTheWorld()) {
             duration = MAX_DEATHBAN_TIME;
         } else {
-            duration = plugin.getConfiguration().getDeathbanBaseDurationMinutes() * 1000L;
+            duration = TimeUnit.MINUTES.toMillis(plugin.getConfiguration().getDeathbanBaseDurationMinutes());
             if (!factionAt.isDeathban()) {
                 duration /= 2L; // non-deathban factions should be 50% quicker
             }
