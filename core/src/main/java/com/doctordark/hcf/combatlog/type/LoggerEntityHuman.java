@@ -1,7 +1,9 @@
 package com.doctordark.hcf.combatlog.type;
 
 import com.doctordark.hcf.HCF;
+import com.doctordark.hcf.combatlog.event.LoggerDeathEvent;
 import com.doctordark.hcf.combatlog.event.LoggerRemovedEvent;
+import net.minecraft.server.v1_7_R4.DamageSource;
 import net.minecraft.server.v1_7_R4.Entity;
 import net.minecraft.server.v1_7_R4.EntityHuman;
 import net.minecraft.server.v1_7_R4.EntityPlayer;
@@ -11,7 +13,6 @@ import net.minecraft.server.v1_7_R4.Packet;
 import net.minecraft.server.v1_7_R4.PacketPlayOutPlayerInfo;
 import net.minecraft.server.v1_7_R4.PlayerConnection;
 import net.minecraft.server.v1_7_R4.PlayerInteractManager;
-import net.minecraft.server.v1_7_R4.PlayerList;
 import net.minecraft.server.v1_7_R4.WorldServer;
 import net.minecraft.util.com.mojang.authlib.GameProfile;
 import org.bukkit.Bukkit;
@@ -31,41 +32,44 @@ import java.util.UUID;
  */
 public class LoggerEntityHuman extends EntityPlayer implements LoggerEntity {
 
-    protected BukkitTask removalTask;
+    private BukkitTask removalTask;
 
-    public LoggerEntityHuman(HCF plugin, Player player, World world) {
-        this(plugin, player, ((CraftWorld) world).getHandle());
+    public LoggerEntityHuman(Player player, World world) {
+        this(player, ((CraftWorld) world).getHandle());
     }
 
-    private LoggerEntityHuman(HCF plugin, Player player, WorldServer world) {
+    private LoggerEntityHuman(Player player, WorldServer world) {
         super(MinecraftServer.getServer(), world, new GameProfile(player.getUniqueId(), player.getName()), new PlayerInteractManager(world));
 
         // Assign variables first.
-        final PlayerList playerlist = MinecraftServer.getServer().getPlayerList();
         Location location = player.getLocation();
         double x = location.getX(), y = location.getY(), z = location.getZ();
         float yaw = location.getYaw(), pitch = location.getPitch();
 
+        new FakePlayerConnection(this); // also assigns to the EntityPlayer#playerConnection field.
+        this.playerConnection.a(x, y, z, yaw, pitch); // must instantiate FakePlayerConnection for this to work
+
         EntityPlayer originPlayer = ((CraftPlayer) player).getHandle();
-        originPlayer.copyTo(this, true);
+        originPlayer.copyTo(this, false); // NBT is loaded in #postSpawn, so the second arg is false.
         this.lastDamager = originPlayer.lastDamager;
         this.invulnerableTicks = originPlayer.invulnerableTicks;
         this.combatTracker = originPlayer.combatTracker;
+    }
 
-        // Next set the values
-        new FakePlayerConnection(this); // also assigns to the EntityPlayer
-        this.spawnIn(world);
-        this.playerConnection.a(x, y, z, yaw, pitch);
-
-        world.addEntity(this);
-        Bukkit.getConsoleSender().sendMessage(String.format(ChatColor.GOLD + "Combat logger of " + player.getName() + " has spawned at %.2f, %.2f, %.2f", x, y, z));
+    public void postSpawn(HCF plugin) {
+        if (world.addEntity(this)) {
+            Bukkit.getConsoleSender().sendMessage(String.format(ChatColor.GOLD + "Combat logger of " + getName() + " has spawned at %.2f, %.2f, %.2f", locX, locY, locZ));
+            MinecraftServer.getServer().getPlayerList().playerFileData.load(this); // load the updated NBT
+        } else {
+            Bukkit.getConsoleSender().sendMessage(String.format(ChatColor.RED + "Combat logger of " + getName() + " failed to spawned at %.2f, %.2f, %.2f", locX, locY, locZ));
+        }
 
         final LoggerEntityHuman finalLogger = this;
         this.removalTask = new BukkitRunnable() {
             @Override
             public void run() {
                 PacketPlayOutPlayerInfo packet = PacketPlayOutPlayerInfo.removePlayer(finalLogger.getBukkitEntity().getHandle());
-                playerlist.sendAll(packet);
+                MinecraftServer.getServer().getPlayerList().sendAll(packet);
                 finalLogger.destroy();
             }
         }.runTaskLater(plugin, plugin.getConfiguration().getCombatlogDespawnDelayTicks());
@@ -73,7 +77,7 @@ public class LoggerEntityHuman extends EntityPlayer implements LoggerEntity {
 
     private static class FakePlayerConnection extends PlayerConnection {
 
-        public FakePlayerConnection(EntityPlayer entityplayer) {
+        private FakePlayerConnection(EntityPlayer entityplayer) {
             super(MinecraftServer.getServer(), new FakeNetworkManager(), entityplayer);
         }
 
@@ -88,7 +92,7 @@ public class LoggerEntityHuman extends EntityPlayer implements LoggerEntity {
 
     private static class FakeNetworkManager extends NetworkManager {
 
-        public FakeNetworkManager() {
+        private FakeNetworkManager() {
             super(false);
         }
 
@@ -103,11 +107,13 @@ public class LoggerEntityHuman extends EntityPlayer implements LoggerEntity {
     }
 
     @Override
-    public void die() {
-        super.die();
+    public void die(DamageSource damageSource) {
+        super.die(damageSource);
 
-        LoggerRemovedEvent event = new LoggerRemovedEvent(this);
-        Bukkit.getPluginManager().callEvent(event);
+        Bukkit.getPluginManager().callEvent(new LoggerDeathEvent(this));
+
+        // Save the inventory NBT
+        MinecraftServer.getServer().getPlayerList().playerFileData.save(this);
         if (this.removalTask != null) {
             this.removalTask.cancel();
             this.removalTask = null;
@@ -117,7 +123,8 @@ public class LoggerEntityHuman extends EntityPlayer implements LoggerEntity {
     @Override
     public void destroy() {
         if (!this.dead) {
-            this.die();
+            this.dead = true;
+            Bukkit.getPluginManager().callEvent(new LoggerRemovedEvent(this));
         }
     }
 

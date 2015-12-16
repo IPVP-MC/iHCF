@@ -1,10 +1,18 @@
 package com.doctordark.hcf.combatlog.type;
 
+import com.doctordark.hcf.HCF;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 
 import java.util.UUID;
 
 public interface LoggerEntity {
+
+    /**
+     * Spawns this NPC.
+     *
+     * @param plugin the plugin instance
+     */
+    void postSpawn(HCF plugin);
 
     /**
      * Gets the Bukkit entity view.
