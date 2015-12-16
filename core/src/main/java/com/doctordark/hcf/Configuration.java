@@ -178,7 +178,7 @@ public class Configuration extends AnnotationConfig {
     private int factionMinimumDtr = -50;
 
     @Setting("factions.dtr.maximum")
-    private int factionMaximumDtr = 6;
+    private float factionMaximumDtr = 6.0F;
 
     @Setting("factions.dtr.millisecondsBetweenUpdates")
     private int factionDtrUpdateMillis = 45000; // 45 seconds
