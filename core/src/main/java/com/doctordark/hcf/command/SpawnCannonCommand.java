@@ -100,7 +100,7 @@ public class SpawnCannonCommand implements CommandExecutor, TabCompleter {
             }
 
             int min = ConfigurationService.SPAWN_RADIUS_MAP.get(world.getEnvironment());
-            int max = plugin.getConfiguration().getWarzoneRadius();
+            int max = plugin.getConfiguration().getWarzoneRadiusOverworld();
             int maxCannonDistance = getMaxCannonDistance(sender);
             Random random = plugin.getRandom();
 
@@ -159,7 +159,7 @@ public class SpawnCannonCommand implements CommandExecutor, TabCompleter {
      */
     public int getMaxCannonDistance(CommandSender sender) {
         int decrement = 50;
-        int radius = ((plugin.getConfiguration().getWarzoneRadius() + decrement - 1) / decrement) * decrement;
+        int radius = ((plugin.getConfiguration().getWarzoneRadiusOverworld() + decrement - 1) / decrement) * decrement;
         for (int i = radius; i > 0; i -= decrement) {
             if (sender.hasPermission("hcf.spawncannon." + i)) {
                 return i;

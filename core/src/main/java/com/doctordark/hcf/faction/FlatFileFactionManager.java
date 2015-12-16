@@ -133,11 +133,9 @@ public class FlatFileFactionManager implements Listener, FactionManager {
             return this.warzone;
         }
 
-        // Nether Warzone should be 8 times smaller allowing for Gold Farms to actually be efficient.
-        int warzoneRadius = plugin.getConfiguration().getWarzoneRadius();
-        if (environment == World.Environment.NETHER) {
-            warzoneRadius /= 8;
-        }
+        int warzoneRadius = environment == World.Environment.NETHER ?
+                plugin.getConfiguration().getWarzoneRadiusNether() :
+                plugin.getConfiguration().getWarzoneRadiusOverworld();
 
         return Math.abs(x) > warzoneRadius || Math.abs(z) > warzoneRadius ? this.wilderness : this.warzone;
     }

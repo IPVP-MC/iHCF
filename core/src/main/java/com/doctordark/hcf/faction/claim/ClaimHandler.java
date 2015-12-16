@@ -235,7 +235,7 @@ public class ClaimHandler {
 
         if (!(plugin.getFactionManager().getFactionAt(location) instanceof WildernessFaction)) {
             player.sendMessage(ChatColor.RED + "You can only claim land in the " + plugin.getConfiguration().getRelationColourWilderness() + "Wilderness" + ChatColor.RED + ". " +
-                    "Make sure you are past " + plugin.getConfiguration().getWarzoneRadius() + " blocks from spawn..");
+                    "Make sure you are past " + plugin.getConfiguration().getWarzoneRadiusOverworld() + " blocks from spawn..");
 
             return false;
         }

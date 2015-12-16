@@ -107,7 +107,8 @@ combatlog {
 
 warzone {
     // The radius of the warzone.
-    radius = 800
+    radiusOverworld = 800
+    radiusNether = 800
 }
 
 factions {

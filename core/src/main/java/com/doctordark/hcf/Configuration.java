@@ -121,8 +121,11 @@ public class Configuration extends AnnotationConfig {
     @Setting("combatlog.despawnDelayTicks")
     private int combatlogDespawnDelayTicks = 600;
 
-    @Setting("warzone.radius")
-    private int warzoneRadius = 800;
+    @Setting("warzone.radiusOverworld")
+    private int warzoneRadiusOverworld = 800;
+
+    @Setting("warzone.radiusNether")
+    private int warzoneRadiusNether = 800;
 
     @Setting("factions.conquest.pointLossPerDeath")
     private int conquestPointLossPerDeath = 20;
