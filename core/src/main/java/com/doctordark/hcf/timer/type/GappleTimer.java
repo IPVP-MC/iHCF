@@ -1,5 +1,6 @@
 package com.doctordark.hcf.timer.type;
 
+import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.timer.PlayerTimer;
 import com.doctordark.util.DurationFormatter;
 import com.doctordark.util.imagemessage.ImageChar;
@@ -14,12 +15,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nullable;
-import javax.imageio.ImageIO;
-import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -27,30 +24,19 @@ import java.util.concurrent.TimeUnit;
  */
 public class GappleTimer extends PlayerTimer implements Listener {
 
-    private static final String GOPPLE_ART_FILE_TYPE = "png";
-    private static final String GOPPLE_ART_FILE_NAME = "/gopple-art." + GOPPLE_ART_FILE_TYPE;
+    private ImageMessage goppleArtMessage;
 
-    private final ImageMessage goppleArtMessage;
-
-    public GappleTimer(JavaPlugin plugin) {
+    public GappleTimer(HCF plugin) {
         super("Gapple", TimeUnit.HOURS.toMillis(6L));
 
-        // Try and create the file from the JAR first.
-        File file = new File(plugin.getDataFolder(), GOPPLE_ART_FILE_NAME);
-        try {
-            if (file.createNewFile()) {
-                ImageIO.write(ImageIO.read(Thread.currentThread().getContextClassLoader().getResourceAsStream(GOPPLE_ART_FILE_NAME)), GOPPLE_ART_FILE_TYPE, file);
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        if (plugin.getImageFolder().getGopple() != null) {
+            goppleArtMessage = ImageMessage.newInstance(plugin.getImageFolder().getGopple(), 8, ImageChar.BLOCK.getChar()).appendText("", "",
+                    ChatColor.GOLD.toString() + ChatColor.BOLD + ' ' + this.name + ':',
+                    ChatColor.GRAY + "  Consumed",
+                    ChatColor.GOLD + " Cooldown Remaining:",
+                    ChatColor.GRAY + "  " + DurationFormatUtils.formatDurationWords(this.defaultCooldown, true, true)
+            );
         }
-
-        this.goppleArtMessage = ImageMessage.newInstance(GOPPLE_ART_FILE_NAME, plugin.getDataFolder(), 8, ImageChar.BLOCK.getChar()).appendText("", "",
-                ChatColor.GOLD.toString() + ChatColor.BOLD + ' ' + this.name + ':',
-                ChatColor.GRAY + "  Consumed",
-                ChatColor.GOLD + " Cooldown Remaining:",
-                ChatColor.GRAY + "  " + DurationFormatUtils.formatDurationWords(this.defaultCooldown, true, true)
-        );
     }
 
     @Override
@@ -70,7 +56,12 @@ public class GappleTimer extends PlayerTimer implements Listener {
                 }
             })) {
 
-                goppleArtMessage.sendToPlayer(player);
+                if (goppleArtMessage != null) {
+                    goppleArtMessage.sendToPlayer(player);
+                } else {
+                    player.sendMessage(ChatColor.YELLOW + "Consumed " + ChatColor.GOLD + "Golden Apple" + ChatColor.YELLOW + ", now on a cooldown for " +
+                            DurationFormatUtils.formatDurationWords(defaultCooldown, true, true));
+                }
             } else {
                 event.setCancelled(true);
                 player.sendMessage(ChatColor.RED + "You still have a " + getDisplayName() + ChatColor.RED + " cooldown for another " +

@@ -147,6 +147,9 @@ public class HCF extends JavaPlugin {
     private FactionManager factionManager;
 
     @Getter
+    private ImageFolder imageFolder;
+
+    @Getter
     private KeyManager keyManager;
 
     @Getter
