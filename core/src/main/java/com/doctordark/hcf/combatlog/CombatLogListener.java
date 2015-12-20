@@ -14,7 +14,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
@@ -67,7 +66,7 @@ public class CombatLogListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onLoggerDeath(LoggerRemovedEvent event) {
-        this.loggers.remove(event.getLoggerEntity().getPlayerUUID());
+        this.loggers.remove(event.getLoggerEntity().getUniqueID());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -87,7 +86,6 @@ public class CombatLogListener implements Listener {
             return;
         }
 
-        PlayerInventory inventory = player.getInventory();
         if (player.getGameMode() != GameMode.CREATIVE && !player.isDead() && !result) {
             // If the player has PVP protection, don't spawn a logger
             if (plugin.getTimerManager().getInvincibilityTimer().getRemaining(uuid) > 0L) {
@@ -95,7 +93,7 @@ public class CombatLogListener implements Listener {
             }
 
             // There is no enemies near the player, so don't spawn a logger.
-            if (this.plugin.getTimerManager().getTeleportTimer().getNearbyEnemies(player, NEARBY_SPAWN_RADIUS) <= 0) {
+            if (this.plugin.getTimerManager().getTeleportTimer().getNearbyEnemies(player, NEARBY_SPAWN_RADIUS) <= 0 || plugin.getSotwTimer().getSotwRunnable() != null) {
                 return;
             }
 
@@ -124,7 +122,7 @@ public class CombatLogListener implements Listener {
                     public void run() {
                         loggerEntity.postSpawn(plugin);
                     }
-                }.runTask(plugin);
+                }.runTaskLater(plugin, 1L);
             }
         }
     }

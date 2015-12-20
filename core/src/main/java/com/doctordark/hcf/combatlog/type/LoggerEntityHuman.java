@@ -18,14 +18,14 @@ import net.minecraft.util.com.mojang.authlib.GameProfile;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-
-import java.util.UUID;
 
 /**
  * Represents a {@link Player} that has combat-logged.
@@ -50,16 +50,44 @@ public class LoggerEntityHuman extends EntityPlayer implements LoggerEntity {
         this.playerConnection.a(x, y, z, yaw, pitch); // must instantiate FakePlayerConnection for this to work
 
         EntityPlayer originPlayer = ((CraftPlayer) player).getHandle();
-        originPlayer.copyTo(this, false); // NBT is loaded in #postSpawn, so the second arg is false.
         this.lastDamager = originPlayer.lastDamager;
         this.invulnerableTicks = originPlayer.invulnerableTicks;
         this.combatTracker = originPlayer.combatTracker;
     }
 
     @Override
-    protected boolean d(final DamageSource damagesource, float f) {
-        this.setHealth(0.0001F); // instant kill
-        return super.d(damagesource, f);
+    protected boolean d(final DamageSource source, float amount) {
+        if (this.dead) {
+            return false;
+        }
+
+        this.dead = true;
+        Location location = this.getBukkitEntity().getLocation();
+        for (int i = 0; i < this.inventory.items.length; ++i) {
+            if (this.inventory.items[i] != null) {
+                org.bukkit.inventory.ItemStack stack = CraftItemStack.asCraftMirror(this.inventory.items[i]);
+                if (stack.getType() != Material.AIR) {
+                    this.world.getWorld().dropItemNaturally(location, stack);
+                }
+
+                this.inventory.items[i] = null;
+            }
+        }
+
+        for (int i = 0; i < this.inventory.armor.length; ++i) {
+            if (this.inventory.armor[i] != null) {
+                org.bukkit.inventory.ItemStack stack = CraftItemStack.asCraftMirror(this.inventory.armor[i]);
+                if (stack.getType() != Material.AIR) {
+                    this.world.getWorld().dropItemNaturally(location, stack);
+                }
+
+                this.inventory.armor[i] = null;
+            }
+        }
+
+        this.setHealth(0.0F);
+        MinecraftServer.getServer().getPlayerList().playerFileData.save(this);
+        return true;
     }
 
     public void postSpawn(HCF plugin) {
@@ -132,11 +160,6 @@ public class LoggerEntityHuman extends EntityPlayer implements LoggerEntity {
             this.dead = true;
             Bukkit.getPluginManager().callEvent(new LoggerRemovedEvent(this));
         }
-    }
-
-    @Override
-    public UUID getPlayerUUID() {
-        return this.getUniqueID();
     }
 
     @Override // prevents the entity going through portals

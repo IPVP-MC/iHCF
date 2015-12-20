@@ -26,7 +26,7 @@ public interface LoggerEntity {
      *
      * @return the represented {@link UUID}
      */
-    UUID getPlayerUUID();
+    UUID getUniqueID();
 
     /**
      * Removes this entity.
