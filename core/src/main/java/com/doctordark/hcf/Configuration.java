@@ -301,8 +301,8 @@ public class Configuration extends AnnotationConfig {
         this.relationColourEnemy = ChatColor.valueOf(this.relationColourEnemyName.replace(" ", "_").toUpperCase());
         this.relationColourRoad = ChatColor.valueOf(this.relationColourRoadName.replace(" ", "_").toUpperCase());
         this.relationColourSafezone = ChatColor.valueOf(this.relationColourSafezoneName.replace(" ", "_").toUpperCase());
-        this.factionDtrRegenFreezeBaseMilliseconds = TimeUnit.MINUTES.convert(this.factionDtrRegenFreezeBaseMinutes, TimeUnit.MILLISECONDS);
-        this.factionDtrRegenFreezeMillisecondsPerMember = TimeUnit.MINUTES.convert(this.factionDtrRegenFreezeMinutesPerMember, TimeUnit.MILLISECONDS);
+        this.factionDtrRegenFreezeBaseMilliseconds = TimeUnit.MINUTES.toMillis(this.factionDtrRegenFreezeBaseMinutes);
+        this.factionDtrRegenFreezeMillisecondsPerMember = TimeUnit.MINUTES.toMillis(this.factionDtrRegenFreezeMinutesPerMember);
 
         String[] split = this.endExitLocationRaw.split(",");
         if (split.length == 6) {
