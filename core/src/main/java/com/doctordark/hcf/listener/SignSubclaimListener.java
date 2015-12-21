@@ -44,13 +44,13 @@ public class SignSubclaimListener implements Listener {
 
     private enum SubclaimType {
 
-        LEADER(ImmutableList.of("LEADER", Role.LEADER.getAstrix()),
+        LEADER(ImmutableList.of("[LEADER]", Role.LEADER.getAstrix()),
                 ChatColor.DARK_RED.toString() + ChatColor.BOLD + "Leader", Role.LEADER, "Leader"),
 
-        CAPTAIN(ImmutableList.of("CAPTAIN", "OFFICER", Role.CAPTAIN.getAstrix()),
+        CAPTAIN(ImmutableList.of("[CAPTAIN]", "[OFFICER]", Role.CAPTAIN.getAstrix()),
                 ChatColor.DARK_RED.toString() + ChatColor.BOLD + "Captain", Role.CAPTAIN, "Captain"),
 
-        MEMBER(ImmutableList.of("PRIVATE", "PERSONAL", "SUBCLAIM", "MEMBER"),
+        MEMBER(ImmutableList.of("[PRIVATE]", "[PERSONAL]", "[SUBCLAIM]", "[MEMBER]"),
                 ChatColor.DARK_RED.toString() + ChatColor.BOLD + "Subclaim", Role.MEMBER, "Member");
 
         private final List<String> aliases;
@@ -93,11 +93,20 @@ public class SignSubclaimListener implements Listener {
         this.plugin = plugin;
     }
 
-    private SubclaimType getSubclaimType(String value) {
-        String typeString = SQUARE_PATTERN_REPLACER.matcher(value.toUpperCase()).replaceAll("");
+    private SubclaimType getSubclaimType(String value, boolean creating) {
+        if (creating) {
+            value = value.toUpperCase();
+        }
+
         for (SubclaimType type : SubclaimType.values()) {
-            if (type.aliases.contains(typeString)) {
-                return type;
+            if (creating) {
+                if (type.aliases.contains(value)) {
+                    return type;
+                }
+            } else {
+                if (type.outputText.equals(value)) {
+                    return type;
+                }
             }
         }
 
@@ -109,16 +118,16 @@ public class SignSubclaimListener implements Listener {
         return type == Material.FENCE_GATE || type == Material.TRAP_DOOR || block.getState() instanceof InventoryHolder;
     }
 
-    private SubclaimType getSubclaimType(Sign sign) {
-        SubclaimType subclaimType = this.getSubclaimType(sign.getLine(0));
+    private SubclaimType getSubclaimType(Sign sign, boolean creating) {
+        SubclaimType subclaimType = this.getSubclaimType(sign.getLine(0), creating);
         return subclaimType != null && subclaimType.isEnabled() ? subclaimType : null;
     }
 
-    private SubclaimType getSubclaimType(Block block) {
+    private SubclaimType getSubclaimType(Block block, boolean creating) {
         if (isSubclaimable(block)) {
             Collection<Sign> attachedSigns = this.getAttachedSigns(block);
             for (Sign attachedSign : attachedSigns) {
-                SubclaimType subclaimType = this.getSubclaimType(attachedSign);
+                SubclaimType subclaimType = this.getSubclaimType(attachedSign, creating);
                 if (subclaimType != null) return subclaimType;
             }
         }
@@ -143,13 +152,13 @@ public class SignSubclaimListener implements Listener {
 
                 Faction factionAt = plugin.getFactionManager().getFactionAt(block.getLocation());
                 if (playerFaction == factionAt) {
-                    SubclaimType subclaimType = this.getSubclaimType(attachedBlock);
+                    SubclaimType subclaimType = getSubclaimType(attachedBlock, false);
                     if (subclaimType != null) {
                         player.sendMessage(ChatColor.RED + "There is already a " + subclaimType.displayName + " subclaim sign on this " + attachedBlock.getName() + '.');
                         return;
                     }
 
-                    subclaimType = this.getSubclaimType(lines[0]);
+                    subclaimType = getSubclaimType(lines[0], true);
                     if (subclaimType == null || !subclaimType.isEnabled()) {
                         return;
                     }
@@ -263,7 +272,7 @@ public class SignSubclaimListener implements Listener {
         }
 
         for (Block block : sourceBlocks) {
-            if (this.getSubclaimType(block) != null) {
+            if (getSubclaimType(block, false) != null) {
                 event.setCancelled(true);
                 break;
             }
@@ -329,9 +338,10 @@ public class SignSubclaimListener implements Listener {
             return true;
         }
 
+        boolean flag = true;
         String search = null; // lazy-loaded
         for (Sign attachedSign : attachedSigns) {
-            SubclaimType subclaimType = getSubclaimType(attachedSign);
+            SubclaimType subclaimType = getSubclaimType(attachedSign, false);
             if (subclaimType == null) {
                 continue;
             }
@@ -339,12 +349,15 @@ public class SignSubclaimListener implements Listener {
             // No need to conditional check leaders as they can open anything.
             if (subclaimType == SubclaimType.CAPTAIN) {
                 if (role == Role.MEMBER) {
+                    flag = false;
                     continue;
                 }
 
                 return true;
             } else if (subclaimType == SubclaimType.MEMBER) {
-                if (search == null) search = this.getShortenedName(player.getName());
+                if (search == null) {
+                    search = this.getShortenedName(player.getName());
+                }
 
                 String[] lines = attachedSign.getLines();
                 for (int i = 1; i < lines.length; i++) {
@@ -355,7 +368,7 @@ public class SignSubclaimListener implements Listener {
             }
         }
 
-        return false;
+        return flag;
     }
 
     /**
