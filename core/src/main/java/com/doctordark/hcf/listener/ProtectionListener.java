@@ -65,6 +65,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.vehicle.VehicleDamageEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.material.Cauldron;
 import org.bukkit.material.MaterialData;
@@ -572,6 +573,25 @@ public class ProtectionListener implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onHangingPlace(HangingPlaceEvent event) {
         if (!attemptBuild(event.getPlayer(), event.getEntity().getLocation(), ChatColor.YELLOW + "You cannot build in the territory of %1$s" + ChatColor.YELLOW + '.')) {
+            event.setCancelled(true);
+        }
+    }
+
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    public void onVehicleDamage(VehicleDamageEvent event) {
+        Player damager = null;
+        Entity attacker = event.getAttacker();
+        if (attacker instanceof Player) {
+            damager = (Player) attacker;
+        } else if (attacker instanceof Projectile) {
+            ProjectileSource shooter = ((Projectile) attacker).getShooter();
+            if (shooter instanceof Player) {
+                damager = (Player) shooter;
+            }
+        }
+
+        if (damager != null && !attemptBuild(attacker, damager.getLocation(), ChatColor.YELLOW + "You cannot build in the territory of %1$s" + ChatColor.YELLOW + '.')) {
             event.setCancelled(true);
         }
     }
