@@ -44,7 +44,7 @@ public class BottledExpListener implements Listener {
     // Don't ignore cancelled as AIR interactions are cancelled
     @EventHandler(ignoreCancelled = false, priority = EventPriority.HIGH)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (plugin.getConfiguration().isBottledExp()) {
+        if (!plugin.getConfiguration().isBottledExp()) {
             return;
         }
 
