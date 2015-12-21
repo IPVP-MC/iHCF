@@ -120,7 +120,9 @@ public class CombatLogListener implements Listener {
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        loggerEntity.postSpawn(plugin);
+                        if (!player.isOnline()) { // just in-case
+                            loggerEntity.postSpawn(plugin);
+                        }
                     }
                 }.runTaskLater(plugin, 1L);
             }

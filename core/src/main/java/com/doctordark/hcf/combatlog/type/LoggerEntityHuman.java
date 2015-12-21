@@ -18,11 +18,9 @@ import net.minecraft.util.com.mojang.authlib.GameProfile;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -57,37 +55,20 @@ public class LoggerEntityHuman extends EntityPlayer implements LoggerEntity {
 
     @Override
     protected boolean d(final DamageSource source, float amount) {
-        if (this.dead) {
-            return false;
-        }
-
-        this.dead = true;
-        Location location = this.getBukkitEntity().getLocation();
-        for (int i = 0; i < this.inventory.items.length; ++i) {
-            if (this.inventory.items[i] != null) {
-                org.bukkit.inventory.ItemStack stack = CraftItemStack.asCraftMirror(this.inventory.items[i]);
-                if (stack.getType() != Material.AIR) {
-                    this.world.getWorld().dropItemNaturally(location, stack);
-                }
-
-                this.inventory.items[i] = null;
+        if (!this.dead) {
+            boolean flag = super.d(source, amount);
+            if (!flag || this.dead || this.getHealth() <= 0.0F) { // super call already killed player
+                return flag;
             }
+
+            super.die(source);
+            this.dead = true;
+            this.setHealth(0.0F);
+            MinecraftServer.getServer().getPlayerList().playerFileData.save(this);
+            return true;
         }
 
-        for (int i = 0; i < this.inventory.armor.length; ++i) {
-            if (this.inventory.armor[i] != null) {
-                org.bukkit.inventory.ItemStack stack = CraftItemStack.asCraftMirror(this.inventory.armor[i]);
-                if (stack.getType() != Material.AIR) {
-                    this.world.getWorld().dropItemNaturally(location, stack);
-                }
-
-                this.inventory.armor[i] = null;
-            }
-        }
-
-        this.setHealth(0.0F);
-        MinecraftServer.getServer().getPlayerList().playerFileData.save(this);
-        return true;
+        return false;
     }
 
     public void postSpawn(HCF plugin) {
