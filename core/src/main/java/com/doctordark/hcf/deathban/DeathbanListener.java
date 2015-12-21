@@ -20,6 +20,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRequestRespawnEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.UUID;
@@ -44,13 +45,15 @@ public class DeathbanListener implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onPlayerLogin(PlayerLoginEvent event) {
         Player player = event.getPlayer();
-        if (player.hasPermission(DeathbanListener.DEATH_BAN_BYPASS_PERMISSION)) {
+        FactionUser user = plugin.getUserManager().getUser(player.getUniqueId());
+        Deathban deathban = user.getDeathban();
+        if (deathban == null || !deathban.isActive()) {
             return;
         }
 
-        FactionUser user = this.plugin.getUserManager().getUser(player.getUniqueId());
-        Deathban deathban = user.getDeathban();
-        if (deathban == null || !deathban.isActive()) {
+        if (player.hasPermission(DeathbanListener.DEATH_BAN_BYPASS_PERMISSION)) {
+            plugin.getUserManager().getUser(player.getUniqueId()).removeDeathban();
+            informAboutDeathbanBypass(player, deathban, plugin, true);
             return;
         }
 
@@ -60,14 +63,14 @@ public class DeathbanListener implements Listener {
         }
 
         UUID uuid = player.getUniqueId();
-        int lives = this.plugin.getDeathbanManager().getLives(uuid);
+        int lives = plugin.getDeathbanManager().getLives(uuid);
 
         String formattedRemaining = DurationFormatter.getRemaining(deathban.getRemaining(), true, false);
         Location deathbanLocation = deathban.getDeathPoint();
 
         if (lives <= 0) {  // If the user has no lives, inform that they need some.
             event.disallow(PlayerLoginEvent.Result.KICK_OTHER, ChatColor.AQUA + "You have been killed " +
-                    ChatColor.GREEN + "(" + ChatColor.WHITE + deathban.getReason() + ChatColor.GREEN + ")" +
+                    ChatColor.GREEN + "(" + ChatColor.WHITE + ChatColor.stripColor(deathban.getReason()) + ChatColor.GREEN + ")" +
                     ChatColor.AQUA + " at " + ChatColor.GOLD + "(" + deathbanLocation.getBlockX() + ", " + deathbanLocation.getBlockY() + ", " + deathbanLocation.getBlockZ() + ")" +
                     ChatColor.AQUA + ". You're deathbanned for " + ChatColor.GREEN + formattedRemaining + ChatColor.AQUA + "."
             );
@@ -85,8 +88,7 @@ public class DeathbanListener implements Listener {
             lives = plugin.getDeathbanManager().takeLives(uuid, 1);
 
             event.setResult(PlayerLoginEvent.Result.ALLOWED);
-            new DelayedMessageRunnable(player, ChatColor.YELLOW + "You have used a life for entry. You now have " + ChatColor.WHITE + lives + ChatColor.YELLOW + " lives.").
-                    runTask(plugin);
+            new DelayedMessageRunnable(plugin, player, ChatColor.YELLOW + "You have used a life for entry. You now have " + ChatColor.WHITE + lives + ChatColor.YELLOW + " lives.");
 
             return;
         }
@@ -133,22 +135,29 @@ public class DeathbanListener implements Listener {
         Deathban deathban = user.getDeathban();
         if (deathban != null && deathban.getRemaining() > 0L) {
             if (player.hasPermission(DeathbanListener.DEATH_BAN_BYPASS_PERMISSION)) {
-                this.cancelRespawnKickTask(player);
+                cancelRespawnKickTask(player);
                 user.removeDeathban();
-                new DelayedMessageRunnable(player, ChatColor.RED + "You would be death-banned for " + deathban.getReason() + ChatColor.RED + ", but you have access to bypass.").
-                        runTask(this.plugin);
-
+                informAboutDeathbanBypass(player, deathban, plugin, false);
                 return;
             }
 
             event.setCancelled(true);
-            this.handleKick(player, deathban);
+            handleKick(player, deathban);
         }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
         this.cancelRespawnKickTask(event.getPlayer());
+    }
+
+    private static void informAboutDeathbanBypass(Player player, Deathban deathban, JavaPlugin plugin, boolean later) {
+        String message = ChatColor.RED + "You would be death-banned for " + ChatColor.YELLOW + ChatColor.stripColor(deathban.getReason()) + ChatColor.RED + ", but you have access to bypass.";
+        if (later) {
+            new DelayedMessageRunnable(plugin, player, message);
+        } else {
+            player.sendMessage(message);
+        }
     }
 
     private void cancelRespawnKickTask(Player player) {
