@@ -364,6 +364,7 @@ public class HCF extends JavaPlugin {
         this.eotwHandler = new EotwHandler(this);
         this.eventScheduler = new EventScheduler(this);
         this.factionManager = new FlatFileFactionManager(this);
+        this.imageFolder = new ImageFolder(this);
         this.keyManager = new KeyManager(this);
         this.pvpClassManager = new PvpClassManager(this);
         this.sotwTimer = new SotwTimer();
