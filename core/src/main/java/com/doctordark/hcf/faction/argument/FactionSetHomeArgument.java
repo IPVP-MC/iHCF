@@ -35,7 +35,7 @@ public class FactionSetHomeArgument extends CommandArgument {
 
         Player player = (Player) sender;
 
-        if (player.getLocation().getY() > plugin.getConfiguration().getMaxHeightFactionHome()) {
+        if (plugin.getConfiguration().getMaxHeightFactionHome() != -1 && player.getLocation().getY() > plugin.getConfiguration().getMaxHeightFactionHome()) {
             sender.sendMessage(ChatColor.RED + "You can not set your faction home above y " + plugin.getConfiguration().getMaxHeightFactionHome() + ".");
             return true;
         }

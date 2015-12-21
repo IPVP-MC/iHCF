@@ -81,7 +81,7 @@ public class FactionHomeArgument extends CommandArgument {
             return true;
         }
 
-        if (home.getY() > plugin.getConfiguration().getMaxHeightFactionHome()) {
+        if (plugin.getConfiguration().getMaxHeightFactionHome() != -1 && home.getY() > plugin.getConfiguration().getMaxHeightFactionHome()) {
             sender.sendMessage(ChatColor.RED + "Your faction home height is above the limit which is " + plugin.getConfiguration().getMaxHeightFactionHome() +
                     ", travel to your current home location at (x. " + home.getBlockX() + ", z. " + home.getBlockZ() + ") and re-set it at a lower height to fix this.");
 
@@ -95,25 +95,36 @@ public class FactionHomeArgument extends CommandArgument {
             return true;
         }
 
-        /*if (factionAt != playerFaction && factionAt instanceof PlayerFaction) {
+        if (factionAt != playerFaction && factionAt instanceof PlayerFaction && plugin.getConfiguration().isAllowTeleportingInEnemyTerritory()) {
             player.sendMessage(ChatColor.RED + "You may not warp in enemy claims. Use " + ChatColor.YELLOW + '/' + label + " stuck" + ChatColor.RED + " if trapped.");
             return true;
-        }*/
+        }
 
         long millis;
         if (factionAt.isSafezone()) {
             millis = 0L;
         } else {
+            String name;
             switch (player.getWorld().getEnvironment()) {
                 case THE_END:
-                    sender.sendMessage(ChatColor.RED + "You cannot teleport to your faction home whilst in The End.");
-                    return true;
+                    name = "End";
+                    millis = plugin.getConfiguration().getFactionHomeTeleportDelayEndMillis();
+                    break;
                 case NETHER:
-                    millis = 30000L;
+                    name = "Nether";
+                    millis = plugin.getConfiguration().getFactionHomeTeleportDelayNetherMillis();
+                    break;
+                case NORMAL:
+                    name = "Overworld";
+                    millis = plugin.getConfiguration().getFactionHomeTeleportDelayOverworldMillis();
                     break;
                 default:
-                    millis = 10000L;
-                    break;
+                    throw new IllegalArgumentException("Unrecognised environment");
+            }
+
+            if (millis == -1L) {
+                sender.sendMessage(ChatColor.RED + "Home teleports are disabled in the " + name + ".");
+                return true;
             }
         }
 

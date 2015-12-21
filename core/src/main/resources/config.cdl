@@ -134,8 +134,20 @@ factions {
         "KOHI"
     ]
 
-    // The maximum height to set a faction home, use -1 to ignore this.
-    maxHomeHeight = -1
+    home {
+        // The time in seconds to teleport to faction home, -1 to disable, 0 for instant
+        teleportDelay {
+            NETHER = 30
+            THE_END = -1
+            NORMAL = 10
+        }
+
+        // The maximum height to set a faction home, use -1 to ignore this.
+        maxHeight = -1
+
+        // If faction homing in enemy territory should be allowed.
+        allowTeleportingInEnemyTerritory = true
+    }
 
     // Minimum amount of characters a faction name must be.
     nameMinCharacters = 3

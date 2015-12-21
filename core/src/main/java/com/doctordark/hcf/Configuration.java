@@ -25,6 +25,9 @@ import java.util.logging.Level;
 @Getter
 public class Configuration extends AnnotationConfig {
 
+    @Setting("factions.home.allowTeleportingInEnemyTerritory")
+    private boolean allowTeleportingInEnemyTerritory = true;
+
     @Setting("handleEntityLimiting")
     private boolean handleEntityLimiting = true;
 
@@ -143,8 +146,20 @@ public class Configuration extends AnnotationConfig {
     @Setting("factions.disallowedFactionNames")
     private List<String> factionDisallowedNames = new ArrayList<>();
 
-    @Setting("factions.maxHomeHeight")
+    @Setting("factions.home.maxHeight")
     private int maxHeightFactionHome = -1;
+
+    @Setting("factions.home.teleportDelay.NORMAL")
+    private int factionHomeTeleportDelayOverworldSeconds;
+    private long factionHomeTeleportDelayOverworldMillis;
+
+    @Setting("factions.home.teleportDelay.NETHER")
+    private int factionHomeTeleportDelayNetherSeconds;
+    private long factionHomeTeleportDelayNetherMillis;
+
+    @Setting("factions.home.teleportDelay.THE_END")
+    private int factionHomeTeleportDelayEndSeconds;
+    private long factionHomeTeleportDelayEndMillis;
 
     @Setting("factions.nameMinCharacters")
     private int factionNameMinCharacters = 3;
@@ -167,7 +182,6 @@ public class Configuration extends AnnotationConfig {
     @Setting("factions.subclaim.nameMaxCharacters")
     private int factionSubclaimNameMaxCharacters = 16;
 
-    @Getter(AccessLevel.NONE)
     @Setting("factions.dtr.regenFreeze.baseMinutes")
     private int factionDtrRegenFreezeBaseMinutes = 40;
     private long factionDtrRegenFreezeBaseMilliseconds;
@@ -303,6 +317,9 @@ public class Configuration extends AnnotationConfig {
         this.relationColourSafezone = ChatColor.valueOf(this.relationColourSafezoneName.replace(" ", "_").toUpperCase());
         this.factionDtrRegenFreezeBaseMilliseconds = TimeUnit.MINUTES.toMillis(this.factionDtrRegenFreezeBaseMinutes);
         this.factionDtrRegenFreezeMillisecondsPerMember = TimeUnit.MINUTES.toMillis(this.factionDtrRegenFreezeMinutesPerMember);
+        this.factionHomeTeleportDelayOverworldMillis = TimeUnit.SECONDS.toMillis(this.factionHomeTeleportDelayOverworldSeconds);
+        this.factionHomeTeleportDelayNetherMillis = TimeUnit.SECONDS.toMillis(this.factionHomeTeleportDelayNetherSeconds);
+        this.factionHomeTeleportDelayEndMillis = TimeUnit.SECONDS.toMillis(this.factionHomeTeleportDelayEndSeconds);
 
         String[] split = this.endExitLocationRaw.split(",");
         if (split.length == 6) {
@@ -322,7 +339,6 @@ public class Configuration extends AnnotationConfig {
             } catch (IllegalArgumentException ignored) {
             }
         }
-
 
         String splitter = " = ";
         for (String entry : this.potionLimitsUnstored) {
