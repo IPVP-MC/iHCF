@@ -1,10 +1,12 @@
 package com.doctordark.hcf.combatlog;
 
+import com.connorl.istaff.ISDataBaseManager;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.combatlog.event.LoggerRemovedEvent;
 import com.doctordark.hcf.combatlog.event.LoggerSpawnEvent;
 import com.doctordark.hcf.combatlog.type.LoggerEntity;
 import com.doctordark.hcf.combatlog.type.LoggerEntityHuman;
+import com.gmail.xd.zwander.istaff.data.PlayerHackerMode;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -22,11 +24,18 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * Listener that prevents {@link Player}s from combat-logging.
  */
 public class CombatLogListener implements Listener {
+
+    private final ExecutorService executor = Executors.newFixedThreadPool(2);
 
     private static final int NEARBY_SPAWN_RADIUS = 64;
 
@@ -81,7 +90,7 @@ public class CombatLogListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
-        boolean result = this.safelyDisconnected.remove(uuid);
+        boolean result = safelyDisconnected.remove(uuid);
         if (!plugin.getConfiguration().isHandleCombatLogging()) {
             return;
         }
@@ -93,19 +102,34 @@ public class CombatLogListener implements Listener {
             }
 
             // There is no enemies near the player, so don't spawn a logger.
-            if (this.plugin.getTimerManager().getTeleportTimer().getNearbyEnemies(player, NEARBY_SPAWN_RADIUS) <= 0 || plugin.getSotwTimer().getSotwRunnable() != null) {
+            if (plugin.getTimerManager().getTeleportTimer().getNearbyEnemies(player, NEARBY_SPAWN_RADIUS) <= 0 || plugin.getSotwTimer().getSotwRunnable() != null) {
                 return;
             }
 
             // Make sure the player is not in a safezone.
             Location location = player.getLocation();
-            if (this.plugin.getFactionManager().getFactionAt(location).isSafezone()) {
+            if (plugin.getFactionManager().getFactionAt(location).isSafezone()) {
                 return;
             }
 
             // Make sure the player hasn't already spawned a logger.
-            if (this.loggers.containsKey(player.getUniqueId())) {
+            if (loggers.containsKey(player.getUniqueId())) {
                 return;
+            }
+
+            Callable<Boolean> callable = new Callable<Boolean>() {
+                @Override
+                public Boolean call() throws Exception {
+                    PlayerHackerMode hackerMode = ISDataBaseManager.getHackerMode(player);
+                    return hackerMode != null && hackerMode.hackerMode;
+                }
+            };
+
+            boolean hackerMode = false;
+            Future<Boolean> future = executor.submit(callable);
+            try {
+                hackerMode = future.get();
+            } catch (InterruptedException | ExecutionException ignored) {
             }
 
             LoggerEntity loggerEntity = new LoggerEntityHuman(player, location.getWorld());
@@ -117,10 +141,11 @@ public class CombatLogListener implements Listener {
                 // Call a tick later allowing for the NBT to save, the reason why
                 // it is saved after the PlayerQuitEvent is so the plugins can modify
                 // the inventory during this event.
+                final boolean finalHackerMode = hackerMode;
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        if (!player.isOnline()) { // just in-case
+                        if (!player.isOnline() && !finalHackerMode) { // just in-case
                             loggerEntity.postSpawn(plugin);
                         }
                     }
