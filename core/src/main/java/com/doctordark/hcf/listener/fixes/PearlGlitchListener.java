@@ -37,7 +37,11 @@ public class PearlGlitchListener implements Listener {
             Material.SANDSTONE_STAIRS,
             Material.SMOOTH_STAIRS,
             Material.SPRUCE_WOOD_STAIRS,
-            Material.WOOD_STAIRS
+            Material.WOOD_STAIRS,
+            Material.WOOD_STEP,
+            Material.WOOD_DOUBLE_STEP,
+            Material.STEP,
+            Material.DOUBLE_STEP
     );
 
     private final HCF plugin;
@@ -53,26 +57,24 @@ public class PearlGlitchListener implements Listener {
             // Don't prevent opening chests, etc, as these won't throw the Enderpearls anyway
             if (block.getType().isSolid() && !(block.getState() instanceof InventoryHolder)) {
                 Faction factionAt = HCF.getPlugin().getFactionManager().getFactionAt(block.getLocation());
-                if (!(factionAt instanceof ClaimableFaction)) {
-                    return;
+                if (factionAt instanceof ClaimableFaction) {
+                    event.setCancelled(true);
+                    Player player = event.getPlayer();
+                    player.setItemInHand(event.getItem()); // required to update Enderpearl count
                 }
-
-                event.setCancelled(true);
-                Player player = event.getPlayer();
-                player.setItemInHand(event.getItem()); // required to update Enderpearl count
             }
         }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
     public void onPearlClip(PlayerTeleportEvent event) {
-        if (!plugin.getConfiguration().isEnderpearlGlitchingRefund()) {
+        if (!plugin.getConfiguration().isEnderpearlGlitchingEnabled()) {
             return;
         }
 
         if (event.getCause() == PlayerTeleportEvent.TeleportCause.ENDER_PEARL) {
             Location to = event.getTo();
-            if (this.blockedPearlTypes.contains(to.getBlock().getType())) {
+            if (blockedPearlTypes.contains(to.getBlock().getType())) {
                 Player player = event.getPlayer();
                 boolean refund = plugin.getConfiguration().isEnderpearlGlitchingRefund();
 
