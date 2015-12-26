@@ -41,11 +41,13 @@ public class CombatLogListener implements Listener {
 
     private final Set<UUID> safelyDisconnected = new HashSet<>();
     private final Map<UUID, LoggerEntity> loggers = new HashMap<>();
+    private boolean containsStaffPlugin;
 
     private final HCF plugin;
 
     public CombatLogListener(HCF plugin) {
         this.plugin = plugin;
+        this.containsStaffPlugin = plugin.getServer().getPluginManager().getPlugin("iStaff") != null;
     }
 
     /**
@@ -117,26 +119,27 @@ public class CombatLogListener implements Listener {
                 return;
             }
 
-            Callable<Boolean> callable = new Callable<Boolean>() {
-                @Override
-                public Boolean call() throws Exception {
-                    PlayerHackerMode hackerMode = ISDataBaseManager.getHackerMode(player);
-                    return hackerMode != null && hackerMode.hackerMode;
-                }
-            };
-
-            boolean hackerMode = false;
-            Future<Boolean> future = executor.submit(callable);
-            try {
-                hackerMode = future.get();
-            } catch (InterruptedException | ExecutionException ignored) {
-            }
-
             LoggerEntity loggerEntity = new LoggerEntityHuman(player, location.getWorld());
             LoggerSpawnEvent calledEvent = new LoggerSpawnEvent(loggerEntity);
             Bukkit.getPluginManager().callEvent(calledEvent);
             if (!calledEvent.isCancelled()) {
                 loggers.put(player.getUniqueId(), loggerEntity);
+
+                boolean hackerMode = containsStaffPlugin;
+                if (hackerMode) {
+                    Future<Boolean> future = executor.submit(new Callable<Boolean>() {
+                        @Override
+                        public Boolean call() throws Exception {
+                            PlayerHackerMode hackerMode = ISDataBaseManager.getHackerMode(player);
+                            return hackerMode != null && hackerMode.isHackerMode();
+                        }
+                    });
+
+                    try {
+                        hackerMode = future.get();
+                    } catch (InterruptedException | ExecutionException ignored) {
+                    }
+                }
 
                 // Call a tick later allowing for the NBT to save, the reason why
                 // it is saved after the PlayerQuitEvent is so the plugins can modify
