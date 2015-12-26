@@ -336,7 +336,7 @@ public class Configuration extends AnnotationConfig {
                     this.endExitLocation.setYaw(yaw);
                     this.endExitLocation.setPitch(pitch);
                 }
-            } catch (IllegalArgumentException ignored) {
+            } catch (NumberFormatException ignored) {
             }
         }
 

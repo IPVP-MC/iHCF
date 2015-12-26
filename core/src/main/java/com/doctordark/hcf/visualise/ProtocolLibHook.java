@@ -35,7 +35,6 @@ public final class ProtocolLibHook {
      */
     public static void hook(HCF hcf) {
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-
         protocolManager.addPacketListener(new PacketAdapter(hcf, ListenerPriority.NORMAL, PacketType.Play.Client.BLOCK_PLACE) {
             @Override
             public void onPacketReceiving(PacketEvent event) {
@@ -74,7 +73,8 @@ public final class ProtocolLibHook {
                             player.setItemInHand(player.getItemInHand()); // send held slot packet again as the client still decrements.
                         }
                     }
-                } catch (FieldAccessException ignored) {
+                } catch (FieldAccessException ex) {
+                    ex.printStackTrace();
                 }
             }
         });
@@ -104,7 +104,8 @@ public final class ProtocolLibHook {
                             }
                         }
                     }
-                } catch (FieldAccessException ignored) {
+                } catch (FieldAccessException ex) {
+                    ex.printStackTrace();
                 }
             }
         });
