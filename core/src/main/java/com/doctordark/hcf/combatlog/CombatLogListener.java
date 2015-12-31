@@ -76,7 +76,7 @@ public class CombatLogListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onLoggerDeath(LoggerRemovedEvent event) {
+    public void onLoggerRemoved(LoggerRemovedEvent event) {
         this.loggers.remove(event.getLoggerEntity().getUniqueID());
     }
 

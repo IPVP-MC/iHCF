@@ -123,8 +123,11 @@ public class LoggerEntityHuman extends EntityPlayer implements LoggerEntity {
 
     @Override
     public void die(DamageSource damageSource) {
-        super.die(damageSource);
+        if (this.dead) {
+            return;
+        }
 
+        super.die(damageSource);
         Bukkit.getPluginManager().callEvent(new LoggerDeathEvent(this));
 
         // Save the inventory NBT
