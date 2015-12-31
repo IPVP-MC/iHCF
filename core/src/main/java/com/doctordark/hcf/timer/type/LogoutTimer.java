@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -40,7 +41,7 @@ public class LogoutTimer extends PlayerTimer implements Listener {
         }
 
         Player player = event.getPlayer();
-        if (this.getRemaining(player) > 0L) {
+        if (getRemaining(player) > 0L) {
             player.sendMessage(ChatColor.RED + "You moved a block, " + getDisplayName() + ChatColor.RED + " timer cancelled.");
             clearCooldown(player);
         }
@@ -68,13 +69,26 @@ public class LogoutTimer extends PlayerTimer implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onPlayerDamage(EntityDamageEvent event) {
+    public void onEntityDamage(EntityDamageEvent event) {
         Entity entity = event.getEntity();
         if (entity instanceof Player) {
             Player player = (Player) entity;
             if (getRemaining(player) > 0L) {
                 player.sendMessage(ChatColor.RED + "You were damaged, " + getDisplayName() + ChatColor.RED + " timer ended.");
                 clearCooldown(player);
+                return;
+            }
+        }
+
+        if (event instanceof EntityDamageByEntityEvent) {
+            EntityDamageByEntityEvent ede = (EntityDamageByEntityEvent) event;
+            Entity damager = ede.getDamager();
+            if (damager instanceof Player && entity instanceof Player) {
+                Player attacker = (Player) damager;
+                if (getRemaining(attacker) > 0L) {
+                    attacker.sendMessage(ChatColor.RED + "You cannot attack players during logout, logout cancelled.");
+                    clearCooldown(attacker);
+                }
             }
         }
     }
