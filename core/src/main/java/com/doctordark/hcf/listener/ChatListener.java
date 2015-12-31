@@ -8,7 +8,6 @@ import com.doctordark.hcf.faction.type.PlayerFaction;
 import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.User;
 import com.google.common.collect.MapMaker;
-import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -53,19 +52,6 @@ public class ChatListener implements Listener {
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         String message = event.getMessage();
         Player player = event.getPlayer();
-
-        // Prevent double posting.
-        String lastMessage = messageHistory.get(player.getUniqueId());
-        String cleanedMessage = PATTERN.matcher(message).replaceAll("");
-        if (lastMessage != null && (message.equals(lastMessage) || StringUtils.getLevenshteinDistance(cleanedMessage, lastMessage) <= 1) &&
-                !player.hasPermission(DOUBLE_POST_BYPASS_PERMISSION)) {
-
-            player.sendMessage(ChatColor.RED + "Hey, don't double post.");
-            event.setCancelled(true);
-            return;
-        } else {
-            messageHistory.put(player.getUniqueId(), cleanedMessage);
-        }
 
         PlayerFaction playerFaction = plugin.getFactionManager().getPlayerFaction(player);
         ChatChannel chatChannel = playerFaction == null ? ChatChannel.PUBLIC : playerFaction.getMember(player).getChatChannel();
