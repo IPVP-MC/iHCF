@@ -14,6 +14,15 @@
         <version>1.0</version>
     </parent>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.doctordark</groupId>
+            <artifactId>ihcf-core</artifactId>
+            <version>1.0</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
     <build>
         <sourceDirectory>${basedir}/src/main/java/</sourceDirectory>
         <finalName>${project.name}</finalName>
