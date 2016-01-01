@@ -12,11 +12,13 @@ import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRequestRespawnEvent;
@@ -38,6 +40,11 @@ public class DeathbanListener implements Listener {
 
     public DeathbanListener(HCF plugin) {
         this.plugin = plugin;
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        event.getPlayer().spigot().respawn(); // Method already checks if player is dead first
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
