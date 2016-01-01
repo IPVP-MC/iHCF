@@ -245,7 +245,8 @@ public class Configuration extends AnnotationConfig {
 
     @Setter
     @Setting("deathban.respawnScreenSecondsBeforeKick")
-    private int respawnScreenSecondsBeforeKick = 15;
+    private int deathbanRespawnScreenSecondsBeforeKick = 15;
+    private long deathbanRespawnScreenTicksBeforeKick;
 
     @Setting("end.open")
     private boolean endOpen = true;
@@ -320,6 +321,7 @@ public class Configuration extends AnnotationConfig {
         this.factionHomeTeleportDelayOverworldMillis = TimeUnit.SECONDS.toMillis(this.factionHomeTeleportDelayOverworldSeconds);
         this.factionHomeTeleportDelayNetherMillis = TimeUnit.SECONDS.toMillis(this.factionHomeTeleportDelayNetherSeconds);
         this.factionHomeTeleportDelayEndMillis = TimeUnit.SECONDS.toMillis(this.factionHomeTeleportDelayEndSeconds);
+        this.deathbanRespawnScreenTicksBeforeKick = TimeUnit.SECONDS.toMillis(this.deathbanRespawnScreenSecondsBeforeKick) / 50L;
 
         String[] split = this.endExitLocationRaw.split(",");
         if (split.length == 6) {

@@ -28,8 +28,6 @@ import java.util.concurrent.TimeUnit;
 
 public class DeathbanListener implements Listener {
 
-    private static final long RESPAWN_KICK_DELAY_MILLIS = TimeUnit.SECONDS.toMillis(10L);
-    private static final long RESPAWN_KICK_DELAY_TICKS = RESPAWN_KICK_DELAY_MILLIS / 50L;
     private static final long LIFE_USE_DELAY_MILLIS = TimeUnit.SECONDS.toMillis(30L);
     private static final String LIFE_USE_DELAY_WORDS = DurationFormatUtils.formatDurationWords(DeathbanListener.LIFE_USE_DELAY_MILLIS, true, true);
     private static final String DEATH_BAN_BYPASS_PERMISSION = "hcf.deathban.bypass";
@@ -114,18 +112,21 @@ public class DeathbanListener implements Listener {
             return;
         }
 
-        if (DeathbanListener.RESPAWN_KICK_DELAY_MILLIS <= 0L || remaining < DeathbanListener.RESPAWN_KICK_DELAY_MILLIS) {
+        long ticks = plugin.getConfiguration().getDeathbanRespawnScreenTicksBeforeKick();
+
+        if (ticks <= 0L || remaining < ticks) {
             this.handleKick(player, deathban);
             return;
         }
 
-        // Let the player see the death screen for 10 seconds
+        // Let the player see the death screen for x seconds
         this.respawnTickTasks.put(player.getUniqueId(), new BukkitRunnable() {
             @Override
             public void run() {
-                DeathbanListener.this.handleKick(player, deathban);
+                respawnTickTasks.remove(player.getUniqueId());
+                handleKick(player, deathban);
             }
-        }.runTaskLater(plugin, DeathbanListener.RESPAWN_KICK_DELAY_TICKS).getTaskId());
+        }.runTaskLater(plugin, ticks).getTaskId());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
