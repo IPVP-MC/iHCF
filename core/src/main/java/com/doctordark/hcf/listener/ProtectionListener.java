@@ -143,15 +143,20 @@ public class ProtectionListener implements Listener {
             CapturableFaction capturableFaction = (CapturableFaction) toFaction;
             for (CaptureZone captureZone : capturableFaction.getCaptureZones()) {
                 Cuboid cuboid = captureZone.getCuboid();
-                if (cuboid != null) {
-                    boolean containsFrom = cuboid.contains(from);
-                    boolean containsTo = cuboid.contains(to);
-                    if (containsFrom && !containsTo) {
+                if (cuboid == null) {
+                    continue;
+                }
+
+                boolean containsFrom = cuboid.contains(from);
+                if (containsFrom) {
+                    if (!cuboid.contains(to)) {
                         CaptureZoneLeaveEvent calledEvent = new CaptureZoneLeaveEvent(player, capturableFaction, captureZone);
                         Bukkit.getPluginManager().callEvent(calledEvent);
                         cancelled = calledEvent.isCancelled();
                         break;
-                    } else if (!containsFrom && containsTo) {
+                    }
+                } else {
+                    if (cuboid.contains(to)) {
                         CaptureZoneEnterEvent calledEvent = new CaptureZoneEnterEvent(player, capturableFaction, captureZone);
                         Bukkit.getPluginManager().callEvent(calledEvent);
                         cancelled = calledEvent.isCancelled();
