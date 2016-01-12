@@ -6,12 +6,12 @@ import com.doctordark.hcf.eventgame.faction.KothFaction;
 import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.util.JavaUtils;
 import com.doctordark.util.command.CommandArgument;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,12 +44,12 @@ public class KothSetCapDelayArgument extends CommandArgument {
 
         Faction faction = plugin.getFactionManager().getFaction(args[1]);
 
-        if (faction == null || !(faction instanceof KothFaction)) {
+        if (!(faction instanceof KothFaction)) {
             sender.sendMessage(ChatColor.RED + "There is not a KOTH arena named '" + args[1] + "'.");
             return true;
         }
 
-        long duration = JavaUtils.parse(StringUtils.join(args, ' ', 2, args.length));
+        long duration = JavaUtils.parse(HCF.SPACE_JOINER.join(Arrays.copyOfRange(args, 2, args.length)));
 
         if (duration == -1L) {
             sender.sendMessage(ChatColor.RED + "Invalid duration, use the correct format: 10m 1s");

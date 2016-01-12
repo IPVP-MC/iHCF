@@ -56,37 +56,38 @@ public class TimerManager implements Listener {
     private Config config;
 
     public TimerManager(HCF plugin) {
-        (this.plugin = plugin).getServer().getPluginManager().registerEvents(this, plugin);
-        this.registerTimer(this.enderPearlTimer = new EnderPearlTimer(plugin));
-        this.registerTimer(this.logoutTimer = new LogoutTimer());
-        this.registerTimer(this.gappleTimer = new GappleTimer(plugin));
-        this.registerTimer(this.stuckTimer = new StuckTimer());
-        this.registerTimer(this.invincibilityTimer = new InvincibilityTimer(plugin));
-        this.registerTimer(this.combatTimer = new CombatTimer(plugin));
-        this.registerTimer(this.teleportTimer = new TeleportTimer(plugin));
-        this.registerTimer(this.eventTimer = new EventTimer(plugin));
-        this.registerTimer(this.pvpClassWarmupTimer = new PvpClassWarmupTimer(plugin));
-        this.reloadTimerData();
+        this.plugin = plugin;
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        registerTimer(enderPearlTimer = new EnderPearlTimer(plugin));
+        registerTimer(logoutTimer = new LogoutTimer());
+        registerTimer(gappleTimer = new GappleTimer(plugin));
+        registerTimer(stuckTimer = new StuckTimer());
+        registerTimer(invincibilityTimer = new InvincibilityTimer(plugin));
+        registerTimer(combatTimer = new CombatTimer(plugin));
+        registerTimer(teleportTimer = new TeleportTimer(plugin));
+        registerTimer(eventTimer = new EventTimer(plugin));
+        registerTimer(pvpClassWarmupTimer = new PvpClassWarmupTimer(plugin));
+        reloadTimerData();
     }
 
     public void registerTimer(Timer timer) {
-        this.timers.add(timer);
+        timers.add(timer);
         if (timer instanceof Listener) {
-            this.plugin.getServer().getPluginManager().registerEvents((Listener) timer, this.plugin);
+            plugin.getServer().getPluginManager().registerEvents((Listener) timer, plugin);
         }
     }
 
     public void unregisterTimer(Timer timer) {
-        this.timers.remove(timer);
+        timers.remove(timer);
     }
 
     /**
      * Reloads the {@link Timer} data from storage.
      */
     public void reloadTimerData() {
-        this.config = new Config(plugin, "timers");
-        for (Timer timer : this.timers) {
-            timer.load(this.config);
+        config = new Config(plugin, "timers");
+        for (Timer timer : timers) {
+            timer.load(config);
         }
     }
 
@@ -94,10 +95,10 @@ public class TimerManager implements Listener {
      * Saves the {@link Timer} data to storage.
      */
     public void saveTimerData() {
-        for (Timer timer : this.timers) {
-            timer.onDisable(this.config);
+        for (Timer timer : timers) {
+            timer.onDisable(config);
         }
 
-        this.config.save();
+        config.save();
     }
 }

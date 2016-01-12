@@ -32,7 +32,8 @@ public class BlockHitFixListener implements Listener {
     private static final ImmutableSet<Material> NON_TRANSPARENT_ATTACK_BREAK_TYPES = Sets.immutableEnumSet(
             Material.GLASS,
             Material.STAINED_GLASS,
-            Material.STAINED_GLASS_PANE);
+            Material.STAINED_GLASS_PANE
+    );
 
     private static final ImmutableSet<Material> NON_TRANSPARENT_ATTACK_INTERACT_TYPES = Sets.immutableEnumSet(
             Material.IRON_DOOR_BLOCK,
@@ -40,7 +41,8 @@ public class BlockHitFixListener implements Listener {
             Material.WOODEN_DOOR,
             Material.WOOD_DOOR,
             Material.TRAP_DOOR,
-            Material.FENCE_GATE);
+            Material.FENCE_GATE
+    );
 
     @EventHandler(ignoreCancelled = false, priority = EventPriority.HIGH)
     public void onPlayerInteract(PlayerInteractEvent event) {

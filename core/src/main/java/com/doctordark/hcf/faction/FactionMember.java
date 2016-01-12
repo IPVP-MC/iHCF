@@ -4,7 +4,6 @@ import com.doctordark.base.GuavaCompat;
 import com.doctordark.hcf.faction.struct.ChatChannel;
 import com.doctordark.hcf.faction.struct.Role;
 import com.doctordark.hcf.faction.type.Faction;
-import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -12,6 +11,7 @@ import org.bukkit.entity.Player;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -83,7 +83,7 @@ public class FactionMember implements ConfigurationSerializable {
      * @param chatChannel the {@link ChatChannel} to set
      */
     public void setChatChannel(ChatChannel chatChannel) {
-        Preconditions.checkNotNull(chatChannel, "ChatChannel cannot be null");
+        Objects.requireNonNull(chatChannel, "ChatChannel cannot be null");
         this.chatChannel = chatChannel;
     }
 

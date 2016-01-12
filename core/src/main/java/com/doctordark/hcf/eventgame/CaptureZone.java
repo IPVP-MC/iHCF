@@ -2,7 +2,6 @@ package com.doctordark.hcf.eventgame;
 
 import com.doctordark.hcf.DateTimeFormats;
 import com.doctordark.util.cuboid.Cuboid;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
@@ -37,7 +36,7 @@ public class CaptureZone implements ConfigurationSerializable {
      * @param defaultCaptureMillis the default milliseconds to capture
      */
     public CaptureZone(String name, Cuboid cuboid, long defaultCaptureMillis) {
-        this(name, StringUtils.EMPTY, cuboid, defaultCaptureMillis);
+        this(name, "", cuboid, defaultCaptureMillis);
     }
 
     /**
@@ -79,29 +78,29 @@ public class CaptureZone implements ConfigurationSerializable {
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> map = new LinkedHashMap<>();
-        map.put("name", this.name);
+        map.put("name", name);
 
-        if (this.prefix != null) {
-            map.put("prefix", this.prefix);
+        if (prefix != null) {
+            map.put("prefix", prefix);
         }
 
-        if (this.cuboid != null) {
-            map.put("cuboid", this.cuboid);
+        if (cuboid != null) {
+            map.put("cuboid", cuboid);
         }
 
-        map.put("captureMillis", Long.toString(this.defaultCaptureMillis));
+        map.put("captureMillis", Long.toString(defaultCaptureMillis));
         return map;
     }
 
     public String getScoreboardRemaining() {
-        synchronized (this.lock) {
-            return this.scoreboardRemaining;
+        synchronized (lock) {
+            return scoreboardRemaining;
         }
     }
 
     public void updateScoreboardRemaining() {
-        synchronized (this.lock) {
-            this.scoreboardRemaining = DateTimeFormats.KOTH_FORMAT.format(this.getRemainingCaptureMillis());
+        synchronized (lock) {
+            scoreboardRemaining = DateTimeFormats.KOTH_FORMAT.format(getRemainingCaptureMillis());
         }
     }
 
@@ -111,7 +110,7 @@ public class CaptureZone implements ConfigurationSerializable {
      * @return true if is currently active
      */
     public boolean isActive() {
-        return this.getRemainingCaptureMillis() > 0L;
+        return getRemainingCaptureMillis() > 0L;
     }
 
     /**
@@ -120,7 +119,7 @@ public class CaptureZone implements ConfigurationSerializable {
      * @return the {@link CaptureZone} name
      */
     public String getName() {
-        return this.name;
+        return name;
     }
 
     public void setName(String name) {
@@ -133,8 +132,11 @@ public class CaptureZone implements ConfigurationSerializable {
      * @return the {@link CaptureZone} prefix
      */
     public String getPrefix() {
-        if (this.prefix == null) this.prefix = ""; // safeguard
-        return this.prefix;
+        if (prefix == null) {
+            prefix = ""; // safeguard
+        }
+
+        return prefix;
     }
 
     /**
@@ -143,7 +145,7 @@ public class CaptureZone implements ConfigurationSerializable {
      * @return the {@link CaptureZone} display name
      */
     public String getDisplayName() {
-        return this.getPrefix() + this.name;
+        return getPrefix() + name;
     }
 
     /**
@@ -152,7 +154,7 @@ public class CaptureZone implements ConfigurationSerializable {
      * @return the {@link Cuboid} of the {@link CaptureZone}
      */
     public Cuboid getCuboid() {
-        return this.cuboid;
+        return cuboid;
     }
 
     /**
@@ -161,15 +163,13 @@ public class CaptureZone implements ConfigurationSerializable {
      * @return the remaining time in milliseconds until captured, or -1 if this is not active
      */
     public long getRemainingCaptureMillis() {
-        if (this.endMillis == Long.MIN_VALUE) {
+        if (endMillis == Long.MIN_VALUE) {
             return -1L;
+        } else if (cappingPlayer == null) {
+            return defaultCaptureMillis;
+        } else {
+            return endMillis - System.currentTimeMillis();
         }
-
-        if (this.cappingPlayer == null) {
-            return this.defaultCaptureMillis;
-        }
-
-        return this.endMillis - System.currentTimeMillis();
     }
 
     /**
@@ -178,7 +178,7 @@ public class CaptureZone implements ConfigurationSerializable {
      * @param millis the remaining time in milliseconds until captured
      */
     public void setRemainingCaptureMillis(long millis) {
-        this.endMillis = System.currentTimeMillis() + millis;
+        endMillis = System.currentTimeMillis() + millis;
     }
 
     /**
@@ -187,11 +187,11 @@ public class CaptureZone implements ConfigurationSerializable {
      * @return the time in milliseconds
      */
     public long getDefaultCaptureMillis() {
-        return this.defaultCaptureMillis;
+        return defaultCaptureMillis;
     }
 
     public String getDefaultCaptureWords() {
-        return this.defaultCaptureWords;
+        return defaultCaptureWords;
     }
 
     /**
@@ -200,9 +200,9 @@ public class CaptureZone implements ConfigurationSerializable {
      * @param millis the milliseconds to set
      */
     public void setDefaultCaptureMillis(long millis) {
-        if (this.defaultCaptureMillis != millis) {
-            this.defaultCaptureMillis = millis;
-            this.defaultCaptureWords = DurationFormatUtils.formatDurationWords(millis, true, true);
+        if (defaultCaptureMillis != millis) {
+            defaultCaptureMillis = millis;
+            defaultCaptureWords = DurationFormatUtils.formatDurationWords(millis, true, true);
         }
     }
 
@@ -212,7 +212,7 @@ public class CaptureZone implements ConfigurationSerializable {
      * @return the {@link Player} in control
      */
     public Player getCappingPlayer() {
-        return this.cappingPlayer;
+        return cappingPlayer;
     }
 
     /**
@@ -221,11 +221,11 @@ public class CaptureZone implements ConfigurationSerializable {
      * @param player the {@link Player} to set
      */
     public void setCappingPlayer(@Nullable Player player) {
-        this.cappingPlayer = player;
+        cappingPlayer = player;
         if (player == null) {
-            this.endMillis = this.defaultCaptureMillis;
+            endMillis = defaultCaptureMillis;
         } else {
-            this.endMillis = System.currentTimeMillis() + this.defaultCaptureMillis;
+            endMillis = System.currentTimeMillis() + defaultCaptureMillis;
         }
     }
 }

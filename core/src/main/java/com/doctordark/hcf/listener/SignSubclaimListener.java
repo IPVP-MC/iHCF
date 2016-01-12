@@ -4,7 +4,6 @@ import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.struct.Role;
 import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
-import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
@@ -18,6 +17,7 @@ import org.bukkit.block.Chest;
 import org.bukkit.block.DoubleChest;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -34,10 +34,9 @@ import org.bukkit.material.MaterialData;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class SignSubclaimListener implements Listener {
@@ -45,19 +44,19 @@ public class SignSubclaimListener implements Listener {
     private enum SubclaimType {
 
         LEADER(ImmutableList.of("[LEADER]", Role.LEADER.getAstrix()),
-                ChatColor.DARK_RED.toString() + ChatColor.BOLD + "Leader", Role.LEADER, "Leader"),
+                ChatColor.DARK_RED.toString() + ChatColor.BOLD + "Leader", "Leader"),
 
         CAPTAIN(ImmutableList.of("[CAPTAIN]", "[OFFICER]", Role.CAPTAIN.getAstrix()),
-                ChatColor.DARK_RED.toString() + ChatColor.BOLD + "Captain", Role.CAPTAIN, "Captain"),
+                ChatColor.DARK_RED.toString() + ChatColor.BOLD + "Captain", "Captain"),
 
         MEMBER(ImmutableList.of("[PRIVATE]", "[PERSONAL]", "[SUBCLAIM]", "[MEMBER]"),
-                ChatColor.DARK_RED.toString() + ChatColor.BOLD + "Subclaim", Role.MEMBER, "Member");
+                ChatColor.DARK_RED.toString() + ChatColor.BOLD + "Subclaim", "Member");
 
         private final List<String> aliases;
         private final String outputText;
         private final String displayName;
 
-        SubclaimType(List<String> aliases, String outputText, Role role, String displayName) {
+        SubclaimType(List<String> aliases, String outputText, String displayName) {
             this.aliases = aliases;
             this.outputText = outputText;
             this.displayName = displayName;
@@ -78,7 +77,6 @@ public class SignSubclaimListener implements Listener {
     }
 
     private static final int MAX_SIGN_LINE_CHARS = 16;
-    private static final Pattern SQUARE_PATTERN_REPLACER = Pattern.compile("\\[|\\]");
     private static final BlockFace[] SIGN_FACES = new BlockFace[]{
             BlockFace.NORTH,
             BlockFace.EAST,
@@ -119,16 +117,18 @@ public class SignSubclaimListener implements Listener {
     }
 
     private SubclaimType getSubclaimType(Sign sign, boolean creating) {
-        SubclaimType subclaimType = this.getSubclaimType(sign.getLine(0), creating);
+        SubclaimType subclaimType = getSubclaimType(sign.getLine(0), creating);
         return subclaimType != null && subclaimType.isEnabled() ? subclaimType : null;
     }
 
     private SubclaimType getSubclaimType(Block block, boolean creating) {
         if (isSubclaimable(block)) {
-            Collection<Sign> attachedSigns = this.getAttachedSigns(block);
+            Collection<Sign> attachedSigns = getAttachedSigns(block);
             for (Sign attachedSign : attachedSigns) {
-                SubclaimType subclaimType = this.getSubclaimType(attachedSign, creating);
-                if (subclaimType != null) return subclaimType;
+                SubclaimType subclaimType = getSubclaimType(attachedSign, creating);
+                if (subclaimType != null) {
+                    return subclaimType;
+                }
             }
         }
 
@@ -137,7 +137,6 @@ public class SignSubclaimListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
-        String[] lines = event.getLines();
         Block block = event.getBlock();
         MaterialData materialData = block.getState().getData();
         if (materialData instanceof org.bukkit.material.Sign) {
@@ -158,6 +157,7 @@ public class SignSubclaimListener implements Listener {
                         return;
                     }
 
+                    String[] lines = event.getLines();
                     subclaimType = getSubclaimType(lines[0], true);
                     if (subclaimType == null || !subclaimType.isEnabled()) {
                         return;
@@ -211,7 +211,7 @@ public class SignSubclaimListener implements Listener {
                         builder.append("captains");
                     } else if (memberList != null) { // Should never be null, but best safe; SubclaimType.PRIVATE
                         builder.append("members ").append(ChatColor.RED).append('[');
-                        builder.append(Joiner.on(", ").join(memberList.stream().filter(string -> playerFaction.getMember(string) != null).collect(Collectors.toList()))).append("]");
+                        builder.append(memberList.stream().filter(string -> playerFaction.getMember(string) != null).collect(Collectors.joining(", "))).append("]");
                     }
 
                     playerFaction.broadcast(builder.toString());
@@ -235,18 +235,18 @@ public class SignSubclaimListener implements Listener {
         BlockState state = block.getState();
 
         Block subclaimObjectBlock = null;
-        if (!(state instanceof Sign)) {
-            subclaimObjectBlock = block;
-        } else {
+        if (state instanceof Sign) {
             Sign sign = (Sign) state;
             MaterialData signData = sign.getData();
             if (signData instanceof org.bukkit.material.Sign) {
                 org.bukkit.material.Sign materialSign = (org.bukkit.material.Sign) signData;
                 subclaimObjectBlock = block.getRelative(materialSign.getAttachedFace());
             }
+        } else {
+            subclaimObjectBlock = block;
         }
 
-        if (subclaimObjectBlock != null && !this.checkSubclaimIntegrity(player, subclaimObjectBlock)) {
+        if (subclaimObjectBlock != null && !checkSubclaimIntegrity(player, subclaimObjectBlock)) {
             event.setCancelled(true);
             player.sendMessage(ChatColor.RED + "You cannot break this subclaimed " + subclaimObjectBlock.getName() + '.');
         }
@@ -301,7 +301,7 @@ public class SignSubclaimListener implements Listener {
 
             Block block = event.getClickedBlock();
             if (!checkSubclaimIntegrity(player, block)) {
-                event.setCancelled(true);
+                event.setUseInteractedBlock(Event.Result.DENY);
                 player.sendMessage(ChatColor.RED + "You do not have access to this subclaimed " + block.getName() + '.');
             }
         }
@@ -356,7 +356,7 @@ public class SignSubclaimListener implements Listener {
                 return true;
             } else if (subclaimType == SubclaimType.MEMBER) {
                 if (search == null) {
-                    search = this.getShortenedName(player.getName());
+                    search = getShortenedName(player.getName());
                 }
 
                 String[] lines = attachedSign.getLines();
@@ -378,7 +378,7 @@ public class SignSubclaimListener implements Listener {
      * @return collection of attached {@link Sign}s
      */
     public Collection<Sign> getAttachedSigns(Block block) {
-        Set<Sign> results = new HashSet<>();
+        LinkedHashSet<Sign> results = new LinkedHashSet<>();
         getSignsAround(block, results);
 
         BlockState state = block.getState();
@@ -396,13 +396,14 @@ public class SignSubclaimListener implements Listener {
     }
 
     /**
-     * Gets the {@link Sign}s that are attached to a given {@link Block}.
+     * Populates a given set with the {@link Sign}s that are attached
+     * to a given {@link Block}.
      *
      * @param block   the {@link Block} to get around
      * @param results the input to add to
      * @return the updated set of {@link Sign}s
      */
-    private Set<Sign> getSignsAround(Block block, Set<Sign> results) {
+    private Set<Sign> getSignsAround(Block block, LinkedHashSet<Sign> results) {
         for (BlockFace face : SIGN_FACES) {
             Block relative = block.getRelative(face);
             BlockState relativeState = relative.getState();

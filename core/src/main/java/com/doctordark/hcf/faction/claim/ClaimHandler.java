@@ -13,7 +13,6 @@ import com.doctordark.hcf.visualise.VisualType;
 import com.doctordark.util.ItemBuilder;
 import com.doctordark.util.cuboid.Cuboid;
 import com.doctordark.util.cuboid.CuboidDirection;
-import com.google.common.base.Preconditions;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -24,6 +23,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 public class ClaimHandler {
@@ -283,7 +283,7 @@ public class ClaimHandler {
      * @return true if {@link Player} could create the {@link Subclaim}
      */
     public boolean tryPurchasing(Player player, Claim claim) {
-        Preconditions.checkNotNull(claim, "Claim is null");
+        Objects.requireNonNull(claim, "Claim is null");
         World world = claim.getWorld();
 
         if (world.getEnvironment() != World.Environment.NORMAL) {

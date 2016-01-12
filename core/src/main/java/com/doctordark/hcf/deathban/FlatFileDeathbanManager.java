@@ -29,7 +29,7 @@ public class FlatFileDeathbanManager implements DeathbanManager {
 
     public FlatFileDeathbanManager(HCF plugin) {
         this.plugin = plugin;
-        this.reloadDeathbanData();
+        reloadDeathbanData();
     }
 
     @Override
@@ -83,7 +83,7 @@ public class FlatFileDeathbanManager implements DeathbanManager {
                 duration /= 2L; // non-deathban factions should be 50% quicker
             }
 
-            duration *= this.getDeathBanMultiplier(player);
+            duration *= getDeathBanMultiplier(player);
             duration *= factionAt.getDeathbanMultiplier();
         }
 

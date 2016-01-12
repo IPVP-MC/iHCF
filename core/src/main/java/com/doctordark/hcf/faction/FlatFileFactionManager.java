@@ -21,7 +21,6 @@ import com.doctordark.hcf.faction.type.WarzoneFaction;
 import com.doctordark.hcf.faction.type.WildernessFaction;
 import com.doctordark.util.Config;
 import com.doctordark.util.JavaUtils;
-import com.google.common.base.Preconditions;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Table;
@@ -44,6 +43,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -66,7 +66,9 @@ public class FlatFileFactionManager implements Listener, FactionManager {
     private final HCF plugin;
 
     public FlatFileFactionManager(HCF plugin) {
-        (this.plugin = plugin).getServer().getPluginManager().registerEvents(this, plugin);
+        this.plugin = plugin;
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+
         this.warzone = new WarzoneFaction();
         this.wilderness = new WildernessFaction();
         this.reloadFactionData();
@@ -258,9 +260,9 @@ public class FlatFileFactionManager implements Listener, FactionManager {
     }
 
     private void cacheClaim(Claim claim, ClaimChangeCause cause) {
-        Preconditions.checkNotNull(claim, "Claim cannot be null");
-        Preconditions.checkNotNull(cause, "Cause cannot be null");
-        Preconditions.checkArgument(cause != ClaimChangeCause.RESIZE, "Cannot cache claims of resize type");
+        Objects.requireNonNull(claim, "Claim cannot be null");
+        Objects.requireNonNull(cause, "Cause cannot be null");
+        Objects.requireNonNull(cause != ClaimChangeCause.RESIZE, "Cannot cache claims of resize type");
 
         World world = claim.getWorld();
         if (world == null) {

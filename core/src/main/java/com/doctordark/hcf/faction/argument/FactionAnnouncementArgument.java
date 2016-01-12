@@ -4,13 +4,14 @@ import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.struct.Role;
 import com.doctordark.hcf.faction.type.PlayerFaction;
 import com.doctordark.util.command.CommandArgument;
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
-import org.apache.commons.lang3.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -58,7 +59,7 @@ public class FactionAnnouncementArgument extends CommandArgument {
         if (args[1].equalsIgnoreCase("clear") || args[1].equalsIgnoreCase("none") || args[1].equalsIgnoreCase("remove")) {
             newAnnouncement = null;
         } else {
-            newAnnouncement = StringUtils.join(args, ' ', 1, args.length);
+            newAnnouncement = HCF.SPACE_JOINER.join(Arrays.copyOfRange(args, 1, args.length));
         }
 
         if (oldAnnouncement == null && newAnnouncement == null) {

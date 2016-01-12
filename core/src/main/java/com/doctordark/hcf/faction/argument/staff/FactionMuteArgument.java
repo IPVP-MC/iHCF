@@ -4,7 +4,6 @@ import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
 import com.doctordark.util.command.CommandArgument;
-import com.google.common.base.Joiner;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -46,10 +45,10 @@ public class FactionMuteArgument extends CommandArgument {
         }
 
         PlayerFaction playerFaction = (PlayerFaction) faction;
-        String extraArgs = Joiner.on(' ').join(Arrays.copyOfRange(args, 2, args.length));
+        String extraArgs = HCF.SPACE_JOINER.join(Arrays.copyOfRange(args, 2, args.length));
         ConsoleCommandSender console = Bukkit.getConsoleSender();
         for (UUID uuid : playerFaction.getMembers().keySet()) {
-            String commandLine = "tempmute " + uuid.toString() + " " + extraArgs;
+            String commandLine = "mute " + uuid.toString() + " " + extraArgs;
             sender.sendMessage(ChatColor.RED + ChatColor.BOLD.toString() + "Executing " + ChatColor.RED + commandLine);
             console.getServer().dispatchCommand(sender, commandLine);
         }

@@ -16,11 +16,12 @@ public class DelayedMessageRunnable extends BukkitRunnable {
     public DelayedMessageRunnable(JavaPlugin plugin, Player player, String message) {
         this.player = player;
         this.message = message;
-        this.runTask(plugin);
+
+        runTask(plugin);
     }
 
     @Override
     public void run() {
-        this.player.sendMessage(this.message);
+        player.sendMessage(message);
     }
 }

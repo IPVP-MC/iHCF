@@ -1,41 +1,4 @@
-# Eclipse
-/.classpath
-/.project
-/.settings
-
-# Netbeans
-/nbproject
-
-# We use maven!
-/build.xml
-
-# Maven
-/target
+/.idea
 /dependency-reduced-pom.xml
-*/target
-*/dependency-reduced-pom.xml
-
-# Vim
-.*.sw[a-p]
-
-# Various other potential build files
-/build
-/bin
-/dist
-/manifest.mf
-/MANIFEST.MF
-/META-INF/MANIFEST.MF
-git.properties
-.ssh
-key
-key.pub
-dependency-reduced-pom.xml
-
-# Mac Filesystem Dust
-.DS_Store
-
-# IntelliJ IDEA
-*.iml
-*.ipr
-*.iws
-.idea/
+/target
+/*.iml

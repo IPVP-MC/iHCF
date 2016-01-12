@@ -15,7 +15,7 @@ public class LoggerRemovedEvent extends Event {
     }
 
     public LoggerEntity getLoggerEntity() {
-        return this.loggerEntity;
+        return loggerEntity;
     }
 
     public static HandlerList getHandlerList() {

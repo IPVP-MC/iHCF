@@ -44,14 +44,14 @@ public class Deathban implements ConfigurationSerializable {
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> map = new LinkedHashMap<>();
-        map.put("reason", this.reason);
-        map.put("creationMillis", Long.toString(this.creationMillis));
-        map.put("expiryMillis", Long.toString(this.expiryMillis));
-        if (this.deathPoint != null) {
-            map.put("deathPoint", this.deathPoint);
+        map.put("reason", reason);
+        map.put("creationMillis", Long.toString(creationMillis));
+        map.put("expiryMillis", Long.toString(expiryMillis));
+        if (deathPoint != null) {
+            map.put("deathPoint", deathPoint);
         }
 
-        map.put("eotwDeathban", this.eotwDeathban);
+        map.put("eotwDeathban", eotwDeathban);
         return map;
     }
 
@@ -61,7 +61,7 @@ public class Deathban implements ConfigurationSerializable {
      * @return the initial duration
      */
     public long getInitialDuration() {
-        return this.expiryMillis - this.creationMillis;
+        return expiryMillis - creationMillis;
     }
 
     /**
@@ -70,7 +70,7 @@ public class Deathban implements ConfigurationSerializable {
      * @return true if is active
      */
     public boolean isActive() {
-        return !this.eotwDeathban && this.getRemaining() > 0L;
+        return !eotwDeathban && getRemaining() > 0L;
     }
 
     /**
@@ -80,7 +80,7 @@ public class Deathban implements ConfigurationSerializable {
      * @return the remaining time until expired
      */
     public long getRemaining() {
-        return this.expiryMillis - System.currentTimeMillis();
+        return expiryMillis - System.currentTimeMillis();
     }
 
     /**

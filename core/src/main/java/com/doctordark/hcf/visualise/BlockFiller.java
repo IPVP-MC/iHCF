@@ -16,7 +16,7 @@ abstract class BlockFiller {
     ArrayList<VisualBlockData> bulkGenerate(Player player, Iterable<Location> locations) {
         ArrayList<VisualBlockData> data = new ArrayList<>(Iterables.size(locations));
         for (Location location : locations) {
-            data.add(this.generate(player, location));
+            data.add(generate(player, location));
         }
 
         return data;

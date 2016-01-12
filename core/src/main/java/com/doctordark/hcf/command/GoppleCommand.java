@@ -37,12 +37,12 @@ public class GoppleCommand implements CommandExecutor, TabCompleter {
         long remaining = timer.getRemaining(player);
 
         if (remaining <= 0L) {
-            sender.sendMessage(ChatColor.RED + "Your " + timer.getDisplayName() + ChatColor.RED + " timer is currently not active.");
+            sender.sendMessage(ChatColor.RED + "Your " + timer.getName() + ChatColor.RED + " timer is currently not active.");
             return true;
         }
 
-        sender.sendMessage(ChatColor.YELLOW + "Your " + timer.getDisplayName() + ChatColor.YELLOW + " timer is active for another " +
-                ChatColor.BOLD + DurationFormatter.getRemaining(remaining, true, false) + ChatColor.YELLOW + '.');
+        sender.sendMessage(ChatColor.YELLOW + "Your " + timer.getName() + ChatColor.YELLOW + " timer is active for another "
+                + ChatColor.BOLD + DurationFormatter.getRemaining(remaining, true, false) + ChatColor.YELLOW + '.');
 
         return true;
     }

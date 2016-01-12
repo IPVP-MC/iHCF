@@ -23,7 +23,7 @@ public final class DateTimeFormats {
     private DateTimeFormats() {
     }
 
-    public static void load(TimeZone timeZone) throws IllegalStateException {
+    public static void reload(TimeZone timeZone) throws IllegalStateException {
         Preconditions.checkArgument(!loaded.getAndSet(true), "Already loaded");
 
         DAY_MTH_HR_MIN_SECS = FastDateFormat.getInstance("dd/MM HH:mm:ss", timeZone, Locale.ENGLISH);

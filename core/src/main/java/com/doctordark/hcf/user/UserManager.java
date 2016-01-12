@@ -74,7 +74,7 @@ public class UserManager implements Listener {
      * Loads the user data from storage.
      */
     public void reloadUserData() {
-        this.userConfig = new Config(plugin, "faction-users");
+        userConfig = new Config(plugin, "faction-users");
 
         Object object = userConfig.get("users");
         if (object instanceof MemorySection) {

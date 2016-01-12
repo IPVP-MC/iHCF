@@ -23,6 +23,7 @@ public class ImageFolder {
 
     public ImageFolder(HCF plugin) {
         this.plugin = plugin;
+
         directory = new File(plugin.getDataFolder(), "imageMessages");
         if (!directory.exists() && directory.mkdir()) {
             plugin.getLogger().log(Level.INFO, "Created image directory");

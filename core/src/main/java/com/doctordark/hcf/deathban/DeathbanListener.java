@@ -12,7 +12,6 @@ import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -84,11 +83,11 @@ public class DeathbanListener implements Listener {
         }
 
         long millis = System.currentTimeMillis();
-        long lastAttemptedJoinMillis = this.lastAttemptedJoinMap.get(uuid);
+        long lastAttemptedJoinMillis = lastAttemptedJoinMap.get(uuid);
 
         // If the user has tried joining in the last 30 seconds and kicked for deathban but has lives, let them join this time to prevent accidental life use.
-        if (lastAttemptedJoinMillis != this.lastAttemptedJoinMap.getNoEntryValue() && lastAttemptedJoinMillis - millis < DeathbanListener.LIFE_USE_DELAY_MILLIS) {
-            this.lastAttemptedJoinMap.remove(uuid);
+        if (lastAttemptedJoinMillis != lastAttemptedJoinMap.getNoEntryValue() && lastAttemptedJoinMillis - millis < DeathbanListener.LIFE_USE_DELAY_MILLIS) {
+            lastAttemptedJoinMap.remove(uuid);
             user.removeDeathban();
             lives = plugin.getDeathbanManager().takeLives(uuid, 1);
 
@@ -99,7 +98,7 @@ public class DeathbanListener implements Listener {
         }
 
         // The user has lives, but just in case they didn't want them to use, tell them to join again in the next 30 seconds.
-        this.lastAttemptedJoinMap.put(uuid, millis + LIFE_USE_DELAY_MILLIS);
+        lastAttemptedJoinMap.put(uuid, millis + LIFE_USE_DELAY_MILLIS);
 
         event.disallow(PlayerLoginEvent.Result.KICK_OTHER, ChatColor.AQUA + "You have been killed " +
                 ChatColor.GREEN + "(" + ChatColor.WHITE + deathban.getReason() + ChatColor.GREEN + ")" +
@@ -122,12 +121,12 @@ public class DeathbanListener implements Listener {
         long ticks = plugin.getConfiguration().getDeathbanRespawnScreenTicksBeforeKick();
 
         if (ticks <= 0L || remaining < ticks) {
-            this.handleKick(player, deathban);
+            handleKick(player, deathban);
             return;
         }
 
         // Let the player see the death screen for x seconds
-        this.respawnTickTasks.put(player.getUniqueId(), new BukkitRunnable() {
+        respawnTickTasks.put(player.getUniqueId(), new BukkitRunnable() {
             @Override
             public void run() {
                 respawnTickTasks.remove(player.getUniqueId());
@@ -139,7 +138,7 @@ public class DeathbanListener implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerRequestRespawn(PlayerRequestRespawnEvent event) {
         Player player = event.getPlayer();
-        FactionUser user = this.plugin.getUserManager().getUser(player.getUniqueId());
+        FactionUser user = plugin.getUserManager().getUser(player.getUniqueId());
         Deathban deathban = user.getDeathban();
         if (deathban != null && deathban.getRemaining() > 0L) {
             if (player.hasPermission(DeathbanListener.DEATH_BAN_BYPASS_PERMISSION)) {
@@ -156,7 +155,7 @@ public class DeathbanListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
-        this.cancelRespawnKickTask(event.getPlayer());
+        cancelRespawnKickTask(event.getPlayer());
     }
 
     private static void informAboutDeathbanBypass(Player player, Deathban deathban, JavaPlugin plugin, boolean later) {
@@ -169,14 +168,14 @@ public class DeathbanListener implements Listener {
     }
 
     private void cancelRespawnKickTask(Player player) {
-        int taskId = this.respawnTickTasks.remove(player.getUniqueId());
-        if (taskId != this.respawnTickTasks.getNoEntryValue()) {
+        int taskId = respawnTickTasks.remove(player.getUniqueId());
+        if (taskId != respawnTickTasks.getNoEntryValue()) {
             Bukkit.getScheduler().cancelTask(taskId);
         }
     }
 
     private void handleKick(Player player, Deathban deathban) {
-        if (this.plugin.getEotwHandler().isEndOfTheWorld()) {
+        if (plugin.getEotwHandler().isEndOfTheWorld()) {
             player.kickPlayer(ChatColor.RED + "Deathbanned for the entirety of the map due to EOTW.\nCome back tomorrow for SOTW!");
         } else {
             player.kickPlayer(ChatColor.RED + "Deathbanned for " + DurationFormatter.getRemaining(deathban.getRemaining(), true, false) + ": " + ChatColor.WHITE + deathban.getReason());

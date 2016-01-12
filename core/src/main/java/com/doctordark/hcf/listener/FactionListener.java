@@ -16,7 +16,6 @@ import com.doctordark.hcf.faction.struct.Relation;
 import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
 import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -31,6 +30,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 public class FactionListener implements Listener {

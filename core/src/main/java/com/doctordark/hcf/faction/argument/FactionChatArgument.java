@@ -5,13 +5,13 @@ import com.doctordark.hcf.faction.FactionMember;
 import com.doctordark.hcf.faction.struct.ChatChannel;
 import com.doctordark.hcf.faction.type.PlayerFaction;
 import com.doctordark.util.command.CommandArgument;
-import org.apache.commons.lang3.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -57,7 +57,7 @@ public class FactionChatArgument extends CommandArgument {
                 }
             }
 
-            String format = String.format(currentChannel.getRawFormat(player), "", StringUtils.join(args, ' ', 1, args.length));
+            String format = String.format(currentChannel.getRawFormat(player), "", HCF.SPACE_JOINER.join(Arrays.copyOfRange(args, 1, args.length)));
             for (Player recipient : recipients) {
                 recipient.sendMessage(format);
             }

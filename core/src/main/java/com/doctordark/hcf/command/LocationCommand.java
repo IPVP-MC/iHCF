@@ -45,8 +45,8 @@ public class LocationCommand implements CommandExecutor, TabCompleter {
 
         Location location = target.getLocation();
         Faction factionAt = plugin.getFactionManager().getFactionAt(location);
-        sender.sendMessage(ChatColor.YELLOW + target.getName() + " is in the territory of " + factionAt.getDisplayName(sender) +
-                ChatColor.YELLOW + '(' + (factionAt.isSafezone() ? ChatColor.GREEN + "Non-Deathban" : ChatColor.RED + "Deathban") + ChatColor.YELLOW + ')');
+        sender.sendMessage(ChatColor.YELLOW + target.getName() + " is in the territory of " + factionAt.getDisplayName(sender)
+                + ChatColor.YELLOW + '(' + (factionAt.isSafezone() ? ChatColor.GREEN + "Non-Deathban" : ChatColor.RED + "Deathban") + ChatColor.YELLOW + ')');
 
         return true;
     }

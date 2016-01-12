@@ -15,8 +15,6 @@ import com.doctordark.hcf.timer.event.TimerClearEvent;
 import com.doctordark.hcf.visualise.VisualType;
 import com.doctordark.util.BukkitUtils;
 import com.doctordark.util.DurationFormatter;
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
 import net.minecraft.util.gnu.trove.map.TObjectLongMap;
 import net.minecraft.util.gnu.trove.map.hash.TObjectLongHashMap;
 import org.apache.commons.lang3.time.DurationFormatUtils;
@@ -47,8 +45,10 @@ import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 
 /**
  * Timer used to apply PVP Protection to {@link Player}s.
@@ -80,7 +80,6 @@ public class InvincibilityTimer extends PlayerTimer implements Listener {
     public void handleExpiry(@Nullable Player player, UUID playerUUID) {
         if (player != null) {
             plugin.getVisualiseHandler().clearVisualBlocks(player, VisualType.CLAIM_BORDER, null);
-            player.sendMessage(ChatColor.RED.toString() + ChatColor.BOLD + "You no longer have " + getDisplayName() + ChatColor.RED + ChatColor.BOLD + ", good luck!");
         }
     }
 
@@ -107,8 +106,9 @@ public class InvincibilityTimer extends PlayerTimer implements Listener {
                 Location location = new Location(claim.getWorld(), claim.getMinimumX() - 1, 0, claim.getMinimumZ() - 1);
                 location = BukkitUtils.getHighestLocation(location, location);
                 for (Player player : players) {
-                    if (this.getRemaining(player) > 0L && player.teleport(location, PlayerTeleportEvent.TeleportCause.PLUGIN)) {
-                        player.sendMessage(ChatColor.RED + "Land was claimed where you were standing. As you still have your " + this.getName() + " timer, you were teleported away.");
+                    if (getRemaining(player) > 0L && player.teleport(location, PlayerTeleportEvent.TeleportCause.PLUGIN)) {
+                        player.sendMessage(ChatColor.RED + "Land was claimed where you were standing. As you still have your " + getName()
+                                + " timer, you were teleported away.");
                     }
                 }
             }
@@ -118,8 +118,8 @@ public class InvincibilityTimer extends PlayerTimer implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
-        if (this.setCooldown(player, player.getUniqueId(), defaultCooldown, true)) {
-            this.setPaused(player.getUniqueId(), true);
+        if (setCooldown(player, player.getUniqueId(), defaultCooldown, true)) {
+            setPaused(player.getUniqueId(), true);
             player.sendMessage(ChatColor.GREEN + "You now have your " + getDisplayName() + ChatColor.GREEN + " timer.");
         }
     }
@@ -142,7 +142,7 @@ public class InvincibilityTimer extends PlayerTimer implements Listener {
             }
         }
 
-        this.clearCooldown(player);
+        clearCooldown(player);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
@@ -174,8 +174,8 @@ public class InvincibilityTimer extends PlayerTimer implements Listener {
         long remaining = getRemaining(player);
         if (remaining > 0L) {
             UUID itemUUID = event.getItem().getUniqueId();
-            long delay = this.itemUUIDPickupDelays.get(itemUUID);
-            if (delay == this.itemUUIDPickupDelays.getNoEntryValue()) {
+            long delay = itemUUIDPickupDelays.get(itemUUID);
+            if (delay == itemUUIDPickupDelays.getNoEntryValue()) {
                 return;
             }
 
@@ -183,7 +183,7 @@ public class InvincibilityTimer extends PlayerTimer implements Listener {
             // PVP Protected players, let them pick it up.
             long millis = System.currentTimeMillis();
             if (delay - millis <= 0L) {
-                this.itemUUIDPickupDelays.remove(itemUUID);
+                itemUUIDPickupDelays.remove(itemUUID);
                 return;
             }
 
@@ -201,7 +201,7 @@ public class InvincibilityTimer extends PlayerTimer implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
-        TimerCooldown runnable = this.cooldowns.get(event.getPlayer().getUniqueId());
+        TimerCooldown runnable = cooldowns.get(event.getPlayer().getUniqueId());
         if (runnable != null && runnable.getRemaining() > 0L) {
             runnable.setPaused(true);
         }
@@ -211,15 +211,15 @@ public class InvincibilityTimer extends PlayerTimer implements Listener {
     public void onPlayerSpawnLocation(PlayerSpawnLocationEvent event) {
         Player player = event.getPlayer();
         if (!player.hasPlayedBefore()) {
-            if (this.canApply() && this.setCooldown(player, player.getUniqueId(), this.defaultCooldown, true)) {
-                this.setPaused(player.getUniqueId(), true);
+            if (canApply() && setCooldown(player, player.getUniqueId(), defaultCooldown, true)) {
+                setPaused(player.getUniqueId(), true);
                 player.sendMessage(ChatColor.GREEN + "You now have your " + getDisplayName() + ChatColor.GREEN + " timer.");
             }
         } else {
             // If a player has their timer paused and they are not in a safezone, un-pause for them.
             // We do this because disconnection pauses PVP Protection.
-            if (this.isPaused(player) && this.getRemaining(player) > 0L && !plugin.getFactionManager().getFactionAt(event.getSpawnLocation()).isSafezone()) {
-                this.setPaused(player.getUniqueId(), false);
+            if (isPaused(player) && getRemaining(player) > 0L && !plugin.getFactionManager().getFactionAt(event.getSpawnLocation()).isSafezone()) {
+                setPaused(player.getUniqueId(), false);
             }
         }
     }
@@ -228,7 +228,7 @@ public class InvincibilityTimer extends PlayerTimer implements Listener {
     public void onPlayerClaimEnterMonitor(PlayerClaimEnterEvent event) {
         Player player = event.getPlayer();
         if (event.getTo().getWorld().getEnvironment() == World.Environment.THE_END) {
-            this.clearCooldown(player);
+            clearCooldown(player);
             return;
         }
 
@@ -237,11 +237,9 @@ public class InvincibilityTimer extends PlayerTimer implements Listener {
             Faction toFaction = event.getToFaction();
             Faction fromFaction = event.getFromFaction();
             if (fromFaction.isSafezone() && !toFaction.isSafezone()) {
-                player.sendMessage(ChatColor.RED + "Your " + getDisplayName() + ChatColor.RED + " timer is no longer paused.");
-                this.setPaused(player.getUniqueId(), false);
+                setPaused(player.getUniqueId(), false);
             } else if (!fromFaction.isSafezone() && toFaction.isSafezone()) {
-                player.sendMessage(ChatColor.GREEN + "Your " + getDisplayName() + ChatColor.GREEN + " timer is now paused.");
-                this.setPaused(player.getUniqueId(), true);
+                setPaused(player.getUniqueId(), true);
             }
 
             if (event.getEnterCause() == PlayerClaimEnterEvent.EnterCause.TELEPORT) {
@@ -249,7 +247,7 @@ public class InvincibilityTimer extends PlayerTimer implements Listener {
                 PlayerFaction playerFaction; // lazy-load
                 if (toFaction instanceof PlayerFaction && (playerFaction = plugin.getFactionManager().getPlayerFaction(player)) != null && playerFaction == toFaction) {
                     player.sendMessage(ChatColor.AQUA + "You have entered your own claim, therefore your " + getDisplayName() + ChatColor.AQUA + " timer was cleared.");
-                    this.clearCooldown(player);
+                    clearCooldown(player);
                 }
             }
         }
@@ -281,7 +279,7 @@ public class InvincibilityTimer extends PlayerTimer implements Listener {
 
             long remaining;
             Player player = (Player) entity;
-            if ((remaining = this.getRemaining(player)) > 0L) {
+            if ((remaining = getRemaining(player)) > 0L) {
                 event.setCancelled(true);
                 attacker.sendMessage(ChatColor.RED + player.getName() + " has their " + getDisplayName() + ChatColor.RED + " timer for another " +
                         ChatColor.BOLD + DurationFormatter.getRemaining(remaining, true, false) + ChatColor.RED + '.');
@@ -289,7 +287,7 @@ public class InvincibilityTimer extends PlayerTimer implements Listener {
                 return;
             }
 
-            if ((remaining = this.getRemaining(attacker)) > 0L) {
+            if ((remaining = getRemaining(attacker)) > 0L) {
                 event.setCancelled(true);
                 attacker.sendMessage(ChatColor.RED + "You cannot attack players whilst your " + getDisplayName() + ChatColor.RED + " timer is active [" +
                         ChatColor.BOLD + DurationFormatter.getRemaining(remaining, true, false) + ChatColor.RED + " remaining]. Use '" + ChatColor.GOLD + PVP_COMMAND + ChatColor.RED + "' to allow pvp.");
@@ -313,7 +311,7 @@ public class InvincibilityTimer extends PlayerTimer implements Listener {
 
     @Override
     public boolean setCooldown(@Nullable Player player, UUID playerUUID, long duration, boolean overwrite, @Nullable Predicate<Long> callback) {
-        return this.canApply() && super.setCooldown(player, playerUUID, duration, overwrite, callback);
+        return canApply() && super.setCooldown(player, playerUUID, duration, overwrite, callback);
     }
 
     private boolean canApply() {

@@ -1,11 +1,14 @@
 package com.doctordark.hcf.listener;
 
 import com.doctordark.hcf.HCF;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.BrewingStand;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.BrewEvent;
+import org.bukkit.inventory.BrewerInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionType;
@@ -25,31 +28,31 @@ public class PotionLimitListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onBrew(BrewEvent event) {
-        if (!testValidity(event.getResults())) {
-            event.setCancelled(true);
-            event.getContents().getHolder().setBrewingTime(EMPTY_BREW_TIME);
+        if (plugin.isPaperPatch()) {
+            if (!testValidity(event.getResults())) {
+                event.setCancelled(true);
+                event.getContents().getHolder().setBrewingTime(EMPTY_BREW_TIME);
+            }
+
+            return;
         }
 
-        /** Version that works with a Spigot version that does not
-         * have a BrewEvent#getResults() API:
-         *
-         * BrewerInventory inventory = event.getContents();
-         * ItemStack[] contents = inventory.getContents();
-         * int length = contents.length;
-         * ItemStack[] cloned = new ItemStack[length];
-         * for (int i = 0; i < length; i++) {
-         *   ItemStack previous = contents[i];
-         *   cloned[i] = (previous == null ? null : previous.clone());
-         * }
-         *
-         * BrewingStand stand = inventory.getHolder();
-         * Bukkit.getScheduler().runTask(HCF.getPlugin(), () -> {
-         *   if (!testValidity(inventory.getContents())) {
-         *     stand.setBrewingTime(EMPTY_BREW_TIME);
-         *     inventory.setContents(cloned);
-         *   }
-         * })
-         */
+        BrewerInventory inventory = event.getContents();
+        ItemStack[] contents = inventory.getContents();
+        int length = contents.length;
+        ItemStack[] cloned = new ItemStack[length];
+        for (int i = 0; i < length; i++) {
+            ItemStack previous = contents[i];
+            cloned[i] = (previous == null ? null : previous.clone());
+        }
+
+        BrewingStand stand = inventory.getHolder();
+        Bukkit.getScheduler().runTask(HCF.getPlugin(), () -> {
+            if (!testValidity(inventory.getContents())) {
+                stand.setBrewingTime(EMPTY_BREW_TIME);
+                inventory.setContents(cloned);
+            }
+        });
     }
 
     private boolean testValidity(ItemStack[] contents) {

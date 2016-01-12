@@ -295,35 +295,36 @@ public class Configuration extends AnnotationConfig {
     private final TObjectIntMap<PotionType> potionLimits = new TObjectIntHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, -1);
 
     public int getEnchantmentLimit(Enchantment enchantment) {
-        int maxLevel = this.enchantmentLimits.get(enchantment);
-        return maxLevel == -1 ? enchantment.getMaxLevel() : maxLevel;
+        int maxLevel = enchantmentLimits.get(enchantment);
+        return maxLevel == enchantmentLimits.getNoEntryValue() ? enchantment.getMaxLevel() : maxLevel;
     }
 
     public int getPotionLimit(PotionType potionEffectType) {
-        int maxLevel = this.potionLimits.get(potionEffectType);
-        return maxLevel == -1 ? potionEffectType.getMaxLevel() : maxLevel;
+        int maxLevel = potionLimits.get(potionEffectType);
+        return maxLevel == potionLimits.getNoEntryValue() ? potionEffectType.getMaxLevel() : maxLevel;
     }
 
     protected void updateFields() {
-        this.serverTimeZone = TimeZone.getTimeZone(this.serverTimeZoneName);
-        this.serverTimeZoneID = this.serverTimeZone.toZoneId();
-        this.scoreboardSidebarTitle = ChatColor.translateAlternateColorCodes('&', this.scoreboardSidebarTitle.replace("{MAP_NUMBER}", Integer.toString(this.mapNumber)));
-        this.factionDtrUpdateTimeWords = DurationFormatUtils.formatDurationWords(this.factionDtrUpdateMillis, true, true);
-        this.relationColourWarzone = ChatColor.valueOf(this.relationColourWarzoneName.replace(" ", "_").toUpperCase());
-        this.relationColourWilderness = ChatColor.valueOf(this.relationColourWildernessName.replace(" ", "_").toUpperCase());
-        this.relationColourTeammate = ChatColor.valueOf(this.relationColourTeammateName.replace(" ", "_").toUpperCase());
-        this.relationColourAlly = ChatColor.valueOf(this.relationColourAllyName.replace(" ", "_").toUpperCase());
-        this.relationColourEnemy = ChatColor.valueOf(this.relationColourEnemyName.replace(" ", "_").toUpperCase());
-        this.relationColourRoad = ChatColor.valueOf(this.relationColourRoadName.replace(" ", "_").toUpperCase());
-        this.relationColourSafezone = ChatColor.valueOf(this.relationColourSafezoneName.replace(" ", "_").toUpperCase());
-        this.factionDtrRegenFreezeBaseMilliseconds = TimeUnit.MINUTES.toMillis(this.factionDtrRegenFreezeBaseMinutes);
-        this.factionDtrRegenFreezeMillisecondsPerMember = TimeUnit.MINUTES.toMillis(this.factionDtrRegenFreezeMinutesPerMember);
-        this.factionHomeTeleportDelayOverworldMillis = TimeUnit.SECONDS.toMillis(this.factionHomeTeleportDelayOverworldSeconds);
-        this.factionHomeTeleportDelayNetherMillis = TimeUnit.SECONDS.toMillis(this.factionHomeTeleportDelayNetherSeconds);
-        this.factionHomeTeleportDelayEndMillis = TimeUnit.SECONDS.toMillis(this.factionHomeTeleportDelayEndSeconds);
-        this.deathbanRespawnScreenTicksBeforeKick = TimeUnit.SECONDS.toMillis(this.deathbanRespawnScreenSecondsBeforeKick) / 50L;
+        serverTimeZone = TimeZone.getTimeZone(serverTimeZoneName);
+        serverTimeZoneID = serverTimeZone.toZoneId();
+        scoreboardSidebarTitle = ChatColor.translateAlternateColorCodes('&',
+                scoreboardSidebarTitle.replace("{MAP_NUMBER}", Integer.toString(mapNumber)));
+        factionDtrUpdateTimeWords = DurationFormatUtils.formatDurationWords(factionDtrUpdateMillis, true, true);
+        relationColourWarzone = ChatColor.valueOf(relationColourWarzoneName.replace(" ", "_").toUpperCase());
+        relationColourWilderness = ChatColor.valueOf(relationColourWildernessName.replace(" ", "_").toUpperCase());
+        relationColourTeammate = ChatColor.valueOf(relationColourTeammateName.replace(" ", "_").toUpperCase());
+        relationColourAlly = ChatColor.valueOf(relationColourAllyName.replace(" ", "_").toUpperCase());
+        relationColourEnemy = ChatColor.valueOf(relationColourEnemyName.replace(" ", "_").toUpperCase());
+        relationColourRoad = ChatColor.valueOf(relationColourRoadName.replace(" ", "_").toUpperCase());
+        relationColourSafezone = ChatColor.valueOf(relationColourSafezoneName.replace(" ", "_").toUpperCase());
+        factionDtrRegenFreezeBaseMilliseconds = TimeUnit.MINUTES.toMillis(factionDtrRegenFreezeBaseMinutes);
+        factionDtrRegenFreezeMillisecondsPerMember = TimeUnit.MINUTES.toMillis(factionDtrRegenFreezeMinutesPerMember);
+        factionHomeTeleportDelayOverworldMillis = TimeUnit.SECONDS.toMillis(factionHomeTeleportDelayOverworldSeconds);
+        factionHomeTeleportDelayNetherMillis = TimeUnit.SECONDS.toMillis(factionHomeTeleportDelayNetherSeconds);
+        factionHomeTeleportDelayEndMillis = TimeUnit.SECONDS.toMillis(factionHomeTeleportDelayEndSeconds);
+        deathbanRespawnScreenTicksBeforeKick = TimeUnit.SECONDS.toMillis(deathbanRespawnScreenSecondsBeforeKick) / 50L;
 
-        String[] split = this.endExitLocationRaw.split(",");
+        String[] split = endExitLocationRaw.split(",");
         if (split.length == 6) {
             try {
                 String worldName = split[0];
@@ -334,16 +335,16 @@ public class Configuration extends AnnotationConfig {
                     Float yaw = Float.parseFloat(split[3]);
                     Float pitch = Float.parseFloat(split[3]);
 
-                    this.endExitLocation = new PersistableLocation(worldName, x, y, z);
-                    this.endExitLocation.setYaw(yaw);
-                    this.endExitLocation.setPitch(pitch);
+                    endExitLocation = new PersistableLocation(worldName, x, y, z);
+                    endExitLocation.setYaw(yaw);
+                    endExitLocation.setPitch(pitch);
                 }
             } catch (NumberFormatException ignored) {
             }
         }
 
         String splitter = " = ";
-        for (String entry : this.potionLimitsUnstored) {
+        for (String entry : potionLimitsUnstored) {
             if (entry.contains(splitter)) {
                 split = entry.split(splitter);
                 String key = split[0];
@@ -352,14 +353,14 @@ public class Configuration extends AnnotationConfig {
                 PotionType effect = PotionType.valueOf(key);
                 if (effect != null) {
                     Bukkit.getLogger().log(Level.INFO, "Potion effect limit of " + effect.name() + " set as " + value);
-                    this.potionLimits.put(effect, value);
+                    potionLimits.put(effect, value);
                 } else {
                     Bukkit.getLogger().log(Level.WARNING, "Unknown potion effect '" + key + "'.");
                 }
             }
         }
 
-        for (String entry : this.enchantmentLimitsUnstored) {
+        for (String entry : enchantmentLimitsUnstored) {
             if (entry.contains(splitter)) {
                 split = entry.split(splitter);
                 String key = split[0];
@@ -368,7 +369,7 @@ public class Configuration extends AnnotationConfig {
                 Enchantment enchantment = Enchantment.getByName(key);
                 if (enchantment != null) {
                     Bukkit.getLogger().log(Level.INFO, "Enchantment limit of " + enchantment.getName() + " set as " + value);
-                    this.enchantmentLimits.put(enchantment, value);
+                    enchantmentLimits.put(enchantment, value);
                 } else {
                     Bukkit.getLogger().log(Level.WARNING, "Unknown enchantment effect '" + key + "'.");
                 }

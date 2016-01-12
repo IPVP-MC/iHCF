@@ -7,7 +7,6 @@ import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
 import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.User;
-import com.google.common.collect.MapMaker;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -21,19 +20,13 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 
 import java.util.Collection;
-import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ChatListener implements Listener {
 
-    private static final String DOUBLE_POST_BYPASS_PERMISSION = "hcf.doublepost.bypass";
-    private static final Pattern PATTERN = Pattern.compile("\\W");
-
     private Essentials essentials;
-    private final Map<UUID, String> messageHistory;
     private final HCF plugin;
 
     public ChatListener(HCF plugin) {
@@ -44,8 +37,6 @@ public class ChatListener implements Listener {
         if (essentialsPlugin instanceof Essentials && essentialsPlugin.isEnabled()) {
             this.essentials = (Essentials) essentialsPlugin;
         }
-
-        this.messageHistory = new MapMaker().expireAfterWrite(2, TimeUnit.MINUTES).makeMap();
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
@@ -92,6 +83,12 @@ public class ChatListener implements Listener {
         }
     }
 
+    private static final Pattern
+            FACTION_TAG_REPLACER = Pattern.compile("\\{FACTION}", Pattern.LITERAL),
+            CAPPER_PREFIX_REPLACER = Pattern.compile("\\{EOTWCAPPERPREFIX}", Pattern.LITERAL),
+            DISPLAY_NAME_REPLACER = Pattern.compile("\\{DISPLAYNAME}", Pattern.LITERAL),
+            MESSAGE_REPLACER = Pattern.compile("\\{MESSAGE}", Pattern.LITERAL);
+
     private String getChatFormat(Player player, PlayerFaction playerFaction, CommandSender viewer) {
         String factionTag = playerFaction == null ? ChatColor.RED + Faction.FACTIONLESS_PREFIX : playerFaction.getDisplayName(viewer);
         String capperTag = plugin.getConfiguration().getEotwLastMapCapperUuids().contains(player.getUniqueId().toString()) ? plugin.getConfiguration().getEotwChatSymbolPrefix() : "";
@@ -99,7 +96,11 @@ public class ChatListener implements Listener {
         if (this.essentials != null) {
             User user = this.essentials.getUser(player);
             result = this.essentials.getSettings().getChatFormat(user.getGroup());
-            result = result.replace("{FACTION}", factionTag).replace("{EOTWCAPPERPREFIX}", capperTag).replace("{DISPLAYNAME}", user.getDisplayName()).replace("{MESSAGE}", "%2$s");
+
+            result = FACTION_TAG_REPLACER.matcher(result).replaceAll(Matcher.quoteReplacement(factionTag));
+            result = CAPPER_PREFIX_REPLACER.matcher(result).replaceAll(Matcher.quoteReplacement(capperTag));
+            result = DISPLAY_NAME_REPLACER.matcher(result).replaceAll(Matcher.quoteReplacement(user.getDisplayName()));
+            result = MESSAGE_REPLACER.matcher(result).replaceAll(Matcher.quoteReplacement("%2$s"));
         } else {
             result = ChatColor.GOLD + "[" + factionTag + ChatColor.GOLD + "] " + capperTag + "%1$s" + ChatColor.GRAY + ": " + ChatColor.WHITE + "%2$s";
         }
@@ -115,16 +116,20 @@ public class ChatListener implements Listener {
      */
     private boolean isGlobalChannel(String input) {
         int length = input.length();
-        if (length <= 1 || !input.startsWith("!")) {
-            return false;
-        }
+        if (length > 1 && input.startsWith("!")) {
+            for (int i = 1; i < length; i++) {
+                char character = input.charAt(i);
 
-        for (int i = 1; i < length; i++) {
-            char character = input.charAt(i);
-            if (character == ' ') continue;
-            if (character == '/') {
-                return false;
-            } else {
+                // Ignore whitespace to prevent blank messages
+                if (Character.isWhitespace(character)) {
+                    continue;
+                }
+
+                // Player is faking a command
+                if (character == '/') {
+                    return false;
+                }
+
                 break;
             }
         }

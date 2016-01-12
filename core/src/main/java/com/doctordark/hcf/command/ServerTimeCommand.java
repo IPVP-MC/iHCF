@@ -20,7 +20,7 @@ public class ServerTimeCommand implements CommandExecutor, TabCompleter {
     private final FastDateFormat format;
 
     public ServerTimeCommand(HCF plugin) {
-        this.format = FastDateFormat.getInstance("E MMM dd h:mm:ssa z yyyy", plugin.getConfiguration().getServerTimeZone(), Locale.ENGLISH);
+        format = FastDateFormat.getInstance("E MMM dd h:mm:ssa z yyyy", plugin.getConfiguration().getServerTimeZone(), Locale.ENGLISH);
     }
 
     @Override

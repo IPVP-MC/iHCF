@@ -7,7 +7,6 @@ import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.RoadFaction;
 import com.doctordark.hcf.timer.Timer;
 import com.doctordark.util.cuboid.Cuboid;
-import com.google.common.base.Predicate;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -17,18 +16,14 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.UUID;
+import java.util.function.Predicate;
 
 public class WallBorderListener implements Listener {
 
@@ -42,19 +37,10 @@ public class WallBorderListener implements Listener {
     private static final int WALL_BORDER_HEIGHT_ABOVE_DIFF = 4;
     private static final int WALL_BORDER_HORIZONTAL_DISTANCE = 7;
 
-    private final Map<UUID, BukkitTask> wallBorderTask = new HashMap<>();
     private final HCF plugin;
 
     public WallBorderListener(HCF plugin) {
         this.plugin = plugin;
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onPlayerQuit(PlayerQuitEvent event) {
-        BukkitTask task = wallBorderTask.remove(event.getPlayer().getUniqueId());
-        if (task != null) {
-            task.cancel();
-        }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -70,7 +56,8 @@ public class WallBorderListener implements Listener {
             public void run() {
                 Location location = player.getLocation();
                 if (now.equals(location)) {
-                    WallBorderListener.this.handlePositionChanged(player, location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
+                    handlePositionChanged(player, location.getWorld(),
+                            location.getBlockX(), location.getBlockY(), location.getBlockZ());
                 }
             }
         }.runTaskLater(plugin, 4L);
@@ -85,13 +72,13 @@ public class WallBorderListener implements Listener {
 
         Location from = event.getFrom();
         if (from.getBlockX() != toX || from.getBlockY() != toY || from.getBlockZ() != toZ) {
-            this.handlePositionChanged(event.getPlayer(), to.getWorld(), toX, toY, toZ);
+            handlePositionChanged(event.getPlayer(), to.getWorld(), toX, toY, toZ);
         }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
-        this.onPlayerMove(event); // PlayerTeleportEvent doesn't have a chained handlerList
+        onPlayerMove(event); // PlayerTeleportEvent doesn't have a chained handlerList
     }
 
     private void handlePositionChanged(Player player, World toWorld, int toX, int toY, int toZ) {
@@ -112,7 +99,7 @@ public class WallBorderListener implements Listener {
         // Clear any visualises that are no longer within distance.
         plugin.getVisualiseHandler().clearVisualBlocks(player, visualType, new Predicate<VisualBlock>() {
             @Override
-            public boolean apply(VisualBlock visualBlock) {
+            public boolean test(VisualBlock visualBlock) {
                 Location other = visualBlock.getLocation();
                 return other.getWorld().equals(toWorld) && (
                         Math.abs(toX - other.getBlockX()) > WALL_BORDER_HORIZONTAL_DISTANCE ||
@@ -135,9 +122,13 @@ public class WallBorderListener implements Listener {
                 if (faction instanceof ClaimableFaction) {
                     // Special case for these.
                     if (flag) {
-                        if (!faction.isSafezone()) continue;
+                        if (!faction.isSafezone()) {
+                            continue;
+                        }
                     } else {
-                        if (faction instanceof RoadFaction || faction.isSafezone()) continue;
+                        if (faction instanceof RoadFaction || faction.isSafezone()) {
+                            continue;
+                        }
                     }
 
                     Collection<Claim> claims = ((ClaimableFaction) faction).getClaims();

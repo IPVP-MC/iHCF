@@ -10,8 +10,6 @@ import com.doctordark.hcf.timer.event.TimerStartEvent;
 import com.doctordark.hcf.visualise.VisualType;
 import com.doctordark.util.BukkitUtils;
 import com.doctordark.util.DurationFormatter;
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
@@ -23,8 +21,10 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 
 /**
  * Timer used to tag {@link Player}s in combat to prevent entering safe-zones.
@@ -84,7 +84,7 @@ public class CombatTimer extends PlayerTimer implements Listener {
         Optional<Player> optional = event.getPlayer();
         if (optional.isPresent()) {
             Player player = optional.get();
-            long remaining = this.getRemaining(player);
+            long remaining = getRemaining(player);
             if (remaining > 0L) {
                 event.setCancelled(true);
 
@@ -122,8 +122,8 @@ public class CombatTimer extends PlayerTimer implements Listener {
         Entity entity;
         if (attacker != null && (entity = event.getEntity()) instanceof Player) {
             Player attacked = (Player) entity;
-            this.setCooldown(attacker, attacker.getUniqueId(), defaultCooldown, false);
-            this.setCooldown(attacked, attacked.getUniqueId(), defaultCooldown, false);
+            setCooldown(attacker, attacker.getUniqueId(), defaultCooldown, false);
+            setCooldown(attacked, attacked.getUniqueId(), defaultCooldown, false);
         }
     }
 
@@ -140,7 +140,7 @@ public class CombatTimer extends PlayerTimer implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerRespawn(PlayerRespawnEvent event) {
-        this.clearCooldown(event.getPlayer(), event.getPlayer().getUniqueId());
+        clearCooldown(event.getPlayer(), event.getPlayer().getUniqueId());
     }
 
     @Override
@@ -153,8 +153,8 @@ public class CombatTimer extends PlayerTimer implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPreventClaimEnterMonitor(PlayerClaimEnterEvent event) {
-        if ((event.getEnterCause() == PlayerClaimEnterEvent.EnterCause.TELEPORT) && (!event.getFromFaction().isSafezone() && event.getToFaction().isSafezone())) {
-            this.clearCooldown(event.getPlayer(), event.getPlayer().getUniqueId());
+        if (event.getEnterCause() == PlayerClaimEnterEvent.EnterCause.TELEPORT && (!event.getFromFaction().isSafezone() && event.getToFaction().isSafezone())) {
+            clearCooldown(event.getPlayer(), event.getPlayer().getUniqueId());
         }
     }
 }

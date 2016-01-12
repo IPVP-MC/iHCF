@@ -44,11 +44,11 @@ public class FactionStuckArgument extends CommandArgument {
         StuckTimer stuckTimer = plugin.getTimerManager().getStuckTimer();
 
         if (!stuckTimer.setCooldown(player, player.getUniqueId())) {
-            sender.sendMessage(ChatColor.RED + "Your " + stuckTimer.getDisplayName() + ChatColor.RED + " timer is already active.");
+            sender.sendMessage(ChatColor.RED + "Your " + stuckTimer.getName() + ChatColor.RED + " timer is already active.");
             return true;
         }
 
-        sender.sendMessage(ChatColor.YELLOW + stuckTimer.getDisplayName() + ChatColor.YELLOW + " timer has started. " +
+        sender.sendMessage(ChatColor.YELLOW + stuckTimer.getName() + ChatColor.YELLOW + " timer has started. " +
                 "Teleport will occur in " + ChatColor.AQUA + DurationFormatter.getRemaining(stuckTimer.getRemaining(player), true, false) + ChatColor.YELLOW + ". " +
                 "This will cancel if you move more than " + StuckTimer.MAX_MOVE_DISTANCE + " blocks.");
 

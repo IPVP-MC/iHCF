@@ -5,7 +5,6 @@ import java.io.Serializable;
 import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -17,27 +16,27 @@ public class ConcurrentValueOrderedMap<K, V extends Comparable<V>> extends Abstr
     private final ConcurrentMap<K, InternalEntry<K, V>> lookup = new ConcurrentHashMap<>();
 
     public V get(Object key) {
-        InternalEntry<K, V> old = this.lookup.get(key);
+        InternalEntry<K, V> old = lookup.get(key);
         return old != null ? old.getValue() : null;
     }
 
     public V put(K key, V val) {
         InternalEntry<K, V> entry = new InternalEntry<>(key, val);
-        InternalEntry<K, V> old = this.lookup.put(key, entry);
+        InternalEntry<K, V> old = lookup.put(key, entry);
         if (old == null) {
-            this.ordering.add(entry);
+            ordering.add(entry);
             return null;
         }
 
-        this.ordering.remove(old);
-        this.ordering.add(entry);
+        ordering.remove(old);
+        ordering.add(entry);
         return old.getValue();
     }
 
     public V remove(Object key) {
-        InternalEntry<K, V> old = this.lookup.remove(key);
+        InternalEntry<K, V> old = lookup.remove(key);
         if (old != null) {
-            this.ordering.remove(old);
+            ordering.remove(old);
             return old.getValue();
         }
 
@@ -45,34 +44,34 @@ public class ConcurrentValueOrderedMap<K, V extends Comparable<V>> extends Abstr
     }
 
     public void clear() {
-        this.ordering.clear();
-        this.lookup.clear();
+        ordering.clear();
+        lookup.clear();
     }
 
     @Nonnull
     @Override
     public Set<Entry<K, V>> entrySet() {
-        return Collections.unmodifiableSet(this.ordering);
+        return Collections.unmodifiableSet(ordering);
     }
 
-    public static class InternalEntry<K, V extends Comparable<V>> implements Comparable<InternalEntry<K, V>>, Map.Entry<K, V> {
+    private static class InternalEntry<K, V extends Comparable<V>> implements Comparable<InternalEntry<K, V>>, Map.Entry<K, V> {
 
         private final K key;
         private final V value;
 
-        InternalEntry(K key, V val) {
+        InternalEntry(K key, V value) {
             this.key = key;
-            this.value = val;
+            this.value = value;
         }
 
         @Override
         public K getKey() {
-            return this.key;
+            return key;
         }
 
         @Override
         public V getValue() {
-            return this.value;
+            return value;
         }
 
         @Override
@@ -82,7 +81,7 @@ public class ConcurrentValueOrderedMap<K, V extends Comparable<V>> extends Abstr
 
         @Override
         public int compareTo(@Nonnull InternalEntry<K, V> o) {
-            return o.value.compareTo(this.value);
+            return o.value.compareTo(value);
         }
     }
 }

@@ -49,7 +49,7 @@ public class LogoutTimer extends PlayerTimer implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
-        this.onPlayerMove(event);
+        onPlayerMove(event);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)

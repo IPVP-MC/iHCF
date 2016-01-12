@@ -1,12 +1,12 @@
 package com.doctordark.hcf.combatlog;
 
-import com.connorl.istaff.ISDataBaseManager;
+//import com.connorl.istaff.ISDataBaseManager;
+
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.combatlog.event.LoggerRemovedEvent;
 import com.doctordark.hcf.combatlog.event.LoggerSpawnEvent;
 import com.doctordark.hcf.combatlog.type.LoggerEntity;
 import com.doctordark.hcf.combatlog.type.LoggerEntityHuman;
-import com.gmail.xd.zwander.istaff.data.PlayerHackerMode;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -17,6 +17,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.ipvp.istaff.IStaff;
+import org.ipvp.istaff.data.PlayerHackerMode;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,6 +31,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
+//import com.gmail.xd.zwander.istaff.data.PlayerHackerMode;
 
 /**
  * Listener that prevents {@link Player}s from combat-logging.
@@ -47,7 +51,7 @@ public class CombatLogListener implements Listener {
 
     public CombatLogListener(HCF plugin) {
         this.plugin = plugin;
-        this.containsStaffPlugin = plugin.getServer().getPluginManager().getPlugin("iStaff") != null;
+        containsStaffPlugin = plugin.getServer().getPluginManager().getPlugin("iStaff") != null;
     }
 
     /**
@@ -57,7 +61,7 @@ public class CombatLogListener implements Listener {
      * @param reason the reason for disconnecting
      */
     public void safelyDisconnect(Player player, String reason) {
-        if (this.safelyDisconnected.add(player.getUniqueId())) {
+        if (safelyDisconnected.add(player.getUniqueId())) {
             player.kickPlayer(reason);
         }
     }
@@ -66,23 +70,23 @@ public class CombatLogListener implements Listener {
      * Removes all the {@link LoggerEntity} instances from the server.
      */
     public void removeCombatLoggers() {
-        Iterator<LoggerEntity> iterator = this.loggers.values().iterator();
+        Iterator<LoggerEntity> iterator = loggers.values().iterator();
         while (iterator.hasNext()) {
             iterator.next().destroy();
             iterator.remove();
         }
 
-        this.safelyDisconnected.clear();
+        safelyDisconnected.clear();
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onLoggerRemoved(LoggerRemovedEvent event) {
-        this.loggers.remove(event.getLoggerEntity().getUniqueID());
+        loggers.remove(event.getLoggerEntity().getUniqueID());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerLogin(PlayerLoginEvent event) {
-        LoggerEntity currentLogger = this.loggers.remove(event.getPlayer().getUniqueId());
+        LoggerEntity currentLogger = loggers.remove(event.getPlayer().getUniqueId());
         if (currentLogger != null) {
             currentLogger.destroy();
         }
@@ -130,7 +134,7 @@ public class CombatLogListener implements Listener {
                     Future<Boolean> future = executor.submit(new Callable<Boolean>() {
                         @Override
                         public Boolean call() throws Exception {
-                            PlayerHackerMode hackerMode = ISDataBaseManager.getHackerMode(player);
+                            PlayerHackerMode hackerMode = IStaff.getPlugin().getIStaffDataBaseManager().getHackerMode(player.getUniqueId());
                             return hackerMode != null && hackerMode.isHackerMode();
                         }
                     });

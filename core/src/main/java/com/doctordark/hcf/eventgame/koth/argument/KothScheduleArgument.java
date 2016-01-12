@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
 
 /**
  * An {@link CommandArgument} used to view schedules for KingOfTheHill games.
@@ -40,7 +41,7 @@ public class KothScheduleArgument extends CommandArgument {
 
         TimeZone timeZone = plugin.getConfiguration().getServerTimeZone();
         this.headingTimeFormat = FastDateFormat.getInstance("EEE FF h:mma (z)", timeZone, Locale.ENGLISH);
-        this.eachKothTimeFormat = FastDateFormat.getInstance("EEE dd '&''b'(h:mma)", timeZone, Locale.ENGLISH);
+        this.eachKothTimeFormat = FastDateFormat.getInstance("EEE dd '" + Matcher.quoteReplacement("&b") + "'(h:mma)", timeZone, Locale.ENGLISH);
     }
 
     @Override
@@ -66,7 +67,7 @@ public class KothScheduleArgument extends CommandArgument {
                 ChatColor colour = dayDifference == 0 ? ChatColor.GREEN : ChatColor.AQUA;
                 long remainingMillis = now.until(scheduleDateTime, ChronoUnit.MILLIS);
                 shownEvents.add("  " + colour + WordUtils.capitalize(entry.getValue()) + ": " + ChatColor.YELLOW +
-                        ChatColor.translateAlternateColorCodes('&', eachKothTimeFormat.format(remainingMillis).replace("'", "")) +
+                        ChatColor.translateAlternateColorCodes('&', eachKothTimeFormat.format(remainingMillis)) +
                         ChatColor.GRAY + " - " + ChatColor.GOLD + DurationFormatUtils.formatDuration(remainingMillis, TIME_UNTIL_PATTERN));
             }
         }

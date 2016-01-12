@@ -4,7 +4,7 @@ import com.doctordark.base.BasePlugin;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.listener.Crowbar;
 import com.doctordark.util.InventoryUtils;
-import com.doctordark.util.JavaUtils;
+import com.doctordark.util.NmsUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -29,7 +29,7 @@ import java.util.regex.Pattern;
 public class ShopSignListener implements Listener {
 
     private static final long SIGN_TEXT_REVERT_TICKS = 100L;
-    private static final Pattern ALPHANUMERIC_REMOVER = Pattern.compile("[^A-Za-z0-9]");
+    private static final Pattern ALPHANUMERIC_PATTERN = Pattern.compile("[^A-Za-z0-9]", Pattern.LITERAL);
 
     private final HCF plugin;
 
@@ -46,61 +46,66 @@ public class ShopSignListener implements Listener {
                 Sign sign = (Sign) state;
                 String[] lines = sign.getLines();
 
-                Integer quantity = JavaUtils.tryParseInt(lines[2]);
-                if (quantity == null) return;
-
-                Integer price = JavaUtils.tryParseInt(ALPHANUMERIC_REMOVER.matcher(lines[3]).replaceAll(""));
-                if (price == null) return;
-
-                ItemStack stack;
-                if (lines[1].equalsIgnoreCase("Crowbar")) {
-                    stack = new Crowbar().getItemIfPresent();
-                } else if ((stack = BasePlugin.getPlugin().getItemDb().getItem(ALPHANUMERIC_REMOVER.matcher(lines[1]).replaceAll(""), quantity)) == null) {
-                    return;
+                boolean parsed = true;
+                Integer quantity = null, price = null;
+                try {
+                    quantity = Integer.parseInt(lines[2]);
+                    price = Integer.parseInt(ALPHANUMERIC_PATTERN.matcher(lines[3]).replaceAll(""));
+                } catch (IllegalArgumentException ex) {
+                    parsed = false;
                 }
 
-                // Final handling of shop.
-                Player player = event.getPlayer();
-                String[] fakeLines = Arrays.copyOf(sign.getLines(), 4);
-                if (lines[0].contains("Sell") && lines[0].contains(ChatColor.RED.toString())) {
-                    int sellQuantity = Math.min(quantity, InventoryUtils.countAmount(player.getInventory(), stack.getType(), stack.getDurability()));
-                    if (sellQuantity <= 0) {
-                        fakeLines[0] = ChatColor.RED + "Not carrying any";
-                        fakeLines[2] = ChatColor.RED + "on you.";
-                        fakeLines[3] = "";
-                    } else {
-                        // Recalculate the price.
-                        int newPrice = (int) (((double) price / (double) quantity) * (double) sellQuantity);
-                        fakeLines[0] = ChatColor.GREEN + "Sold " + sellQuantity;
-                        fakeLines[3] = ChatColor.GREEN + "for " + EconomyManager.ECONOMY_SYMBOL + newPrice;
-
-                        plugin.getEconomyManager().addBalance(player.getUniqueId(), newPrice);
-                        InventoryUtils.removeItem(player.getInventory(), stack.getType(), stack.getData().getData(), sellQuantity);
-                        player.updateInventory();
+                if (parsed) {
+                    ItemStack stack;
+                    if (lines[1].equalsIgnoreCase("Crowbar")) {
+                        stack = new Crowbar().getItemIfPresent();
+                    } else if ((stack = BasePlugin.getPlugin().getItemDb().getItem(ALPHANUMERIC_PATTERN.matcher(lines[1]).replaceAll(""), quantity)) == null) {
+                        return;
                     }
-                } else if (lines[0].contains("Buy") && lines[0].contains(ChatColor.GREEN.toString())) {
-                    if (price > plugin.getEconomyManager().getBalance(player.getUniqueId())) {
-                        fakeLines[0] = ChatColor.RED + "Cannot afford";
-                    } else {
-                        fakeLines[0] = ChatColor.GREEN + "Item bought";
-                        fakeLines[3] = ChatColor.GREEN + "for " + EconomyManager.ECONOMY_SYMBOL + price;
-                        plugin.getEconomyManager().subtractBalance(player.getUniqueId(), price);
 
-                        World world = player.getWorld();
-                        Location location = player.getLocation();
-                        Map<Integer, ItemStack> excess = player.getInventory().addItem(stack);
-                        for (Map.Entry<Integer, ItemStack> excessItemStack : excess.entrySet()) {
-                            world.dropItemNaturally(location, excessItemStack.getValue());
+                    // Final handling of shop.
+                    Player player = event.getPlayer();
+                    String[] fakeLines = Arrays.copyOf(sign.getLines(), 4);
+                    if (lines[0].contains("Sell") && lines[0].contains(ChatColor.RED.toString())) {
+                        int sellQuantity = Math.min(quantity, InventoryUtils.countAmount(player.getInventory(), stack.getType(), stack.getDurability()));
+                        if (sellQuantity <= 0) {
+                            fakeLines[0] = ChatColor.RED + "Not carrying any";
+                            fakeLines[2] = ChatColor.RED + "on you.";
+                            fakeLines[3] = "";
+                        } else {
+                            // Recalculate the price.
+                            int newPrice = (int) (((double) price / (double) quantity) * (double) sellQuantity);
+                            fakeLines[0] = ChatColor.GREEN + "Sold " + sellQuantity;
+                            fakeLines[3] = ChatColor.GREEN + "for " + EconomyManager.ECONOMY_SYMBOL + newPrice;
+
+                            plugin.getEconomyManager().addBalance(player.getUniqueId(), newPrice);
+                            InventoryUtils.removeItem(player.getInventory(), stack.getType(), stack.getData().getData(), sellQuantity);
+                            player.updateInventory();
                         }
+                    } else if (lines[0].contains("Buy") && lines[0].contains(ChatColor.GREEN.toString())) {
+                        if (price > plugin.getEconomyManager().getBalance(player.getUniqueId())) {
+                            fakeLines[0] = ChatColor.RED + "Cannot afford";
+                        } else {
+                            fakeLines[0] = ChatColor.GREEN + "Item bought";
+                            fakeLines[3] = ChatColor.GREEN + "for " + EconomyManager.ECONOMY_SYMBOL + price;
+                            plugin.getEconomyManager().subtractBalance(player.getUniqueId(), price);
 
-                        player.setItemInHand(player.getItemInHand()); // resend held item packet.
+                            World world = player.getWorld();
+                            Location location = player.getLocation();
+                            Map<Integer, ItemStack> excess = player.getInventory().addItem(stack);
+                            for (Map.Entry<Integer, ItemStack> excessItemStack : excess.entrySet()) {
+                                world.dropItemNaturally(location, excessItemStack.getValue());
+                            }
+
+                            NmsUtils.resendHeldItemPacket(player);
+                        }
+                    } else {
+                        return;
                     }
-                } else {
-                    return;
-                }
 
-                event.setCancelled(true);
-                BasePlugin.getPlugin().getSignHandler().showLines(player, sign, fakeLines, SIGN_TEXT_REVERT_TICKS, true);
+                    event.setCancelled(true);
+                    BasePlugin.getPlugin().getSignHandler().showLines(player, sign, fakeLines, SIGN_TEXT_REVERT_TICKS, true);
+                }
             }
         }
     }

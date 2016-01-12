@@ -37,7 +37,7 @@ public abstract class Timer {
      * @return the display name
      */
     public final String getDisplayName() {
-        return this.getScoreboardPrefix() + name;
+        return getScoreboardPrefix() + name;
     }
 
     /**

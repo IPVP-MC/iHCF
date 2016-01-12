@@ -1,13 +1,13 @@
 package com.doctordark.hcf.timer.event;
 
 import com.doctordark.hcf.timer.Timer;
-import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -22,7 +22,7 @@ public class TimerClearEvent extends Event {
     private final Timer timer;
 
     public TimerClearEvent(Timer timer) {
-        this.userUUID = Optional.absent();
+        this.userUUID = Optional.empty();
         this.timer = timer;
     }
 
@@ -32,7 +32,7 @@ public class TimerClearEvent extends Event {
     }
 
     public TimerClearEvent(Player player, Timer timer) {
-        Preconditions.checkNotNull(player);
+        Objects.requireNonNull(player);
 
         this.player = Optional.of(player);
         this.userUUID = Optional.of(player.getUniqueId());
@@ -40,18 +40,18 @@ public class TimerClearEvent extends Event {
     }
 
     public Optional<Player> getPlayer() {
-        if (this.player == null) {
-            this.player = this.userUUID.isPresent() ? Optional.of(Bukkit.getPlayer(userUUID.get())) : Optional.absent();
+        if (player == null) {
+            player = userUUID.isPresent() ? Optional.of(Bukkit.getPlayer(userUUID.get())) : Optional.empty();
         }
 
-        return this.player;
+        return player;
     }
 
     /**
      * Gets the optional UUID of the user this was removed for.
      * <p>This may return absent if the timer is not of a player type</p>
      *
-     * @return the removed user UUID or {@link Optional#absent()}
+     * @return the removed user UUID or {@link Optional#empty()}
      */
     public Optional<UUID> getUserUUID() {
         return userUUID;

@@ -26,22 +26,22 @@ public class EventScheduler implements IEventScheduler {
 
     public EventScheduler(HCF plugin) {
         this.plugin = plugin;
-        this.reloadSchedules();
+        reloadSchedules();
     }
 
     private void reloadSchedules() {
-        this.scheduleMap.clear();
+        scheduleMap.clear();
 
-        if (this.kothNames.size() < 2) {
+        if (kothNames.size() < 2) {
             Bukkit.getLogger().warning("Less than 2 koths defined");
         } else {
             Bukkit.getLogger().info("Defining hardcoded schedules");
-            LocalDateTime now = LocalDateTime.now(this.plugin.getConfiguration().getServerTimeZoneID());
+            LocalDateTime now = LocalDateTime.now(plugin.getConfiguration().getServerTimeZoneID());
 
             int assigned = 0;
             String lastPicked = null;
-            while (this.scheduleMap.size() < 6) {
-                String kothName = this.kothNames.get(this.plugin.getRandom().nextInt(this.kothNames.size()));
+            while (scheduleMap.size() < 6) {
+                String kothName = kothNames.get(plugin.getRandom().nextInt(kothNames.size()));
                 if (lastPicked == null || !kothName.equals(lastPicked)) {
                     assigned++;
                     lastPicked = kothName;
@@ -65,10 +65,13 @@ public class EventScheduler implements IEventScheduler {
                     }
 
                     int assignedDay = now.getDayOfMonth();
-                    if (now.getHour() > assignedHour) assignedDay++;
+                    if (now.getHour() > assignedHour) {
+                        assignedDay++;
+                    }
 
-                    LocalDateTime time = LocalDateTime.of(now.getYear(), now.getMonth(), assignedDay, assignedHour, 0);
-                    this.scheduleMap.put(time, kothName);
+                    LocalDateTime time = LocalDateTime.of(
+                            now.getYear(), now.getMonth(), assignedDay, assignedHour, 0);
+                    scheduleMap.put(time, kothName);
                     System.out.println("Assigning " + kothName + " for " + time.toString());
                 }
             }
@@ -105,6 +108,6 @@ public class EventScheduler implements IEventScheduler {
             this.lastQuery = millis;
         }*/
 
-        return this.scheduleMap;
+        return scheduleMap;
     }
 }

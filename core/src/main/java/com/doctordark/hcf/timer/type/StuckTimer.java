@@ -5,7 +5,6 @@ import com.doctordark.hcf.faction.LandMap;
 import com.doctordark.hcf.timer.PlayerTimer;
 import com.doctordark.hcf.timer.TimerCooldown;
 import com.doctordark.util.DurationFormatter;
-import com.google.common.base.Predicate;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -24,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 
 public class StuckTimer extends PlayerTimer implements Listener {
 
@@ -46,7 +46,7 @@ public class StuckTimer extends PlayerTimer implements Listener {
     public TimerCooldown clearCooldown(@Nullable Player player, UUID uuid) {
         TimerCooldown runnable = super.clearCooldown(player, uuid);
         if (runnable != null) {
-            this.startedLocations.remove(uuid);
+            startedLocations.remove(uuid);
         }
 
         return runnable;
@@ -55,7 +55,7 @@ public class StuckTimer extends PlayerTimer implements Listener {
     @Override
     public boolean setCooldown(@Nullable Player player, UUID playerUUID, long millis, boolean force, @Nullable Predicate<Long> callback) {
         if (player != null && super.setCooldown(player, playerUUID, millis, force, callback)) {
-            this.startedLocations.put(playerUUID, player.getLocation());
+            startedLocations.put(playerUUID, player.getLocation());
             return true;
         }
 
@@ -64,9 +64,9 @@ public class StuckTimer extends PlayerTimer implements Listener {
 
     private void checkMovement(Player player, Location from, Location to) {
         UUID uuid = player.getUniqueId();
-        if (this.getRemaining(uuid) > 0L) {
+        if (getRemaining(uuid) > 0L) {
             if (from == null) {
-                this.clearCooldown(player, uuid);
+                clearCooldown(player, uuid);
                 return;
             }
 
@@ -74,7 +74,7 @@ public class StuckTimer extends PlayerTimer implements Listener {
             int yDiff = Math.abs(from.getBlockY() - to.getBlockY());
             int zDiff = Math.abs(from.getBlockZ() - to.getBlockZ());
             if (xDiff > MAX_MOVE_DISTANCE || yDiff > MAX_MOVE_DISTANCE || zDiff > MAX_MOVE_DISTANCE) {
-                this.clearCooldown(player, uuid);
+                clearCooldown(player, uuid);
                 player.sendMessage(ChatColor.RED + "You moved more than " + ChatColor.BOLD + MAX_MOVE_DISTANCE + ChatColor.RED + " blocks. " +
                         getDisplayName() + ChatColor.RED + " timer ended.");
             }

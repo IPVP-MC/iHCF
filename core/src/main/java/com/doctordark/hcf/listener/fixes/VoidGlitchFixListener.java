@@ -28,11 +28,7 @@ public class VoidGlitchFixListener implements Listener {
                 }
 
                 Location destination = BukkitUtils.getHighestLocation(entity.getLocation());
-                if (destination == null) {
-                    return;
-                }
-
-                if (entity.teleport(destination, PlayerTeleportEvent.TeleportCause.PLUGIN)) {
+                if (destination != null && entity.teleport(destination, PlayerTeleportEvent.TeleportCause.PLUGIN)) {
                     event.setCancelled(true);
                     ((Player) entity).sendMessage(ChatColor.YELLOW + "You were saved from the void.");
                 }

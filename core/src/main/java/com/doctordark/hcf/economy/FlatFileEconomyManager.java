@@ -25,51 +25,52 @@ public class FlatFileEconomyManager implements EconomyManager {
 
     public FlatFileEconomyManager(JavaPlugin plugin) {
         this.plugin = plugin;
-        this.reloadEconomyData();
+        reloadEconomyData();
     }
 
     @Override
     public TObjectIntMap<UUID> getBalanceMap() {
-        return this.balanceMap;
+        return balanceMap;
     }
 
     @Override
     public int getBalance(UUID uuid) {
-        return this.balanceMap.get(uuid);
+        return balanceMap.get(uuid);
     }
 
     @Override
     public int setBalance(UUID uuid, int amount) {
-        this.balanceMap.put(uuid, amount);
+        balanceMap.put(uuid, amount);
         return amount;
     }
 
     @Override
     public int addBalance(UUID uuid, int amount) {
-        return this.setBalance(uuid, this.getBalance(uuid) + amount);
+        return setBalance(uuid, getBalance(uuid) + amount);
     }
 
     @Override
     public int subtractBalance(UUID uuid, int amount) {
-        return this.setBalance(uuid, this.getBalance(uuid) - amount);
+        return setBalance(uuid, getBalance(uuid) - amount);
     }
 
     @Override
     public void reloadEconomyData() {
-        Object object = (this.balanceConfig = new Config(plugin, "balances")).get("balances");
+        balanceConfig = new Config(plugin, "balances");
+        Object object = balanceConfig.get("balances");
         if (object instanceof MemorySection) {
             MemorySection section = (MemorySection) object;
             Set<String> keys = section.getKeys(false);
             for (String id : keys) {
-                this.balanceMap.put(UUID.fromString(id), this.balanceConfig.getInt("balances." + id));
+                balanceMap.put(UUID.fromString(id), balanceConfig.getInt("balances." + id));
             }
         }
     }
 
     @Override
     public void saveEconomyData() {
-        Map<String, Integer> saveMap = new LinkedHashMap<>(this.balanceMap.size());
-        this.balanceMap.forEachEntry(new TObjectIntProcedure<UUID>() {
+        Map<String, Integer> saveMap = new LinkedHashMap<>(balanceMap.size());
+        balanceMap.forEachEntry(new TObjectIntProcedure<UUID>() {
             @Override
             public boolean execute(UUID uuid, int i) {
                 saveMap.put(uuid.toString(), i);
@@ -77,7 +78,7 @@ public class FlatFileEconomyManager implements EconomyManager {
             }
         });
 
-        this.balanceConfig.set("balances", saveMap);
-        this.balanceConfig.save();
+        balanceConfig.set("balances", saveMap);
+        balanceConfig.save();
     }
 }

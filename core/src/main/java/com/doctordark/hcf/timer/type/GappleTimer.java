@@ -5,7 +5,6 @@ import com.doctordark.hcf.timer.PlayerTimer;
 import com.doctordark.util.DurationFormatter;
 import com.doctordark.util.imagemessage.ImageChar;
 import com.doctordark.util.imagemessage.ImageMessage;
-import com.google.common.base.Predicate;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -18,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nullable;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 
 /**
  * Timer used to prevent {@link Player}s from using Notch Apples too often.
@@ -31,10 +31,10 @@ public class GappleTimer extends PlayerTimer implements Listener {
 
         if (plugin.getImageFolder().getGopple() != null) {
             goppleArtMessage = ImageMessage.newInstance(plugin.getImageFolder().getGopple(), 8, ImageChar.BLOCK.getChar()).appendText("", "",
-                    ChatColor.GOLD.toString() + ChatColor.BOLD + ' ' + this.name + ':',
+                    ChatColor.GOLD.toString() + ChatColor.BOLD + ' ' + name + ':',
                     ChatColor.GRAY + "  Consumed",
                     ChatColor.GOLD + " Cooldown Remaining:",
-                    ChatColor.GRAY + "  " + DurationFormatUtils.formatDurationWords(this.defaultCooldown, true, true)
+                    ChatColor.GRAY + "  " + DurationFormatUtils.formatDurationWords(defaultCooldown, true, true)
             );
         }
     }
@@ -51,7 +51,7 @@ public class GappleTimer extends PlayerTimer implements Listener {
             Player player = event.getPlayer();
             if (setCooldown(player, player.getUniqueId(), defaultCooldown, false, new Predicate<Long>() {
                 @Override
-                public boolean apply(@Nullable Long value) {
+                public boolean test(@Nullable Long value) {
                     return false;
                 }
             })) {

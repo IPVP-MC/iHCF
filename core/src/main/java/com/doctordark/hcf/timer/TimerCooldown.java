@@ -40,20 +40,20 @@ public class TimerCooldown {
     }
 
     public long getRemaining() {
-        return this.getRemaining(false);
+        return getRemaining(false);
     }
 
     protected long getRemaining(boolean ignorePaused) {
-        if (!ignorePaused && this.pauseMillis != 0L) {
-            return this.pauseMillis; // If isn't paused, return that.
+        if (!ignorePaused && pauseMillis != 0L) {
+            return pauseMillis; // If isn't paused, return that.
+        } else {
+            return expiryMillis - System.currentTimeMillis();
         }
-
-        return this.expiryMillis - System.currentTimeMillis();
     }
 
     protected void setRemaining(long milliseconds) throws IllegalStateException {
         if (milliseconds <= 0L) {
-            this.cancel();
+            cancel();
             return;
         }
 
@@ -63,12 +63,12 @@ public class TimerCooldown {
 
             // Recreate the task manually as Bukkit doesn't allow
             // you to just reschedule for some reason :(.
-            if (this.eventNotificationTask != null) {
-                this.eventNotificationTask.cancel();
+            if (eventNotificationTask != null) {
+                eventNotificationTask.cancel();
             }
 
             long ticks = milliseconds / 50L;
-            this.eventNotificationTask = new BukkitRunnable() {
+            eventNotificationTask = new BukkitRunnable() {
                 @Override
                 public void run() {
                     if (timer instanceof PlayerTimer && owner != null) {
@@ -82,17 +82,17 @@ public class TimerCooldown {
     }
 
     protected boolean isPaused() {
-        return this.pauseMillis != 0L;
+        return pauseMillis != 0L;
     }
 
     public void setPaused(boolean paused) {
-        if (paused != this.isPaused()) {
+        if (paused != isPaused()) {
             if (paused) {
-                this.pauseMillis = this.getRemaining(true);
-                this.cancel();
+                pauseMillis = getRemaining(true);
+                cancel();
             } else {
-                this.setRemaining(this.pauseMillis);
-                this.pauseMillis = 0L;
+                setRemaining(pauseMillis);
+                pauseMillis = 0L;
             }
         }
     }
@@ -103,9 +103,9 @@ public class TimerCooldown {
      * @throws IllegalStateException if was not running
      */
     protected void cancel() throws IllegalStateException {
-        if (this.eventNotificationTask != null) {
-            this.eventNotificationTask.cancel();
-            this.eventNotificationTask = null;
+        if (eventNotificationTask != null) {
+            eventNotificationTask.cancel();
+            eventNotificationTask = null;
         }
     }
 }

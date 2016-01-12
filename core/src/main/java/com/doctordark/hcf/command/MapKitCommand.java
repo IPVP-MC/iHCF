@@ -12,7 +12,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.craftbukkit.libs.joptsimple.internal.Strings;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -33,16 +32,16 @@ import java.util.List;
 
 public class MapKitCommand implements CommandExecutor, TabCompleter, Listener {
 
-    private static final String SEPARATOR_LINE = ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH.toString() + ChatColor.BOLD.toString() + Strings.repeat('-', 16);
+    //private static final String SEPARATOR_LINE = ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH.toString() + ChatColor.BOLD.toString() + Strings.repeat('-', 16);
 
     private Inventory mapkitInventory;
 
     private final HCF plugin;
 
     public MapKitCommand(HCF plugin) {
-        (this.plugin = plugin).getServer().getPluginManager().registerEvents(this, plugin);
-
-        this.reloadMapKitInventory();
+        this.plugin = plugin;
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        reloadMapKitInventory();
     }
 
     private void reloadMapKitInventory() {
@@ -64,9 +63,9 @@ public class MapKitCommand implements CommandExecutor, TabCompleter, Listener {
             items.add(builder.build());
         }
 
-        this.mapkitInventory = Bukkit.createInventory(null, InventoryUtils.getSafestInventorySize(items.size()), "Map " + plugin.getConfiguration().getMapNumber() + " Kit");
+        mapkitInventory = Bukkit.createInventory(null, InventoryUtils.getSafestInventorySize(items.size()), "Map " + plugin.getConfiguration().getMapNumber() + " Kit");
         for (ItemStack item : items) {
-            this.mapkitInventory.addItem(item);
+            mapkitInventory.addItem(item);
         }
     }
 
@@ -77,7 +76,7 @@ public class MapKitCommand implements CommandExecutor, TabCompleter, Listener {
             return true;
         }
 
-        ((Player) sender).openInventory(this.mapkitInventory);
+        ((Player) sender).openInventory(mapkitInventory);
         return true;
     }
 
@@ -88,14 +87,14 @@ public class MapKitCommand implements CommandExecutor, TabCompleter, Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onInventoryClick(InventoryClickEvent event) {
-        if (this.mapkitInventory.equals(event.getInventory())) {
+        if (mapkitInventory.equals(event.getInventory())) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPluginDisable(PluginDisableEvent event) {
-        for (HumanEntity viewer : new HashSet<>(this.mapkitInventory.getViewers())) { // copy to prevent co-modification
+        for (HumanEntity viewer : new HashSet<>(mapkitInventory.getViewers())) { // copy to prevent co-modification
             viewer.closeInventory();
         }
     }

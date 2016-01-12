@@ -100,7 +100,7 @@ public class EotwHandler {
 
         //TODO: Cleanup these millisecond managements
         public long getMillisUntilStarting() {
-            long difference = System.currentTimeMillis() - this.startStamp;
+            long difference = System.currentTimeMillis() - startStamp;
             return difference > 0L ? -1L : Math.abs(difference);
         }
 
@@ -109,14 +109,14 @@ public class EotwHandler {
         }
 
         public long getElapsedMilliseconds() {
-            return System.currentTimeMillis() - this.startStamp;
+            return System.currentTimeMillis() - startStamp;
         }
 
         @Override
         public void run() {
-            this.elapsedSeconds++;
+            elapsedSeconds++;
 
-            if (this.elapsedSeconds == 0) {
+            if (elapsedSeconds == 0) {
                 for (Faction faction : HCF.getPlugin().getFactionManager().getFactions()) {
                     if (faction instanceof ClaimableFaction) {
                         ClaimableFaction claimableFaction = (ClaimableFaction) faction;

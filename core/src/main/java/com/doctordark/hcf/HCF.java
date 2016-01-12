@@ -94,6 +94,7 @@ import com.doctordark.hcf.user.UserManager;
 import com.doctordark.hcf.visualise.ProtocolLibHook;
 import com.doctordark.hcf.visualise.VisualiseHandler;
 import com.doctordark.hcf.visualise.WallBorderListener;
+import com.google.common.base.Joiner;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import lombok.Getter;
 import org.bukkit.ChatColor;
@@ -104,14 +105,19 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Team;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 
 public class HCF extends JavaPlugin {
+
+    public static final Joiner SPACE_JOINER = Joiner.on(' ');
+    public static final Joiner COMMA_JOINER = Joiner.on(", ");
 
     @Getter
     private static HCF plugin;
@@ -173,27 +179,38 @@ public class HCF extends JavaPlugin {
     @Getter
     private WorldEditPlugin worldEdit;
 
+    @Getter
+    private boolean paperPatch;
+
     private boolean configurationLoaded = true;
 
     @Override
     public void onEnable() {
-        this.registerConfiguration();
-        if (!this.configurationLoaded) {
+        registerConfiguration();
+        if (!configurationLoaded) {
             getLogger().severe("Disabling plugin..");
             setEnabled(false);
             return;
         }
 
         HCF.plugin = this;
-        DateTimeFormats.load(this.configuration.getServerTimeZone());        // Initialise the static fields.
+        DateTimeFormats.reload(configuration.getServerTimeZone());        // Initialise the static fields.
         ///////////////////////////
         Plugin wep = getServer().getPluginManager().getPlugin("WorldEdit");  // Initialise WorldEdit hook.
-        this.worldEdit = wep instanceof WorldEditPlugin && wep.isEnabled() ? (WorldEditPlugin) wep : null;
+        worldEdit = wep instanceof WorldEditPlugin && wep.isEnabled() ? (WorldEditPlugin) wep : null;
 
-        this.registerSerialization();
-        this.registerCommands();
-        this.registerManagers();
-        this.registerListeners();
+        registerSerialization();
+        registerCommands();
+        registerManagers();
+        registerListeners();
+
+        paperPatch = true;
+        try {
+            Team team = getServer().getScoreboardManager().createNewTeam("lookup");
+            team.unregister();
+        } catch (NoSuchMethodError ex) {
+            paperPatch = false;
+        }
 
         //TODO: More reliable, SQL based.
         long dataSaveInterval = TimeUnit.MINUTES.toMillis(20L);
@@ -208,56 +225,56 @@ public class HCF extends JavaPlugin {
     }
 
     private void saveData() {
-        this.deathbanManager.saveDeathbanData();
-        this.economyManager.saveEconomyData();
-        this.factionManager.saveFactionData();
-        this.keyManager.saveKeyData();
-        this.timerManager.saveTimerData();
-        this.userManager.saveUserData();
+        deathbanManager.saveDeathbanData();
+        economyManager.saveEconomyData();
+        factionManager.saveFactionData();
+        keyManager.saveKeyData();
+        timerManager.saveTimerData();
+        userManager.saveUserData();
     }
 
     @Override
     public void onDisable() {
-        if (!this.configurationLoaded) {
+        if (!configurationLoaded) {
             // Ignore everything.
             return;
         }
 
         try {
             String configFileName = "config.cdl";
-            this.configuration.save(new File(getDataFolder(), configFileName), HCF.class.getResource("/" + configFileName));
+            configuration.save(new File(getDataFolder(), configFileName), HCF.class.getResource("/" + configFileName));
         } catch (IOException | InvalidConfigurationException ex) {
             getLogger().warning("Unable to save config.");
             ex.printStackTrace();
         }
 
-        this.combatLogListener.removeCombatLoggers();
-        this.pvpClassManager.onDisable();
-        this.scoreboardHandler.clearBoards();
-        this.saveData();
+        combatLogListener.removeCombatLoggers();
+        pvpClassManager.onDisable();
+        scoreboardHandler.clearBoards();
 
-        HCF.plugin = null; // Always initialise last.
+        saveData();
+
+        HCF.plugin = null; // Always uninitialise last.
     }
 
     private void registerConfiguration() {
-        this.configuration = new Configuration();
+        configuration = new Configuration();
         try {
             String configFileName = "config.cdl";
             File file = new File(getDataFolder(), configFileName);
             if (!file.exists()) {
-                this.saveResource(configFileName, false);
+                saveResource(configFileName, false);
             }
 
-            this.configuration.load(file, HCF.class.getResource("/" + configFileName));
-            this.configuration.updateFields();
+            configuration.load(file, HCF.class.getResource("/" + configFileName));
+            configuration.updateFields();
         } catch (IOException | InvalidConfigurationException ex) {
-            getLogger().severe("Failed to load configuration.");
-            ex.printStackTrace();
-            this.configurationLoaded = false;
+            getLogger().log(Level.SEVERE, "Failed to load configuration", ex);
+            configurationLoaded = false;
         }
     }
 
-    //TODO: Very unstable.
+    //TODO: More reliable, SQL based.
     private void registerSerialization() {
         ConfigurationSerialization.registerClass(CaptureZone.class);
         ConfigurationSerialization.registerClass(Deathban.class);
@@ -282,7 +299,7 @@ public class HCF extends JavaPlugin {
     }
 
     private void registerListeners() {
-        PluginManager manager = this.getServer().getPluginManager();
+        PluginManager manager = getServer().getPluginManager();
         manager.registerEvents(new BlockHitFixListener(), this);
         manager.registerEvents(new BlockJumpGlitchFixListener(), this);
         manager.registerEvents(new BoatGlitchFixListener(this), this);
@@ -290,7 +307,7 @@ public class HCF extends JavaPlugin {
         manager.registerEvents(new BottledExpListener(this), this);
         manager.registerEvents(new ChatListener(this), this);
         manager.registerEvents(new ClaimWandListener(this), this);
-        manager.registerEvents(this.combatLogListener = new CombatLogListener(this), this);
+        manager.registerEvents(combatLogListener = new CombatLogListener(this), this);
         manager.registerEvents(new CoreListener(this), this);
         manager.registerEvents(new CrowbarListener(this), this);
         manager.registerEvents(new DeathListener(this), this);
@@ -357,20 +374,20 @@ public class HCF extends JavaPlugin {
     }
 
     private void registerManagers() {
-        this.claimHandler = new ClaimHandler(this);
-        this.deathbanManager = new FlatFileDeathbanManager(this);
-        this.economyManager = new FlatFileEconomyManager(this);
-        this.effectRestorer = new EffectRestorer(this);
-        this.eotwHandler = new EotwHandler(this);
-        this.eventScheduler = new EventScheduler(this);
-        this.factionManager = new FlatFileFactionManager(this);
-        this.imageFolder = new ImageFolder(this);
-        this.keyManager = new KeyManager(this);
-        this.pvpClassManager = new PvpClassManager(this);
-        this.sotwTimer = new SotwTimer();
-        this.timerManager = new TimerManager(this); // Needs to be registered before ScoreboardHandler.
-        this.scoreboardHandler = new ScoreboardHandler(this);
-        this.userManager = new UserManager(this);
-        this.visualiseHandler = new VisualiseHandler();
+        claimHandler = new ClaimHandler(this);
+        deathbanManager = new FlatFileDeathbanManager(this);
+        economyManager = new FlatFileEconomyManager(this);
+        effectRestorer = new EffectRestorer(this);
+        eotwHandler = new EotwHandler(this);
+        eventScheduler = new EventScheduler(this);
+        factionManager = new FlatFileFactionManager(this);
+        imageFolder = new ImageFolder(this);
+        keyManager = new KeyManager(this);
+        pvpClassManager = new PvpClassManager(this);
+        sotwTimer = new SotwTimer();
+        timerManager = new TimerManager(this); // Needs to be registered before ScoreboardHandler.
+        scoreboardHandler = new ScoreboardHandler(this);
+        userManager = new UserManager(this);
+        visualiseHandler = new VisualiseHandler();
     }
 }

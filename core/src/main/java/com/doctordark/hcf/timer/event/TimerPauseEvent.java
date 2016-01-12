@@ -1,11 +1,11 @@
 package com.doctordark.hcf.timer.event;
 
 import com.doctordark.hcf.timer.Timer;
-import com.google.common.base.Optional;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -21,13 +21,13 @@ public class TimerPauseEvent extends Event implements Cancellable {
     private final Timer timer;
 
     public TimerPauseEvent(Timer timer, boolean paused) {
-        this.userUUID = Optional.absent();
+        this.userUUID = Optional.empty();
         this.timer = timer;
         this.paused = paused;
     }
 
     public TimerPauseEvent(UUID userUUID, Timer timer, boolean paused) {
-        this.userUUID = Optional.fromNullable(userUUID);
+        this.userUUID = Optional.ofNullable(userUUID);
         this.timer = timer;
         this.paused = paused;
     }
@@ -36,7 +36,7 @@ public class TimerPauseEvent extends Event implements Cancellable {
      * Gets the optional UUID of the user this has expired for.
      * <p>This may return absent if the timer is not of a player type</p>
      *
-     * @return the expiring user UUID or {@link Optional#absent()}
+     * @return the expiring user UUID or {@link Optional#empty()}
      */
     public Optional<UUID> getUserUUID() {
         return userUUID;

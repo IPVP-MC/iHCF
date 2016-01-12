@@ -45,25 +45,25 @@ public class LoggerEntityHuman extends EntityPlayer implements LoggerEntity {
         float yaw = location.getYaw(), pitch = location.getPitch();
 
         new FakePlayerConnection(this); // also assigns to the EntityPlayer#playerConnection field.
-        this.playerConnection.a(x, y, z, yaw, pitch); // must instantiate FakePlayerConnection for this to work
+        playerConnection.a(x, y, z, yaw, pitch); // must instantiate FakePlayerConnection for this to work
 
         EntityPlayer originPlayer = ((CraftPlayer) player).getHandle();
-        this.lastDamager = originPlayer.lastDamager;
-        this.invulnerableTicks = originPlayer.invulnerableTicks;
-        this.combatTracker = originPlayer.combatTracker;
+        lastDamager = originPlayer.lastDamager;
+        invulnerableTicks = originPlayer.invulnerableTicks;
+        combatTracker = originPlayer.combatTracker;
     }
 
     @Override
     protected boolean d(final DamageSource source, float amount) {
-        if (!this.dead) {
+        if (!dead) {
             boolean flag = super.d(source, amount);
-            if (!flag || this.dead || this.getHealth() <= 0.0F) { // super call already killed player
+            if (!flag || dead || getHealth() <= 0.0F) { // super call already killed player
                 return flag;
             }
 
             super.die(source);
-            this.dead = true;
-            this.setHealth(0.0F);
+            dead = true;
+            setHealth(0.0F);
             MinecraftServer.getServer().getPlayerList().playerFileData.save(this);
             return true;
         }
@@ -80,10 +80,11 @@ public class LoggerEntityHuman extends EntityPlayer implements LoggerEntity {
         }
 
         final LoggerEntityHuman finalLogger = this;
-        this.removalTask = new BukkitRunnable() {
+        removalTask = new BukkitRunnable() {
             @Override
             public void run() {
-                PacketPlayOutPlayerInfo packet = PacketPlayOutPlayerInfo.removePlayer(finalLogger.getBukkitEntity().getHandle());
+                PacketPlayOutPlayerInfo packet = PacketPlayOutPlayerInfo.removePlayer(
+                        finalLogger.getBukkitEntity().getHandle());
                 MinecraftServer.getServer().getPlayerList().sendAll(packet);
                 finalLogger.destroy();
             }
@@ -121,28 +122,29 @@ public class LoggerEntityHuman extends EntityPlayer implements LoggerEntity {
     public void closeInventory() {
     }
 
+    private void cancelTask() {
+        if (removalTask != null) {
+            removalTask.cancel();
+            removalTask = null;
+        }
+    }
+
     @Override
     public void die(DamageSource damageSource) {
-        if (this.dead) {
-            return;
-        }
-
-        super.die(damageSource);
-        Bukkit.getPluginManager().callEvent(new LoggerDeathEvent(this));
-
-        // Save the inventory NBT
-        MinecraftServer.getServer().getPlayerList().playerFileData.save(this);
-        if (this.removalTask != null) {
-            this.removalTask.cancel();
-            this.removalTask = null;
+        if (!dead) {
+            super.die(damageSource);
+            Bukkit.getPluginManager().callEvent(new LoggerDeathEvent(this));
+            MinecraftServer.getServer().getPlayerList().playerFileData.save(this); // Save inventory NBT
+            cancelTask();
         }
     }
 
     @Override
     public void destroy() {
-        if (!this.dead) {
-            this.dead = true;
+        if (!dead) {
+            cancelTask();
             Bukkit.getPluginManager().callEvent(new LoggerRemovedEvent(this));
+            dead = true;
         }
     }
 

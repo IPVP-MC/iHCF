@@ -4,11 +4,12 @@ import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.struct.ChatChannel;
 import com.doctordark.hcf.faction.type.PlayerFaction;
 import com.doctordark.util.command.CommandArgument;
-import org.apache.commons.lang3.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.Arrays;
 
 public class FactionMessageArgument extends CommandArgument {
 
@@ -45,7 +46,7 @@ public class FactionMessageArgument extends CommandArgument {
             return true;
         }
 
-        String format = String.format(ChatChannel.FACTION.getRawFormat(player), "", StringUtils.join(args, ' ', 1, args.length));
+        String format = String.format(ChatChannel.FACTION.getRawFormat(player), "", HCF.SPACE_JOINER.join(Arrays.copyOfRange(args, 1, args.length)));
         for (Player target : playerFaction.getOnlinePlayers()) {
             target.sendMessage(format);
         }

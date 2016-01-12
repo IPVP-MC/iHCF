@@ -2,10 +2,11 @@ package com.doctordark.hcf.faction.event;
 
 import com.doctordark.hcf.eventgame.CaptureZone;
 import com.doctordark.hcf.eventgame.faction.CapturableFaction;
-import com.google.common.base.Preconditions;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
+
+import java.util.Objects;
 
 /**
  * Faction event called when a player enters an event capture zone.
@@ -21,8 +22,8 @@ public class CaptureZoneEnterEvent extends FactionEvent implements Cancellable {
     public CaptureZoneEnterEvent(Player player, CapturableFaction capturableFaction, CaptureZone captureZone) {
         super(capturableFaction);
 
-        Preconditions.checkNotNull(player, "Player cannot be null");
-        Preconditions.checkNotNull(captureZone, "Capture zone cannot be null");
+        Objects.requireNonNull(player, "Player cannot be null");
+        Objects.requireNonNull(captureZone, "Capture zone cannot be null");
 
         this.captureZone = captureZone;
         this.player = player;

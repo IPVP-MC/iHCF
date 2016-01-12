@@ -1,13 +1,11 @@
 package com.doctordark.hcf.listener;
 
-import com.doctordark.base.GuavaCompat;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.FactionMember;
 import com.doctordark.hcf.faction.claim.Claim;
 import com.doctordark.hcf.faction.type.PlayerFaction;
 import com.doctordark.util.ItemBuilder;
 import com.doctordark.util.ParticleEffect;
-import com.google.common.base.Optional;
 import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -31,6 +29,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Handles the events caused by using a {@link Crowbar}.
@@ -161,12 +160,16 @@ public class CrowbarListener implements Listener {
                 List<String> lore = meta.getLore();
                 if (!lore.isEmpty()) {
                     String spawnerName = ChatColor.stripColor(lore.get(0).toUpperCase());
-                    Optional<EntityType> entityTypeOptional = GuavaCompat.getIfPresent(EntityType.class, spawnerName);
-                    if (entityTypeOptional.isPresent()) {
-                        spawner.setSpawnedType(entityTypeOptional.get());
-                        spawner.update(true, true);
-                        player.sendMessage(ChatColor.AQUA + "Placed a " + ChatColor.BLUE + spawnerName + ChatColor.AQUA + " spawner.");
+                    EntityType entityType;
+                    try {
+                        entityType = Enum.valueOf(EntityType.class, spawnerName);
+                    } catch (IllegalArgumentException ex) {
+                        return;
                     }
+
+                    spawner.setSpawnedType(entityType);
+                    spawner.update(true, true);
+                    player.sendMessage(ChatColor.AQUA + "Placed a " + ChatColor.BLUE + spawnerName + ChatColor.AQUA + " spawner.");
                 }
             }
         }

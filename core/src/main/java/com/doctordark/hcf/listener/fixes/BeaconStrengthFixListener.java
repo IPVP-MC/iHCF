@@ -23,7 +23,7 @@ public class BeaconStrengthFixListener implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onPotionEffectAdd(PotionEffectAddEvent event) {
         LivingEntity entity = event.getEntity();
-        if (entity instanceof Player && event.getCause() == PotionEffectAddEvent.EffectCause.BEACON) {
+        if (entity instanceof Player && event.getCause() == PotionEffectAddEvent.EffectCause.BEACON && plugin.isPaperPatch()) {
             int limit = plugin.getConfiguration().getBeaconStrengthLevelLimit();
 
             if (limit <= 0) {

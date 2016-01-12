@@ -21,14 +21,12 @@ import com.doctordark.util.BukkitUtils;
 import com.doctordark.util.GenericUtils;
 import com.doctordark.util.JavaUtils;
 import com.doctordark.util.PersistableLocation;
-import com.google.common.base.Objects;
-import com.google.common.base.Preconditions;
+import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import lombok.Getter;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -46,6 +44,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.UUID;
@@ -360,9 +359,9 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
             TeleportTimer timer = HCF.getPlugin().getTimerManager().getTeleportTimer();
             for (Player player : getOnlinePlayers()) {
                 Location destination = timer.getDestination(player);
-                if (Objects.equal(destination, this.home.getLocation())) {
+                if (Objects.equals(destination, this.home.getLocation())) {
                     timer.clearCooldown(player);
-                    player.sendMessage(ChatColor.RED + "Your home was unset, so your " + timer.getDisplayName() + ChatColor.RED + " timer has been cancelled");
+                    player.sendMessage(ChatColor.RED + "Your home was unset, so your " + timer.getName() + ChatColor.RED + " timer has been cancelled");
                 }
             }
         }
@@ -509,6 +508,8 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
         }
     }
 
+    private static final Joiner INFO_JOINER = Joiner.on(ChatColor.GRAY + ", ");
+
     @Override
     public void printDetails(CommandSender sender) {
         String leaderName = null;
@@ -567,7 +568,7 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
                 ' ' + (open ? ChatColor.LIGHT_PURPLE + "[Open" : ChatColor.GRAY + "[Closed") + ']');
 
         if (!allyNames.isEmpty()) {
-            sender.sendMessage(ChatColor.YELLOW + "  Allies: " + StringUtils.join(allyNames, ChatColor.GRAY + ", "));
+            sender.sendMessage(ChatColor.YELLOW + "  Allies: " + INFO_JOINER.join(allyNames));
         }
 
         if (leaderName != null) {
@@ -575,11 +576,11 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
         }
 
         if (!captainNames.isEmpty()) {
-            sender.sendMessage(ChatColor.YELLOW + "  Captains: " + ChatColor.RED + StringUtils.join(captainNames, ChatColor.GRAY + ", "));
+            sender.sendMessage(ChatColor.YELLOW + "  Captains: " + ChatColor.RED + INFO_JOINER.join(captainNames));
         }
 
         if (!memberNames.isEmpty()) {
-            sender.sendMessage(ChatColor.YELLOW + "  Members: " + ChatColor.RED + StringUtils.join(memberNames, ChatColor.GRAY + ", "));
+            sender.sendMessage(ChatColor.YELLOW + "  Members: " + ChatColor.RED + INFO_JOINER.join(memberNames));
         }
 
         // Show announcement if the sender is in this faction.
@@ -642,8 +643,8 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
      * @param ignore   the {@link FactionMember} with {@link UUID}s not to send message to
      */
     public void broadcast(String[] messages, UUID... ignore) {
-        Preconditions.checkNotNull(messages, "Messages cannot be null");
-        Preconditions.checkArgument(messages.length > 0, "Message array cannot be empty");
+        Objects.requireNonNull(messages, "Messages cannot be null");
+        Objects.requireNonNull(messages.length > 0, "Message array cannot be empty");
         Collection<Player> players = getOnlinePlayers();
         Collection<UUID> ignores = ignore.length == 0 ? Collections.emptySet() : Sets.newHashSet(ignore);
         for (Player player : players) {

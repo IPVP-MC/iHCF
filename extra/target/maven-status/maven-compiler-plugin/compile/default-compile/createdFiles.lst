@@ -1,0 +1,9 @@
+org\ipvp\hcfextra\Configuration.class
+org\ipvp\hcfextra\HCFExtra.class
+org\ipvp\hcfextra\inventoryrestore\InventoryRestoreHandler$InventoryState.class
+org\ipvp\hcfextra\inventoryrestore\InventoryRestoreHandler.class
+org\ipvp\hcfextra\command\HCFExtraCommand.class
+org\ipvp\hcfextra\command\EndportalHandler$1.class
+org\ipvp\hcfextra\command\CoordsCommand.class
+org\ipvp\hcfextra\command\EndportalHandler.class
+org\ipvp\hcfextra\command\HelpCommand.class

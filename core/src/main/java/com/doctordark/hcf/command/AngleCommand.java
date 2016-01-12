@@ -25,8 +25,9 @@ public class AngleCommand implements CommandExecutor, TabCompleter {
         }
 
         Location location = ((Player) sender).getLocation();
+        sender.sendMessage(ChatColor.GOLD + JavaUtils.format(location.getYaw()) + " yaw" + ChatColor.WHITE + ", " + ChatColor.GOLD
+                + JavaUtils.format(location.getPitch()) + " pitch");
 
-        sender.sendMessage(ChatColor.GOLD + JavaUtils.format(location.getYaw()) + " yaw" + ChatColor.WHITE + ", " + ChatColor.GOLD + JavaUtils.format(location.getPitch()) + " pitch");
         return true;
     }
 

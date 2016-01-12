@@ -52,7 +52,7 @@ public class PvpClassWarmupTimer extends PlayerTimer implements Listener {
     @Override
     public void onDisable(Config config) {
         super.onDisable(config);
-        this.classWarmups.clear();
+        classWarmups.clear();
     }
 
     @Override
@@ -64,7 +64,7 @@ public class PvpClassWarmupTimer extends PlayerTimer implements Listener {
     public TimerCooldown clearCooldown(@Nullable Player player, UUID playerUUID) {
         TimerCooldown runnable = super.clearCooldown(player, playerUUID);
         if (runnable != null) {
-            this.classWarmups.remove(playerUUID);
+            classWarmups.remove(playerUUID);
         }
 
         return runnable;
@@ -72,28 +72,28 @@ public class PvpClassWarmupTimer extends PlayerTimer implements Listener {
 
     @Override
     public void handleExpiry(@Nullable Player player, UUID userUUID) {
-        PvpClass pvpClass = this.classWarmups.remove(userUUID);
+        PvpClass pvpClass = classWarmups.remove(userUUID);
         if (player != null) {
             Preconditions.checkNotNull(pvpClass, "Attempted to equip a class for %s, but nothing was added", player.getName());
-            this.plugin.getPvpClassManager().setEquippedClass(player, pvpClass);
+            plugin.getPvpClassManager().setEquippedClass(player, pvpClass);
         }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerKick(PlayerQuitEvent event) {
-        this.plugin.getPvpClassManager().setEquippedClass(event.getPlayer(), null);
+        plugin.getPvpClassManager().setEquippedClass(event.getPlayer(), null);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerJoin(PlayerJoinEvent event) {
-        this.attemptEquip(event.getPlayer());
+        attemptEquip(event.getPlayer());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onEquipmentSet(EquipmentSetEvent event) {
         HumanEntity humanEntity = event.getHumanEntity();
         if (humanEntity instanceof Player) {
-            this.attemptEquip((Player) humanEntity);
+            attemptEquip((Player) humanEntity);
         }
     }
 
@@ -104,20 +104,20 @@ public class PvpClassWarmupTimer extends PlayerTimer implements Listener {
                 return;
             }
 
-            this.plugin.getPvpClassManager().setEquippedClass(player, null);
+            plugin.getPvpClassManager().setEquippedClass(player, null);
         } else if ((current = classWarmups.get(player.getUniqueId())) != null) {
             if (current.isApplicableFor(player)) {
                 return;
             }
 
-            this.clearCooldown(player);
+            clearCooldown(player);
         }
 
         Collection<PvpClass> pvpClasses = plugin.getPvpClassManager().getPvpClasses();
         for (PvpClass pvpClass : pvpClasses) {
             if (pvpClass.isApplicableFor(player)) {
-                this.classWarmups.put(player.getUniqueId(), pvpClass);
-                this.setCooldown(player, player.getUniqueId(), pvpClass.getWarmupDelay(), false);
+                classWarmups.put(player.getUniqueId(), pvpClass);
+                setCooldown(player, player.getUniqueId(), pvpClass.getWarmupDelay(), false);
                 break;
             }
         }

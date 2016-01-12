@@ -3,7 +3,6 @@ package com.doctordark.hcf.faction.claim;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.visualise.VisualBlock;
 import com.doctordark.hcf.visualise.VisualType;
-import com.google.common.base.Predicate;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -30,6 +29,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 public class SubclaimWandListener implements Listener {
 
@@ -117,7 +117,7 @@ public class SubclaimWandListener implements Listener {
                 if (oldPosition != null) {
                     plugin.getVisualiseHandler().clearVisualBlocks(player, VisualType.CREATE_CLAIM_SELECTION, new Predicate<VisualBlock>() {
                         @Override
-                        public boolean apply(VisualBlock visualBlock) {
+                        public boolean test(VisualBlock visualBlock) {
                             Location location = visualBlock.getLocation();
                             return location.getBlockX() == oldPosition.getBlockX() && location.getBlockZ() == oldPosition.getBlockZ();
                         }

@@ -2,8 +2,6 @@ package com.doctordark.hcf.faction.event;
 
 import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
-import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -12,6 +10,8 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -33,9 +33,9 @@ public class PlayerJoinFactionEvent extends FactionEvent implements Cancellable 
     public PlayerJoinFactionEvent(CommandSender sender, @Nullable Player player, UUID playerUUID, PlayerFaction playerFaction) {
         super(playerFaction);
 
-        Preconditions.checkNotNull(sender, "Sender cannot be null");
-        Preconditions.checkNotNull(playerUUID, "Player UUID cannot be null");
-        Preconditions.checkNotNull(playerFaction, "Player faction cannot be null");
+        Objects.requireNonNull(sender, "Sender cannot be null");
+        Objects.requireNonNull(playerUUID, "Player UUID cannot be null");
+        Objects.requireNonNull(playerFaction, "Player faction cannot be null");
 
         this.sender = sender;
         if (player != null) {
@@ -47,7 +47,7 @@ public class PlayerJoinFactionEvent extends FactionEvent implements Cancellable 
 
     public Optional<Player> getPlayer() {
         if (this.player == null) {
-            this.player = Optional.fromNullable(Bukkit.getPlayer(this.playerUUID));
+            this.player = Optional.ofNullable(Bukkit.getPlayer(this.playerUUID));
         }
 
         return this.player;

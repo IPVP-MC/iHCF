@@ -46,6 +46,7 @@ public class ArcherClass extends PvpClass implements Listener {
 
     private static final int MARK_TIMEOUT_SECONDS = 15;
     private static final int MARK_EXECUTION_LEVEL = 3;
+    private static final double MARK_EXECUTION_DAMAGE_BONUS = 2.0;
     private static final float MINIMUM_FORCE = 0.5F;
 
     private static final PotionEffect ARCHER_SPEED_EFFECT = new PotionEffect(PotionEffectType.SPEED, 160, 3);
@@ -125,7 +126,7 @@ public class ArcherClass extends PvpClass implements Listener {
                     ChatColor enemyColour = plugin.getConfiguration().getRelationColourEnemy();
                     int newLevel = archerMark.incrementMark();
                     if (newLevel >= MARK_EXECUTION_LEVEL) {
-                        event.setDamage(event.getDamage() + 5.0);
+                        event.setDamage(event.getDamage() + MARK_EXECUTION_DAMAGE_BONUS);
                         attacked.addPotionEffect(ARCHER_CRITICAL_EFFECT);
 
                         getSentMarks(shooter).clear();
@@ -192,7 +193,9 @@ public class ArcherClass extends PvpClass implements Listener {
                     ItemStack stack = player.getItemInHand();
                     if (stack.getAmount() == 1) {
                         player.setItemInHand(new ItemStack(Material.AIR, 1));
-                    } else stack.setAmount(stack.getAmount() - 1);
+                    } else {
+                        stack.setAmount(stack.getAmount() - 1);
+                    }
 
                     plugin.getEffectRestorer().setRestoreEffect(player, ARCHER_SPEED_EFFECT);
                     archerSpeedCooldowns.put(event.getPlayer().getUniqueId(), System.currentTimeMillis() + ARCHER_SPEED_COOLDOWN_DELAY);

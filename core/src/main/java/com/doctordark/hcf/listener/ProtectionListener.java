@@ -33,6 +33,7 @@ import org.bukkit.entity.Horse;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.entity.ThrownPotion;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
@@ -81,7 +82,7 @@ public class ProtectionListener implements Listener {
 
     public static final String PROTECTION_BYPASS_PERMISSION = "hcf.faction.protection.bypass";
 
-    // No such ImmutableEnumMultimap :/
+    // List of materials a player can not right click in enemy territory. ~No such ImmutableEnumMultimap in current Guava build :/
     private static final ImmutableMultimap<Material, Material> ITEM_ON_BLOCK_RIGHT_CLICK_DENY = ImmutableMultimap.<Material, Material>builder().
             put(Material.DIAMOND_HOE, Material.GRASS).
             put(Material.GOLD_HOE, Material.GRASS).
@@ -90,6 +91,7 @@ public class ProtectionListener implements Listener {
             put(Material.WOOD_HOE, Material.GRASS).
             build();
 
+    // List of materials a player can not right click in enemy territory.
     private static final ImmutableSet<Material> BLOCK_RIGHT_CLICK_DENY = Sets.immutableEnumSet(
             Material.BED,
             Material.BED_BLOCK,
@@ -147,8 +149,7 @@ public class ProtectionListener implements Listener {
                     continue;
                 }
 
-                boolean containsFrom = cuboid.contains(from);
-                if (containsFrom) {
+                if (cuboid.contains(from)) {
                     if (!cuboid.contains(to)) {
                         CaptureZoneLeaveEvent calledEvent = new CaptureZoneLeaveEvent(player, capturableFaction, captureZone);
                         Bukkit.getPluginManager().callEvent(calledEvent);
@@ -366,23 +367,6 @@ public class ProtectionListener implements Listener {
         }
     }
 
-    // Prevent players using horses that don't belong to them.
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
-    public void onVehicleEnter(VehicleEnterEvent event) {
-        Entity entered = event.getEntered();
-        if (entered instanceof Player) {
-            Vehicle vehicle = event.getVehicle();
-            if (vehicle instanceof Horse) {
-                Horse horse = (Horse) event.getVehicle();
-                AnimalTamer owner = horse.getOwner();
-                if (owner != null && !owner.equals(entered)) {
-                    ((Player) entered).sendMessage(ChatColor.YELLOW + "You cannot enter a Horse that belongs to " + ChatColor.RED + owner.getName() + ChatColor.YELLOW + '.');
-                    event.setCancelled(true);
-                }
-            }
-        }
-    }
-
     // Prevents losing hunger in safe-zones.
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
@@ -582,6 +566,27 @@ public class ProtectionListener implements Listener {
         }
     }
 
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onVehicleEnter(VehicleEnterEvent event) {
+        Entity entered = event.getEntered();
+        if (entered instanceof Player) {
+            Vehicle vehicle = event.getVehicle();
+            if (!attemptBuild(event.getEntered(), vehicle.getLocation(), ChatColor.YELLOW + "You cannot enter vehicles in the territory of %1$s" + ChatColor.YELLOW + '.')) {
+                event.setCancelled(true);
+                return;
+            }
+
+            // Prevent players using horses that don't belong to them.
+            if (vehicle instanceof Horse) {
+                Horse horse = (Horse) event.getVehicle();
+                AnimalTamer owner = horse.getOwner();
+                if (owner != null && !owner.equals(entered)) {
+                    ((Player) entered).sendMessage(ChatColor.YELLOW + "You cannot enter a Horse that belongs to " + ChatColor.RED + owner.getName() + ChatColor.YELLOW + '.');
+                    event.setCancelled(true);
+                }
+            }
+        }
+    }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onVehicleDamage(VehicleDamageEvent event) {
@@ -607,7 +612,7 @@ public class ProtectionListener implements Listener {
         Entity entity = event.getEntity();
         if (entity instanceof Hanging) {
             Player attacker = BukkitUtils.getFinalAttacker(event, false);
-            if (!attemptBuild(attacker, entity.getLocation(), ChatColor.YELLOW + "You cannot build in the territory of %1$s" + ChatColor.YELLOW + '.')) {
+            if (attacker != null && !attemptBuild(attacker, entity.getLocation(), ChatColor.YELLOW + "You cannot build in the territory of %1$s" + ChatColor.YELLOW + '.')) {
                 event.setCancelled(true);
             }
         }

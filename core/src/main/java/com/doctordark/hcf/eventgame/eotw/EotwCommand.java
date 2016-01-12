@@ -24,7 +24,7 @@ public class EotwCommand implements CommandExecutor, TabCompleter {
     private final ConversationFactory factory;
 
     public EotwCommand(HCF plugin) {
-        this.factory = new ConversationFactory(plugin).
+        factory = new ConversationFactory(plugin).
                 withFirstPrompt(new EotwPrompt()).
                 withEscapeSequence("/no").
                 withTimeout(10).

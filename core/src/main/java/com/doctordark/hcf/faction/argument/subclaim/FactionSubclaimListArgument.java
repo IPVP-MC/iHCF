@@ -5,7 +5,7 @@ import com.doctordark.hcf.faction.claim.Claim;
 import com.doctordark.hcf.faction.claim.Subclaim;
 import com.doctordark.hcf.faction.type.PlayerFaction;
 import com.doctordark.util.command.CommandArgument;
-import org.apache.commons.lang3.StringUtils;
+import com.google.common.base.Joiner;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -55,7 +55,7 @@ public class FactionSubclaimListArgument extends CommandArgument {
             return true;
         }
 
-        sender.sendMessage(ChatColor.YELLOW + "Factions' Subclaims (" + subclaimNames.size() + "): " + ChatColor.AQUA + StringUtils.join(subclaimNames, ", "));
+        sender.sendMessage(ChatColor.YELLOW + "Factions' Subclaims (" + subclaimNames.size() + "): " + ChatColor.AQUA + HCF.COMMA_JOINER.join(subclaimNames));
         return true;
     }
 

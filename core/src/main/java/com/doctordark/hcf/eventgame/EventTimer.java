@@ -11,8 +11,6 @@ import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
 import com.doctordark.hcf.listener.EventSignListener;
 import com.doctordark.hcf.timer.GlobalTimer;
-import com.google.common.base.Objects;
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
@@ -34,6 +32,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -51,7 +50,7 @@ public class EventTimer extends GlobalTimer implements Listener {
     private final HCF plugin;
 
     public EventFaction getEventFaction() {
-        return this.eventFaction;
+        return eventFaction;
     }
 
     public EventTimer(HCF plugin) {
@@ -94,22 +93,22 @@ public class EventTimer extends GlobalTimer implements Listener {
 
     @Override
     public String getName() {
-        return this.eventFaction == null ? "Event" : this.eventFaction.getName();
+        return eventFaction != null ? eventFaction.getName() : "Event";
     }
 
     @Override
     public boolean clearCooldown() {
         boolean result = super.clearCooldown();
-        if (this.eventFaction != null) {
-            for (CaptureZone captureZone : this.eventFaction.getCaptureZones()) {
+        if (eventFaction != null) {
+            for (CaptureZone captureZone : eventFaction.getCaptureZones()) {
                 captureZone.setCappingPlayer(null);
             }
 
             // Make sure to set the land back as Deathban.
-            this.eventFaction.setDeathban(true);
-            this.eventFaction.getEventType().getEventTracker().stopTiming();
-            this.eventFaction = null;
-            this.startStamp = -1L;
+            eventFaction.setDeathban(true);
+            eventFaction.getEventType().getEventTracker().stopTiming();
+            eventFaction = null;
+            startStamp = -1L;
             result = true;
         }
 
@@ -118,10 +117,10 @@ public class EventTimer extends GlobalTimer implements Listener {
 
     @Override
     public long getRemaining() {
-        if (this.eventFaction == null) {
+        if (eventFaction == null) {
             return 0L;
-        } else if (this.eventFaction instanceof KothFaction) {
-            return ((KothFaction) this.eventFaction).getCaptureZone().getRemainingCaptureMillis();
+        } else if (eventFaction instanceof KothFaction) {
+            return ((KothFaction) eventFaction).getCaptureZone().getRemainingCaptureMillis();
         } else {
             return super.getRemaining();
         }
@@ -133,26 +132,26 @@ public class EventTimer extends GlobalTimer implements Listener {
      * @param winner the {@link Player} that won
      */
     public void handleWinner(Player winner) {
-        if (this.eventFaction == null) return;
+        if (eventFaction != null) {
+            PlayerFaction playerFaction = plugin.getFactionManager().getPlayerFaction(winner);
+            Bukkit.broadcastMessage(ChatColor.GOLD + "[" + eventFaction.getEventType().getDisplayName() + "] " +
+                    ChatColor.DARK_AQUA + winner.getName() + ChatColor.AQUA + '[' + (playerFaction == null ? Faction.FACTIONLESS_PREFIX : playerFaction.getName()) + ']' +
+                    ChatColor.BLUE + " has captured " + ChatColor.DARK_AQUA + eventFaction.getName() + ChatColor.BLUE + " after " +
+                    ChatColor.DARK_AQUA + DurationFormatUtils.formatDurationWords(getUptime(), true, true) + " of up-time" + ChatColor.BLUE + '.');
 
-        PlayerFaction playerFaction = plugin.getFactionManager().getPlayerFaction(winner);
-        Bukkit.broadcastMessage(ChatColor.GOLD + "[" + this.eventFaction.getEventType().getDisplayName() + "] " +
-                ChatColor.DARK_AQUA + winner.getName() + ChatColor.AQUA + '[' + (playerFaction == null ? Faction.FACTIONLESS_PREFIX : playerFaction.getName()) + ']' +
-                ChatColor.BLUE + " has captured " + ChatColor.DARK_AQUA + this.eventFaction.getName() + ChatColor.BLUE + " after " +
-                ChatColor.DARK_AQUA + DurationFormatUtils.formatDurationWords(getUptime(), true, true) + " of up-time" + ChatColor.BLUE + '.');
+            EventType eventType = eventFaction.getEventType();
+            World world = winner.getWorld();
+            Location location = winner.getLocation();
+            EventKey eventKey = plugin.getKeyManager().getEventKey();
+            Collection<Inventory> inventories = eventKey.getInventories(eventType);
+            ItemStack keyStack = eventKey.getItemStack(new EventKey.EventKeyData(eventType, inventories.isEmpty() ? 1 : plugin.getRandom().nextInt(inventories.size()) + 1));
+            Map<Integer, ItemStack> excess = winner.getInventory().addItem(keyStack, EventSignListener.getEventSign(eventFaction.getName(), winner.getName()));
+            for (ItemStack entry : excess.values()) {
+                world.dropItemNaturally(location, entry);
+            }
 
-        EventType eventType = this.eventFaction.getEventType();
-        World world = winner.getWorld();
-        Location location = winner.getLocation();
-        EventKey eventKey = plugin.getKeyManager().getEventKey();
-        Collection<Inventory> inventories = eventKey.getInventories(eventType);
-        ItemStack keyStack = eventKey.getItemStack(new EventKey.EventKeyData(eventType, inventories.isEmpty() ? 1 : plugin.getRandom().nextInt(inventories.size()) + 1));
-        Map<Integer, ItemStack> excess = winner.getInventory().addItem(keyStack, EventSignListener.getEventSign(eventFaction.getName(), winner.getName()));
-        for (ItemStack entry : excess.values()) {
-            world.dropItemNaturally(location, entry);
+            clearCooldown(); // must always be cooled last as this nulls some variables.
         }
-
-        this.clearCooldown(); // must always be cooled last as this nulls some variables.
     }
 
     /**
@@ -192,8 +191,8 @@ public class EventTimer extends GlobalTimer implements Listener {
             return false;
         }
 
-        this.lastContestedEventMillis = millis;
-        this.startStamp = millis;
+        lastContestedEventMillis = millis;
+        startStamp = millis;
         this.eventFaction = eventFaction;
 
         eventFaction.getEventType().getEventTracker().onContest(eventFaction, this);
@@ -235,55 +234,55 @@ public class EventTimer extends GlobalTimer implements Listener {
     }
 
     private void handleDisconnect(Player player) {
-        Preconditions.checkNotNull(player);
-
-        if (this.eventFaction == null) return;
-        Collection<CaptureZone> captureZones = this.eventFaction.getCaptureZones();
-        for (CaptureZone captureZone : captureZones) {
-            if (Objects.equal(captureZone.getCappingPlayer(), player)) {
-                captureZone.setCappingPlayer(null);
-                this.eventFaction.getEventType().getEventTracker().onControlLoss(player, captureZone, this.eventFaction);
-                break;
+        if (eventFaction != null) {
+            Objects.requireNonNull(player);
+            Collection<CaptureZone> captureZones = eventFaction.getCaptureZones();
+            for (CaptureZone captureZone : captureZones) {
+                if (Objects.equals(captureZone.getCappingPlayer(), player)) {
+                    captureZone.setCappingPlayer(null);
+                    eventFaction.getEventType().getEventTracker().onControlLoss(player, captureZone, eventFaction);
+                    break;
+                }
             }
         }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerDeath(PlayerDeathEvent event) {
-        this.handleDisconnect(event.getEntity());
+        handleDisconnect(event.getEntity());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerLogout(PlayerQuitEvent event) {
-        this.handleDisconnect(event.getPlayer());
+        handleDisconnect(event.getPlayer());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerKick(PlayerKickEvent event) {
-        this.handleDisconnect(event.getPlayer());
+        handleDisconnect(event.getPlayer());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onCaptureZoneEnter(CaptureZoneEnterEvent event) {
-        if (this.eventFaction == null) return;
-
-        CaptureZone captureZone = event.getCaptureZone();
-        if (!this.eventFaction.getCaptureZones().contains(captureZone)) return;
-
-        Player player = event.getPlayer();
-        if (captureZone.getCappingPlayer() == null && this.eventFaction.getEventType().getEventTracker().onControlTake(player, captureZone)) {
-            captureZone.setCappingPlayer(player);
+        if (eventFaction != null) {
+            CaptureZone captureZone = event.getCaptureZone();
+            if (eventFaction.getCaptureZones().contains(captureZone)) {
+                Player player = event.getPlayer();
+                if (captureZone.getCappingPlayer() == null && eventFaction.getEventType().getEventTracker().onControlTake(player, captureZone)) {
+                    captureZone.setCappingPlayer(player);
+                }
+            }
         }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onCaptureZoneLeave(CaptureZoneLeaveEvent event) {
-        if (Objects.equal(event.getFaction(), this.eventFaction)) {
+        if (Objects.equals(event.getFaction(), eventFaction)) {
             Player player = event.getPlayer();
             CaptureZone captureZone = event.getCaptureZone();
-            if (Objects.equal(player, captureZone.getCappingPlayer())) {
+            if (Objects.equals(player, captureZone.getCappingPlayer())) {
                 captureZone.setCappingPlayer(null);
-                this.eventFaction.getEventType().getEventTracker().onControlLoss(player, captureZone, this.eventFaction);
+                eventFaction.getEventType().getEventTracker().onControlLoss(player, captureZone, eventFaction);
 
                 // Try and find a new capper.
                 for (Player target : captureZone.getCuboid().getPlayers()) {

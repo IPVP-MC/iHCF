@@ -1,0 +1,18 @@
+name: iHCFExtra
+version: 1.0 (Build 11da48a, 01.01.2016 18:11:23)
+description: Plugin used to achieve HCF related tasks.
+author: DoctorDark
+main: com.doctordark.hcfextra.HCFExtra
+commands:
+  coords:
+    description: Shows co-ordinates for events.
+  endportal:
+    description: Lights up end-portals properly.
+  inv:
+    aliases: [invrestore, restoreinv]
+    description: Restore player inventories from last death.
+  help:
+    aliases: ["?"]
+    description: Find out more about this server.
+  hcfextra:
+    description: Manage this plugin.

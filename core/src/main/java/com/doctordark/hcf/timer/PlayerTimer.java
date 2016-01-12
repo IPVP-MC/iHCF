@@ -5,8 +5,6 @@ import com.doctordark.hcf.timer.event.TimerExtendEvent;
 import com.doctordark.hcf.timer.event.TimerPauseEvent;
 import com.doctordark.hcf.timer.event.TimerStartEvent;
 import com.doctordark.util.Config;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Predicate;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
@@ -14,9 +12,11 @@ import org.bukkit.entity.Player;
 import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
 
 /**
  * Represents a {@link Player} {@link Timer} countdown.
@@ -43,20 +43,20 @@ public abstract class PlayerTimer extends Timer {
      * @param playerUUID the UUID of user to handle for
      */
     protected void handleExpiry(@Nullable Player player, UUID playerUUID) {
-        this.cooldowns.remove(playerUUID);
+        cooldowns.remove(playerUUID);
     }
 
     public TimerCooldown clearCooldown(UUID uuid) {
-        return this.clearCooldown(null, uuid);
+        return clearCooldown(null, uuid);
     }
 
     public TimerCooldown clearCooldown(Player player) {
-        Preconditions.checkNotNull(player);
-        return this.clearCooldown(player, player.getUniqueId());
+        Objects.requireNonNull(player);
+        return clearCooldown(player, player.getUniqueId());
     }
 
     public TimerCooldown clearCooldown(@Nullable Player player, UUID playerUUID) {
-        TimerCooldown runnable = this.cooldowns.remove(playerUUID);
+        TimerCooldown runnable = cooldowns.remove(playerUUID);
         if (runnable != null) {
             runnable.cancel();
             if (player == null) {
@@ -70,7 +70,7 @@ public abstract class PlayerTimer extends Timer {
     }
 
     public boolean isPaused(Player player) {
-        return this.isPaused(player.getUniqueId());
+        return isPaused(player.getUniqueId());
     }
 
     public boolean isPaused(UUID playerUUID) {
@@ -79,7 +79,7 @@ public abstract class PlayerTimer extends Timer {
     }
 
     public void setPaused(UUID playerUUID, boolean paused) {
-        TimerCooldown runnable = this.cooldowns.get(playerUUID);
+        TimerCooldown runnable = cooldowns.get(playerUUID);
         if (runnable != null && runnable.isPaused() != paused) {
             TimerPauseEvent event = new TimerPauseEvent(playerUUID, this, paused);
             Bukkit.getPluginManager().callEvent(event);
@@ -90,27 +90,27 @@ public abstract class PlayerTimer extends Timer {
     }
 
     public long getRemaining(Player player) {
-        return this.getRemaining(player.getUniqueId());
+        return getRemaining(player.getUniqueId());
     }
 
     public long getRemaining(UUID playerUUID) {
-        TimerCooldown runnable = this.cooldowns.get(playerUUID);
+        TimerCooldown runnable = cooldowns.get(playerUUID);
         return runnable == null ? 0L : runnable.getRemaining();
     }
 
     public boolean setCooldown(@Nullable Player player, UUID playerUUID) {
-        return this.setCooldown(player, playerUUID, this.defaultCooldown, false);
+        return setCooldown(player, playerUUID, defaultCooldown, false);
     }
 
     public boolean setCooldown(@Nullable Player player, UUID playerUUID, long duration, boolean overwrite) {
-        return this.setCooldown(player, playerUUID, duration, overwrite, null);
+        return setCooldown(player, playerUUID, duration, overwrite, null);
     }
 
     /**
      * @return true if cooldown was set or changed
      */
     public boolean setCooldown(@Nullable Player player, UUID playerUUID, long duration, boolean overwrite, @Nullable Predicate<Long> currentCooldownPredicate) {
-        TimerCooldown runnable = duration > 0L ? this.cooldowns.get(playerUUID) : this.clearCooldown(player, playerUUID);
+        TimerCooldown runnable = duration > 0L ? cooldowns.get(playerUUID) : clearCooldown(player, playerUUID);
         if (runnable != null) {
             long remaining = runnable.getRemaining();
             if (!overwrite && remaining > 0L && duration <= remaining) {
@@ -125,7 +125,7 @@ public abstract class PlayerTimer extends Timer {
 
             boolean flag = true;
             if (currentCooldownPredicate != null) {
-                flag = currentCooldownPredicate.apply(remaining);
+                flag = currentCooldownPredicate.test(remaining);
             }
 
             if (flag) {
@@ -138,7 +138,7 @@ public abstract class PlayerTimer extends Timer {
             runnable = new TimerCooldown(this, playerUUID, duration);
         }
 
-        this.cooldowns.put(playerUUID, runnable);
+        cooldowns.put(playerUUID, runnable);
         return true;
     }
 
@@ -178,8 +178,8 @@ public abstract class PlayerTimer extends Timer {
 
     @Override
     public void onDisable(Config config) {
-        if (this.persistable) {
-            Set<Map.Entry<UUID, TimerCooldown>> entrySet = this.cooldowns.entrySet();
+        if (persistable) {
+            Set<Map.Entry<UUID, TimerCooldown>> entrySet = cooldowns.entrySet();
             Map<String, Long> pauseSavemap = new LinkedHashMap<>(entrySet.size());
             Map<String, Long> cooldownSavemap = new LinkedHashMap<>(entrySet.size());
             for (Map.Entry<UUID, TimerCooldown> entry : entrySet) {
@@ -189,8 +189,8 @@ public abstract class PlayerTimer extends Timer {
                 cooldownSavemap.put(id, runnable.getExpiryMillis());
             }
 
-            config.set("timer-pauses." + this.name, pauseSavemap);
-            config.set("timer-cooldowns." + this.name, cooldownSavemap);
+            config.set("timer-pauses." + name, pauseSavemap);
+            config.set("timer-cooldowns." + name, cooldownSavemap);
         }
     }
 }

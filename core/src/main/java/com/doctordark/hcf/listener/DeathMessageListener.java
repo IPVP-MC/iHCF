@@ -1,7 +1,6 @@
 package com.doctordark.hcf.listener;
 
 import com.doctordark.hcf.HCF;
-import com.google.common.base.Preconditions;
 import net.minecraft.server.v1_7_R4.EntityLiving;
 import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.ChatColor;
@@ -14,10 +13,17 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
+import java.util.Objects;
+import java.util.regex.Pattern;
+
 /**
  * Listener that customises the death-messages to show kills besides name.
  */
 public class DeathMessageListener implements Listener {
+
+    private static final Pattern UNDERSCORE_PATTERN = Pattern.compile("_", Pattern.LITERAL);
+    private static final Pattern LEFT_BRACKET_PATTERN = Pattern.compile("\\[");
+    private static final Pattern RIGHT_BRACKET_LAST_OCCURRENCE_PATTERN = Pattern.compile("(?s)(.*)\\]");
 
     private final HCF plugin;
 
@@ -28,58 +34,51 @@ public class DeathMessageListener implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onPlayerDeath(PlayerDeathEvent event) {
         String message = event.getDeathMessage();
-        if (message == null || message.isEmpty()) return;
-        event.setDeathMessage(getDeathMessage(message, event.getEntity(), getKiller(event)));
+        if (message != null && !message.isEmpty()) {
+            Entity entity = event.getEntity();
+            Entity killer = getKiller(event);
+
+            // If the death message shows a death by item, replace the brackets in that text with coloured ones.
+            // Only the first and last occurrences to prevent people using those characters in item
+            // names causing the message to be oddly coloured.
+            message = LEFT_BRACKET_PATTERN.matcher(message).replaceFirst(ChatColor.GOLD + "[" + ChatColor.WHITE);
+            message = RIGHT_BRACKET_LAST_OCCURRENCE_PATTERN.matcher(message).replaceFirst("$1" + ChatColor.GOLD + "]" + ChatColor.WHITE);
+
+            // Format the killed entity's name
+            if (entity != null) {
+                message = message.replaceFirst(getEntityName(entity), ChatColor.RED + getFormattedName(entity) + ChatColor.YELLOW);
+            }
+
+            // Format the killing entity's name
+            if (killer != null && !Objects.equals(killer, entity)) {
+                message = message.replaceFirst(getEntityName(killer), ChatColor.RED + getFormattedName(killer) + ChatColor.YELLOW);
+            }
+
+            // Finally update with the formatted message.
+            event.setDeathMessage(message);
+        }
     }
 
     /**
-     * Gets the final killer from the death event including LivingEntity types
+     * Gets the final killer or damager from the death event
+     * including LivingEntity types
      *
      * @param event the event to get from
      * @return the killer from the event
      */
     private CraftEntity getKiller(PlayerDeathEvent event) {
         EntityLiving lastAttacker = ((CraftPlayer) event.getEntity()).getHandle().aX();
-        return lastAttacker == null ? null : lastAttacker.getBukkitEntity();
+        return lastAttacker != null ? lastAttacker.getBukkitEntity() : null;
     }
 
     /**
-     * Builds a death message with a given input string, entity and killer.
-     *
-     * @param input  the original death message
-     * @param entity the entity that has been killed
-     * @param killer the killer of the entity
-     * @return the final death message string
-     */
-    private String getDeathMessage(String input, Entity entity, Entity killer) {
-        // Fancify the message.
-        input = input.replaceFirst("\\[", ChatColor.GOLD + "[" + ChatColor.WHITE);
-        input = replaceLast(input, "]", ChatColor.GOLD + "]" + ChatColor.WHITE);
-
-        if (entity != null) {
-            input = input.replaceFirst("(?i)" + getEntityName(entity), ChatColor.RED + getDisplayName(entity) + ChatColor.YELLOW);
-        }
-
-        if (killer != null && (entity == null || !killer.equals(entity))) {
-            input = input.replaceFirst("(?i)" + getEntityName(killer), ChatColor.RED + getDisplayName(killer) + ChatColor.YELLOW);
-        }
-
-        return input;
-    }
-
-    public static String replaceLast(String text, String regex, String replacement) {
-        return text.replaceFirst("(?s)" + regex + "(?!.*?" + regex + ')', replacement);
-    }
-
-    /**
-     * Gets the name of a {@link Entity} or username of a {@link Player}.
+     * Gets the name an entity will display in a vanilla death message.
      *
      * @param entity the {@link Entity} to get for
-     * @return username if is a {@link Player}, otherwise type name
+     * @return the death message entity name
      */
     private String getEntityName(Entity entity) {
-        Preconditions.checkNotNull(entity, "Entity cannot be null");
-        return entity instanceof Player ? ((Player) entity).getName() : ((CraftEntity) entity).getHandle().getName();
+        return ((CraftEntity) entity).getHandle().getScoreboardDisplayName().c();
     }
 
     /**
@@ -88,13 +87,13 @@ public class DeathMessageListener implements Listener {
      * @param entity the entity
      * @return entity type name if !instanceof player
      */
-    private String getDisplayName(Entity entity) {
-        Preconditions.checkNotNull(entity, "Entity cannot be null");
+    private String getFormattedName(Entity entity) {
+        Objects.requireNonNull(entity, "Entity cannot be null");
         if (entity instanceof Player) {
             Player player = (Player) entity;
             return player.getName() + ChatColor.GOLD + '[' + ChatColor.WHITE + plugin.getUserManager().getUser(player.getUniqueId()).getKills() + ChatColor.GOLD + ']';
         } else {
-            return WordUtils.capitalizeFully(entity.getType().name().replace('_', ' '));
+            return UNDERSCORE_PATTERN.matcher(WordUtils.capitalizeFully(entity.getType().name())).replaceAll(" ");
         }
     }
 }

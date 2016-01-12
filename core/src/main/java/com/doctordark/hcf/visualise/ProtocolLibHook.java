@@ -9,6 +9,7 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.FieldAccessException;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.doctordark.hcf.HCF;
+import com.doctordark.util.NmsUtils;
 import net.minecraft.server.v1_7_R4.EntityPlayer;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -70,7 +71,7 @@ public final class ProtocolLibHook {
                         if (hcf.getVisualiseHandler().getVisualBlockAt(player, placedLocation) == null) {
                             event.setCancelled(true);
                             player.sendBlockChange(placedLocation, Material.AIR, (byte) 0);
-                            player.setItemInHand(player.getItemInHand()); // send held slot packet again as the client still decrements.
+                            NmsUtils.resendHeldItemPacket(player);
                         }
                     }
                 } catch (FieldAccessException ex) {

@@ -4,11 +4,12 @@ import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
 import com.doctordark.util.cuboid.Cuboid;
-import com.google.common.base.Preconditions;
 import org.bukkit.Location;
 import org.bukkit.World;
 
 import java.util.UUID;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Wrapper for a {@link Claim} selection.
@@ -74,8 +75,12 @@ public class ClaimSelection implements Cloneable {
      * @return the price of this {@link ClaimSelection}
      */
     public int getPrice(PlayerFaction playerFaction, boolean selling) {
-        Preconditions.checkNotNull(playerFaction, "Player faction cannot be null");
-        return pos1 == null || pos2 == null ? 0 : HCF.getPlugin().getClaimHandler().calculatePrice(new Cuboid(pos1, pos2), playerFaction.getClaims().size(), selling);
+        requireNonNull(playerFaction, "Player faction cannot be null");
+        if (pos1 == null || pos2 == null) {
+            return 0;
+        } else {
+            return HCF.getPlugin().getClaimHandler().calculatePrice(new Cuboid(pos1, pos2), playerFaction.getClaims().size(), selling);
+        }
     }
 
     /**
@@ -85,7 +90,7 @@ public class ClaimSelection implements Cloneable {
      * @return the converted {@link Claim} instance
      */
     public Claim toClaim(Faction faction) {
-        Preconditions.checkNotNull(faction, "Faction cannot be null");
+        requireNonNull(faction, "Faction cannot be null");
         return pos1 == null || pos2 == null ? null : new Claim(faction, pos1, pos2);
     }
 
@@ -113,7 +118,7 @@ public class ClaimSelection implements Cloneable {
      * @param location the {@link Location} to set
      */
     public void setPos1(Location location) {
-        Preconditions.checkNotNull(location, "The location cannot be null");
+        requireNonNull(location, "The location cannot be null");
         this.pos1 = location;
         this.lastUpdateMillis = System.currentTimeMillis();
     }
@@ -133,7 +138,7 @@ public class ClaimSelection implements Cloneable {
      * @param location the {@link Location} to set
      */
     public void setPos2(Location location) {
-        Preconditions.checkNotNull(location, "The location is null");
+        requireNonNull(location, "The location is null");
         this.pos2 = location;
         this.lastUpdateMillis = System.currentTimeMillis();
     }

@@ -46,7 +46,7 @@ public class FactionMapArgument extends CommandArgument {
 
         final FactionUser factionUser = plugin.getUserManager().getUser(uuid);
         final VisualType visualType;
-        if (args.length <= 1) {
+        if (args.length < 2) {
             visualType = VisualType.CLAIM_MAP;
         } else if ((visualType = GuavaCompat.getIfPresent(VisualType.class, args[1]).orNull()) == null) {
             player.sendMessage(ChatColor.RED + "Visual type " + args[1] + " not found.");

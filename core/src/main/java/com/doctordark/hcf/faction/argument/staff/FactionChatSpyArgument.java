@@ -7,8 +7,8 @@ import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
 import com.doctordark.hcf.user.FactionUser;
 import com.doctordark.util.command.CommandArgument;
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
-import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -42,9 +42,11 @@ public class FactionChatSpyArgument extends CommandArgument implements Listener 
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
+    private static final Joiner USAGE_JOINER = Joiner.on('|');
+
     @Override
     public String getUsage(String label) {
-        return '/' + label + ' ' + getName() + " <" + StringUtils.join(COMPLETIONS, '|') + "> [factionName]";
+        return '/' + label + ' ' + getName() + " <" + USAGE_JOINER.join(COMPLETIONS) + "> [factionName]";
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -100,7 +102,7 @@ public class FactionChatSpyArgument extends CommandArgument implements Listener 
             }
 
             sender.sendMessage(ChatColor.GRAY + "You are currently spying on the chat of (" + currentSpies.size() + " factions): " + ChatColor.RED +
-                    StringUtils.join(currentSpies, ChatColor.GRAY + ", " + ChatColor.RED) + ChatColor.GRAY + '.');
+                    Joiner.on(ChatColor.GRAY + ", " + ChatColor.RED).join(currentSpies) + ChatColor.GRAY + '.');
 
             return true;
         }

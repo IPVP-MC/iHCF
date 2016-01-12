@@ -17,7 +17,7 @@ public class LoggerSpawnEvent extends Event implements Cancellable {
     }
 
     public LoggerEntity getLoggerEntity() {
-        return this.loggerEntity;
+        return loggerEntity;
     }
 
     @Override

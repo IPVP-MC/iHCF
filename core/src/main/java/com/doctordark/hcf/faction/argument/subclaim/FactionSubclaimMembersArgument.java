@@ -6,7 +6,6 @@ import com.doctordark.hcf.faction.claim.Subclaim;
 import com.doctordark.hcf.faction.struct.Role;
 import com.doctordark.hcf.faction.type.PlayerFaction;
 import com.doctordark.util.command.CommandArgument;
-import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -77,8 +76,9 @@ public class FactionSubclaimMembersArgument extends CommandArgument {
             if (name != null) memberNames.add(target.getName());
         }
 
-        sender.sendMessage(ChatColor.YELLOW + "Non-officers accessible of subclaim " + subclaim.getName() + " (" + memberNames.size() + "): " + ChatColor.AQUA +
-                StringUtils.join(memberNames, ", "));
+        sender.sendMessage(ChatColor.YELLOW + "Non-officers accessible of subclaim " +
+                subclaim.getName() + " (" + memberNames.size() + "): " +
+                ChatColor.AQUA + HCF.COMMA_JOINER.join(memberNames));
 
         return true;
     }

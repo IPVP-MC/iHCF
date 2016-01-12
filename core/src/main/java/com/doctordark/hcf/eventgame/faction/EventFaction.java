@@ -18,7 +18,7 @@ public abstract class EventFaction extends ClaimableFaction {
 
     public EventFaction(String name) {
         super(name);
-        this.setDeathban(true); // make cappable factions death-ban between reloads.
+        setDeathban(true); // make cappable factions death-ban between reloads.
     }
 
     public EventFaction(Map<String, Object> map) {

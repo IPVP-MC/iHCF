@@ -12,9 +12,9 @@ import com.doctordark.hcf.faction.FactionManager;
 import com.doctordark.hcf.faction.claim.Claim;
 import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.util.command.CommandArgument;
+import com.google.common.base.Joiner;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.Selection;
-import org.apache.commons.lang3.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -123,7 +123,7 @@ public class EventSetCapzoneArgument extends CommandArgument {
             ConquestFaction.ConquestZone conquestZone = ConquestFaction.ConquestZone.getByName(args[2]);
             if (conquestZone == null) {
                 sender.sendMessage(ChatColor.RED + "There is no conquest zone named '" + args[2] + "'.");
-                sender.sendMessage(ChatColor.RED + "Did you mean?: " + StringUtils.join(ConquestFaction.ConquestZone.getNames(), ", "));
+                sender.sendMessage(ChatColor.RED + "Did you mean?: " + HCF.COMMA_JOINER.join(ConquestFaction.ConquestZone.getNames()));
                 return true;
             }
 

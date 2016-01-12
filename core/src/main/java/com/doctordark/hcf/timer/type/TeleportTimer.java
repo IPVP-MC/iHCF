@@ -39,7 +39,7 @@ public class TeleportTimer extends PlayerTimer implements Listener {
     @Override
     public void handleExpiry(@Nullable Player player, UUID userUUID) {
         if (player != null) {
-            Location destination = this.destinationMap.remove(userUUID);
+            Location destination = destinationMap.remove(userUUID);
             if (destination != null) {
                 destination.getChunk(); // pre-load the chunk before teleport.
                 player.teleport(destination, PlayerTeleportEvent.TeleportCause.COMMAND);

@@ -1,7 +1,5 @@
 package com.doctordark.hcf.listener;
 
-import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -9,6 +7,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Represents a tool to collect End Frame Portals or Spawners.
@@ -44,7 +44,7 @@ public class Crowbar {
      * @param endFrameUses the amount of End Frame uses to create with
      */
     public Crowbar(int spawnerUses, int endFrameUses) {
-        Preconditions.checkArgument(spawnerUses > 0 || endFrameUses > 0, "Cannot create a crowbar with empty uses");
+        Objects.requireNonNull(spawnerUses > 0 || endFrameUses > 0, "Cannot create a crowbar with empty uses");
         this.stack = new ItemStack(CROWBAR_TYPE, 1);
         this.setSpawnerUses(Math.min(MAX_SPAWNER_USES, spawnerUses));
         this.setEndFrameUses(Math.min(MAX_END_FRAME_USES, endFrameUses));
@@ -58,12 +58,12 @@ public class Crowbar {
      */
     public static Optional<Crowbar> fromStack(ItemStack stack) {
         if (stack == null || !stack.hasItemMeta()) {
-            return Optional.absent();
+            return Optional.empty();
         }
 
         ItemMeta meta = stack.getItemMeta();
         if (!meta.hasDisplayName() || !meta.hasLore() || !meta.getDisplayName().equals(CROWBAR_NAME)) {
-            return Optional.absent();
+            return Optional.empty();
         }
 
         Crowbar crowbar = new Crowbar();
@@ -144,7 +144,7 @@ public class Crowbar {
     /**
      * Converts this {@link Crowbar} to an optional {@link ItemStack}.
      *
-     * @return the converted {@link ItemStack} or an {@link Optional#absent()} if fully used
+     * @return the converted {@link ItemStack} or an {@link Optional#empty()} if fully used
      */
     public Optional<ItemStack> toItemStack() {
         if (needsMetaUpdate) {
@@ -153,14 +153,15 @@ public class Crowbar {
             double increment = curDurability / ((double) Crowbar.MAX_SPAWNER_USES + Crowbar.MAX_END_FRAME_USES);
             curDurability -= increment * ((double) spawnerUses + endFrameUses);
             if (Math.abs(curDurability - maxDurability) == 0) {
-                return Optional.absent();
+                return Optional.empty();
             }
 
             ItemMeta meta = stack.getItemMeta();
             meta.setDisplayName(CROWBAR_NAME);
             meta.setLore(Arrays.asList(
                     String.format(LORE_FORMAT, SPAWNER_USE_TAG, spawnerUses, MAX_SPAWNER_USES),
-                    String.format(LORE_FORMAT, END_FRAME_USE_TAG, endFrameUses, MAX_END_FRAME_USES)));
+                    String.format(LORE_FORMAT, END_FRAME_USE_TAG, endFrameUses, MAX_END_FRAME_USES))
+            );
 
             stack.setItemMeta(meta);
             stack.setDurability((short) curDurability);

@@ -3,13 +3,13 @@ package com.doctordark.hcf.faction.event;
 import com.doctordark.hcf.faction.claim.Claim;
 import com.doctordark.hcf.faction.event.cause.ClaimChangeCause;
 import com.doctordark.hcf.faction.type.ClaimableFaction;
-import com.google.common.base.Preconditions;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * Event called when {@link Claim}s are about to be changed.
@@ -25,11 +25,11 @@ public class FactionClaimChangeEvent extends Event implements Cancellable {
     private final CommandSender sender;
 
     public FactionClaimChangeEvent(CommandSender sender, ClaimChangeCause cause, Collection<Claim> affectedClaims, ClaimableFaction claimableFaction) {
-        Preconditions.checkNotNull(sender, "CommandSender cannot be null");
-        Preconditions.checkNotNull(cause, "Cause cannot be null");
-        Preconditions.checkNotNull(affectedClaims, "Affected claims cannot be null");
-        Preconditions.checkNotNull(affectedClaims.isEmpty(), "Affected claims cannot be empty");
-        Preconditions.checkNotNull(claimableFaction, "ClaimableFaction cannot be null");
+        Objects.requireNonNull(sender, "CommandSender cannot be null");
+        Objects.requireNonNull(cause, "Cause cannot be null");
+        Objects.requireNonNull(affectedClaims, "Affected claims cannot be null");
+        Objects.requireNonNull(affectedClaims.isEmpty(), "Affected claims cannot be empty");
+        Objects.requireNonNull(claimableFaction, "ClaimableFaction cannot be null");
 
         this.sender = sender;
         this.cause = cause;

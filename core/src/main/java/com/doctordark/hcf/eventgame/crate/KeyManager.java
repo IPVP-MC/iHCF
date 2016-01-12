@@ -25,9 +25,11 @@ public class KeyManager {
     private final Config config;
 
     public KeyManager(HCF plugin) {
+        eventKey = new EventKey();
+
         this.config = new Config(plugin, "key-data");
-        this.keys = Sets.newHashSet(this.eventKey = new EventKey());
-        this.reloadKeyData();
+        this.keys = Sets.newHashSet(eventKey);
+        reloadKeyData();
     }
 
     /**
@@ -61,7 +63,7 @@ public class KeyManager {
      * @return the {@link Key} with the name
      */
     public Key getKey(String name) {
-        for (Key key : this.keys) {
+        for (Key key : keys) {
             if (key.getName().equalsIgnoreCase(name)) {
                 return key;
             }
@@ -124,7 +126,7 @@ public class KeyManager {
                 if (object instanceof MemorySection) {
                     section = (MemorySection) object;
                     for (String key : section.getKeys(false)) {
-                        this.depositedCrateMap.put(UUID.fromString(id), key, config.getInt("deposited-key-map." + id + '.' + key));
+                        depositedCrateMap.put(UUID.fromString(id), key, config.getInt("deposited-key-map." + id + '.' + key));
                     }
                 }
             }
@@ -139,8 +141,8 @@ public class KeyManager {
             key.save(config);
         }
 
-        Map<String, Map<String, Integer>> saveMap = new LinkedHashMap<>(this.depositedCrateMap.size());
-        for (Map.Entry<UUID, Map<String, Integer>> entry : this.depositedCrateMap.rowMap().entrySet()) {
+        Map<String, Map<String, Integer>> saveMap = new LinkedHashMap<>(depositedCrateMap.size());
+        for (Map.Entry<UUID, Map<String, Integer>> entry : depositedCrateMap.rowMap().entrySet()) {
             saveMap.put(entry.getKey().toString(), entry.getValue());
         }
 

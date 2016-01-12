@@ -31,11 +31,11 @@ public class LogoutCommand implements CommandExecutor, TabCompleter {
         LogoutTimer logoutTimer = plugin.getTimerManager().getLogoutTimer();
 
         if (!logoutTimer.setCooldown(player, player.getUniqueId())) {
-            sender.sendMessage(ChatColor.RED + "Your " + logoutTimer.getDisplayName() + ChatColor.RED + " timer is already active.");
+            sender.sendMessage(ChatColor.RED + "Your " + logoutTimer.getName() + ChatColor.RED + " timer is already active.");
             return true;
         }
 
-        sender.sendMessage(ChatColor.RED + "Your " + logoutTimer.getDisplayName() + ChatColor.RED + " timer has started.");
+        sender.sendMessage(ChatColor.RED + "Your " + logoutTimer.getName() + ChatColor.RED + " timer has started.");
         return true;
     }
 

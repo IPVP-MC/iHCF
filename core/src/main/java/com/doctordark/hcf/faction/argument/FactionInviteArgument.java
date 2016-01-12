@@ -28,7 +28,7 @@ import static com.doctordark.util.SpigotUtils.toBungee;
  */
 public class FactionInviteArgument extends CommandArgument {
 
-    private static final Pattern USERNAME_REGEX = Pattern.compile("^[a-zA-Z0-9_]{2,16}$");
+    private static final Pattern USERNAME_REGEX = Pattern.compile("^[a-zA-Z0-9_]{2,16}$", Pattern.LITERAL);
 
     private final HCF plugin;
 

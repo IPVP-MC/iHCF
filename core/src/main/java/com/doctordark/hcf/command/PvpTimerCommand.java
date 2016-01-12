@@ -43,11 +43,11 @@ public class PvpTimerCommand implements CommandExecutor, TabCompleter {
 
         if (args[0].equalsIgnoreCase("enable") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("off")) {
             if (pvpTimer.getRemaining(player) <= 0L) {
-                sender.sendMessage(ChatColor.RED + "Your " + pvpTimer.getDisplayName() + ChatColor.RED + " timer is currently not active.");
+                sender.sendMessage(ChatColor.RED + "Your " + pvpTimer.getName() + ChatColor.RED + " timer is currently not active.");
                 return true;
             }
 
-            sender.sendMessage(ChatColor.YELLOW + "Your " + pvpTimer.getDisplayName() + ChatColor.YELLOW + " timer is now off.");
+            sender.sendMessage(ChatColor.YELLOW + "Your " + pvpTimer.getName() + ChatColor.YELLOW + " timer is now off.");
             pvpTimer.clearCooldown(player);
             return true;
         }
@@ -55,11 +55,11 @@ public class PvpTimerCommand implements CommandExecutor, TabCompleter {
         if (args[0].equalsIgnoreCase("remaining") || args[0].equalsIgnoreCase("time") || args[0].equalsIgnoreCase("left") || args[0].equalsIgnoreCase("check")) {
             long remaining = pvpTimer.getRemaining(player);
             if (remaining <= 0L) {
-                sender.sendMessage(ChatColor.RED + "Your " + pvpTimer.getDisplayName() + ChatColor.RED + " timer is currently not active.");
+                sender.sendMessage(ChatColor.RED + "Your " + pvpTimer.getName() + ChatColor.RED + " timer is currently not active.");
                 return true;
             }
 
-            sender.sendMessage(ChatColor.YELLOW + "Your " + pvpTimer.getDisplayName() + ChatColor.YELLOW + " timer is active for another " +
+            sender.sendMessage(ChatColor.YELLOW + "Your " + pvpTimer.getName() + ChatColor.YELLOW + " timer is active for another " +
                     ChatColor.BOLD + DurationFormatter.getRemaining(remaining, true, false) + ChatColor.YELLOW + (pvpTimer.isPaused(player) ? " and is currently paused" : "") + '.');
 
             return true;
@@ -84,8 +84,8 @@ public class PvpTimerCommand implements CommandExecutor, TabCompleter {
      */
     private void printUsage(CommandSender sender, String label, InvincibilityTimer pvpTimer) {
         sender.sendMessage(ChatColor.GOLD + "*** " + pvpTimer.getName() + " Timer Help ***");
-        sender.sendMessage(ChatColor.GRAY + "/" + label + " enable - Removes your " + pvpTimer.getDisplayName() + ChatColor.GRAY + " timer.");
-        sender.sendMessage(ChatColor.GRAY + "/" + label + " time - Check remaining " + pvpTimer.getDisplayName() + ChatColor.GRAY + " time.");
+        sender.sendMessage(ChatColor.GRAY + "/" + label + " enable - Removes your " + pvpTimer.getName() + ChatColor.GRAY + " timer.");
+        sender.sendMessage(ChatColor.GRAY + "/" + label + " time - Check remaining " + pvpTimer.getName() + ChatColor.GRAY + " time.");
         sender.sendMessage(ChatColor.GRAY + "/lives - Life and deathban related commands.");
     }
 }

@@ -9,7 +9,6 @@ import com.doctordark.hcf.faction.type.PlayerFaction;
 import com.doctordark.hcf.visualise.VisualBlockData;
 import com.doctordark.hcf.visualise.VisualType;
 import com.doctordark.util.BukkitUtils;
-import com.google.common.base.Objects;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -20,6 +19,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public class LandMap {
@@ -119,13 +119,13 @@ public class LandMap {
             for (int z = minZ; z < maxZ; z++) {
                 Location atPos = origin.clone().add(x, 0, z);
                 Faction factionAtPos = factionManager.getFactionAt(atPos);
-                if (Objects.equal(factionAtPos, playerFaction) || !(factionAtPos instanceof PlayerFaction)) {
+                if (Objects.equals(factionAtPos, playerFaction) || !(factionAtPos instanceof PlayerFaction)) {
                     return BukkitUtils.getHighestLocation(atPos, atPos);
                 }
 
                 Location atNeg = origin.clone().add(x, 0, z);
                 Faction factionAtNeg = factionManager.getFactionAt(atNeg);
-                if (Objects.equal(factionAtNeg, playerFaction) || !(factionAtNeg instanceof PlayerFaction)) {
+                if (Objects.equals(factionAtNeg, playerFaction) || !(factionAtNeg instanceof PlayerFaction)) {
                     return BukkitUtils.getHighestLocation(atNeg, atNeg);
                 }
             }

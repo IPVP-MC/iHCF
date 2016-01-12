@@ -8,7 +8,6 @@ import com.doctordark.hcf.deathban.lives.argument.LivesGiveArgument;
 import com.doctordark.hcf.deathban.lives.argument.LivesReviveArgument;
 import com.doctordark.hcf.deathban.lives.argument.LivesSetArgument;
 import com.doctordark.hcf.deathban.lives.argument.LivesSetDeathbanTimeArgument;
-import com.doctordark.hcf.deathban.lives.argument.LivesTopArgument;
 import com.doctordark.util.command.ArgumentExecutor;
 
 /**
@@ -26,6 +25,5 @@ public class LivesExecutor extends ArgumentExecutor {
         addArgument(new LivesReviveArgument(plugin));
         addArgument(new LivesSetArgument(plugin));
         addArgument(new LivesSetDeathbanTimeArgument(plugin));
-        addArgument(new LivesTopArgument(plugin));
     }
 }
