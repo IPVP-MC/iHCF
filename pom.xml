@@ -16,8 +16,14 @@
         <module>extra</module>
     </modules>
 
+    <repositories>
+        <repository>
+            <id>maven.sainttx.com-origin</id>
+            <url>http://maven.sainttx.com/artifactory/origin-mc-dev/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
-        <!-- Locally for now -->
         <dependency>
             <groupId>org.github.paperspigot</groupId>
             <artifactId>paperspigot-api</artifactId>
@@ -30,8 +36,6 @@
             <version>1.7.10-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-        <!-- Locally for now -->
-
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
