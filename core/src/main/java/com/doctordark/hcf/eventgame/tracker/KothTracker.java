@@ -39,6 +39,13 @@ public class KothTracker implements EventTracker {
         CaptureZone captureZone = ((KothFaction) eventFaction).getCaptureZone();
         captureZone.updateScoreboardRemaining();
         long remainingMillis = captureZone.getRemainingCaptureMillis();
+
+        if (captureZone.getCappingPlayer() != null
+                && !captureZone.getCuboid().contains(captureZone.getCappingPlayer())) {
+            onControlLoss(captureZone.getCappingPlayer(), captureZone, eventFaction);
+            return;
+        }
+
         if (remainingMillis <= 0L) { // has been captured.
             plugin.getTimerManager().getEventTimer().handleWinner(captureZone.getCappingPlayer());
             eventTimer.clearCooldown();
