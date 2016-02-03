@@ -119,6 +119,11 @@ public class ConquestTracker implements EventTracker, Listener {
             Player cappingPlayer = captureZone.getCappingPlayer();
             if (cappingPlayer == null) continue;
 
+            if (!captureZone.getCuboid().contains(cappingPlayer)) {
+                onControlLoss(cappingPlayer, captureZone, eventFaction);
+                continue;
+            }
+
             // The capture zone has been controlled.
             long remainingMillis = captureZone.getRemainingCaptureMillis();
             if (remainingMillis <= 0L) {
