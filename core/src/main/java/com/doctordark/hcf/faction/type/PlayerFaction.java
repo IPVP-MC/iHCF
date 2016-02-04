@@ -163,7 +163,7 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
         }
 
         // Call pre event.
-        PlayerLeaveFactionEvent preEvent = new PlayerLeaveFactionEvent(sender, player, playerUUID, this, FactionLeaveCause.LEAVE, kick, false);
+        PlayerLeaveFactionEvent preEvent = new PlayerLeaveFactionEvent(sender, player, playerUUID, this, FactionLeaveCause.LEAVE, kick, force);
         Bukkit.getPluginManager().callEvent(preEvent);
         if (preEvent.isCancelled()) {
             return false;
@@ -171,6 +171,9 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
 
         this.members.remove(playerUUID);
         this.setDeathsUntilRaidable(Math.min(this.deathsUntilRaidable, this.getMaximumDeathsUntilRaidable()));
+        if (force) {
+            this.setDeathsUntilRaidable(getDeathsUntilRaidable() - 1);
+        }
 
         // Call after event.
         PlayerLeftFactionEvent event = new PlayerLeftFactionEvent(sender, player, playerUUID, this, FactionLeaveCause.LEAVE, kick, false);
