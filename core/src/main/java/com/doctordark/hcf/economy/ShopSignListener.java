@@ -4,7 +4,7 @@ import com.doctordark.base.BasePlugin;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.listener.Crowbar;
 import com.doctordark.util.InventoryUtils;
-import com.doctordark.util.NmsUtils;
+import com.doctordark.hcf.util.NmsUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;

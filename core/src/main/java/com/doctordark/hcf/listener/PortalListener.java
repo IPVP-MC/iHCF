@@ -2,7 +2,7 @@ package com.doctordark.hcf.listener;
 
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.timer.PlayerTimer;
-import com.doctordark.util.DurationFormatter;
+import com.doctordark.hcf.util.DurationFormatter;
 import gnu.trove.map.TObjectLongMap;
 import gnu.trove.map.hash.TObjectLongHashMap;
 import org.bukkit.ChatColor;

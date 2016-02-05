@@ -1,4 +1,4 @@
-package com.doctordark.util;
+package com.doctordark.hcf.util;
 
 import javax.annotation.Nonnull;
 import java.io.Serializable;

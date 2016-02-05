@@ -9,7 +9,7 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.FieldAccessException;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.doctordark.hcf.HCF;
-import com.doctordark.util.NmsUtils;
+import com.doctordark.hcf.util.NmsUtils;
 import net.minecraft.server.v1_7_R4.EntityPlayer;
 import org.bukkit.GameMode;
 import org.bukkit.Location;

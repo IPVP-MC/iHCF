@@ -2,8 +2,8 @@ package com.doctordark.hcf.deathban;
 
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.user.FactionUser;
-import com.doctordark.util.DelayedMessageRunnable;
-import com.doctordark.util.DurationFormatter;
+import com.doctordark.hcf.util.DelayedMessageRunnable;
+import com.doctordark.hcf.util.DurationFormatter;
 import net.minecraft.util.gnu.trove.map.TObjectIntMap;
 import net.minecraft.util.gnu.trove.map.TObjectLongMap;
 import net.minecraft.util.gnu.trove.map.hash.TObjectIntHashMap;

@@ -1,4 +1,4 @@
-package com.doctordark.util;
+package com.doctordark.hcf.util;
 
 public class SpigotUtils {
 

@@ -1,4 +1,4 @@
-package com.doctordark.util;
+package com.doctordark.hcf.util;
 
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;

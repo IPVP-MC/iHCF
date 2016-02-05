@@ -2,7 +2,7 @@ package com.doctordark.hcf.timer.type;
 
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.timer.PlayerTimer;
-import com.doctordark.util.DurationFormatter;
+import com.doctordark.hcf.util.DurationFormatter;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;

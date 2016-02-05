@@ -1,4 +1,4 @@
-package com.doctordark.util;
+package com.doctordark.hcf.util;
 
 import com.doctordark.hcf.HCF;
 import net.minecraft.server.v1_7_R4.EntityPlayer;

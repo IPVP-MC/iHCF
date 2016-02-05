@@ -3,7 +3,7 @@ package com.doctordark.hcf.timer.argument;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.timer.PlayerTimer;
 import com.doctordark.hcf.timer.Timer;
-import com.doctordark.util.UUIDFetcher;
+import com.doctordark.hcf.util.UUIDFetcher;
 import com.doctordark.util.command.CommandArgument;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.ChatColor;
