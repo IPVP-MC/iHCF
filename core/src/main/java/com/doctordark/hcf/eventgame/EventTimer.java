@@ -205,7 +205,7 @@ public class EventTimer extends GlobalTimer implements Listener {
         for (CaptureZone captureZone : captureZones) {
             if (captureZone.isActive()) {
                 Player player = Iterables.getFirst(captureZone.getCuboid().getPlayers(), null);
-                if (player != null && eventFaction.getEventType().getEventTracker().onControlTake(player, captureZone)) {
+                if (player != null && eventFaction.getEventType().getEventTracker().onControlTake(player, captureZone, eventFaction)) {
                     captureZone.setCappingPlayer(player);
                 }
             }
@@ -268,7 +268,7 @@ public class EventTimer extends GlobalTimer implements Listener {
             CaptureZone captureZone = event.getCaptureZone();
             if (eventFaction.getCaptureZones().contains(captureZone)) {
                 Player player = event.getPlayer();
-                if (captureZone.getCappingPlayer() == null && eventFaction.getEventType().getEventTracker().onControlTake(player, captureZone)) {
+                if (captureZone.getCappingPlayer() == null && eventFaction.getEventType().getEventTracker().onControlTake(player, captureZone, eventFaction)) {
                     captureZone.setCappingPlayer(player);
                 }
             }
@@ -286,7 +286,7 @@ public class EventTimer extends GlobalTimer implements Listener {
 
                 // Try and find a new capper.
                 for (Player target : captureZone.getCuboid().getPlayers()) {
-                    if (target != null && !target.equals(player) && eventFaction.getEventType().getEventTracker().onControlTake(target, captureZone)) {
+                    if (target != null && !target.equals(player) && eventFaction.getEventType().getEventTracker().onControlTake(target, captureZone, eventFaction)) {
                         captureZone.setCappingPlayer(target);
                         break;
                     }

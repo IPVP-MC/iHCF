@@ -42,6 +42,7 @@ public class KothTracker implements EventTracker {
 
         if (captureZone.getCappingPlayer() != null
                 && !captureZone.getCuboid().contains(captureZone.getCappingPlayer())) {
+            captureZone.setCappingPlayer(null);
             onControlLoss(captureZone.getCappingPlayer(), captureZone, eventFaction);
             return;
         }
@@ -70,8 +71,12 @@ public class KothTracker implements EventTracker {
     }
 
     @Override
-    public boolean onControlTake(Player player, CaptureZone captureZone) {
+    public boolean onControlTake(Player player, CaptureZone captureZone, EventFaction eventFaction) {
         player.sendMessage(ChatColor.DARK_AQUA + "You are now in control of " + ChatColor.BLUE + captureZone.getDisplayName() + ChatColor.DARK_AQUA + '.');
+        Bukkit.broadcastMessage(ChatColor.GOLD + "[" + eventFaction.getEventType().getDisplayName() + "] " +
+                ChatColor.DARK_AQUA + "Someone" + ChatColor.BLUE + " is in control of " +
+                ChatColor.DARK_AQUA + captureZone.getDisplayName() + ChatColor.BLUE + '.' +
+                ChatColor.RED + " (" + captureZone.getScoreboardRemaining() + ')');
         return true;
     }
 
@@ -81,12 +86,12 @@ public class KothTracker implements EventTracker {
 
         // Only broadcast if the KOTH has been controlled for at least 25 seconds to prevent spam.
         long remainingMillis = captureZone.getRemainingCaptureMillis();
-        if (remainingMillis > 0L && captureZone.getDefaultCaptureMillis() - remainingMillis > MINIMUM_CONTROL_TIME_ANNOUNCE) {
+        // if (remainingMillis > 0L && captureZone.getDefaultCaptureMillis() - remainingMillis > MINIMUM_CONTROL_TIME_ANNOUNCE) {
             Bukkit.broadcastMessage(ChatColor.GOLD + "[" + eventFaction.getEventType().getDisplayName() + "] " +
                     ChatColor.DARK_AQUA + player.getName() + ChatColor.BLUE + " has lost control of " +
                     ChatColor.DARK_AQUA + captureZone.getDisplayName() + ChatColor.BLUE + '.' +
                     ChatColor.RED + " (" + captureZone.getScoreboardRemaining() + ')');
-        }
+//        }
     }
 
     @Override

@@ -29,7 +29,7 @@ public class EotwHandler {
     public static final long EOTW_WARMUP_WAIT_MILLIS = TimeUnit.SECONDS.toMillis(30L);
     public static final int EOTW_WARMUP_WAIT_SECONDS = (int) (TimeUnit.MILLISECONDS.toSeconds(EOTW_WARMUP_WAIT_MILLIS));
 
-    private static final long EOTW_CAPPABLE_WAIT_MILLIS = TimeUnit.MINUTES.toMillis(40L);
+    private static final long EOTW_CAPPABLE_WAIT_MILLIS = TimeUnit.SECONDS.toMillis(30L);
     private static final int WITHER_INTERVAL_SECONDS = 10;
 
     private EotwRunnable runnable;

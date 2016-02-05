@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import static com.doctordark.hcf.util.SpigotUtils.toBungee;
 
@@ -28,14 +27,12 @@ import static com.doctordark.hcf.util.SpigotUtils.toBungee;
  */
 public class FactionInviteArgument extends CommandArgument {
 
-    private static final Pattern USERNAME_REGEX = Pattern.compile("^[a-zA-Z0-9_]{2,16}$", Pattern.LITERAL);
-
     private final HCF plugin;
 
     public FactionInviteArgument(HCF plugin) {
         super("invite", "Invite a player to the faction.");
         this.plugin = plugin;
-        this.aliases = new String[]{"inv", "invitemember", "inviteplayer"};
+        this.aliases = new String[]{ "inv", "invitemember", "inviteplayer" };
     }
 
     @Override
@@ -55,8 +52,9 @@ public class FactionInviteArgument extends CommandArgument {
             return true;
         }
 
-        if (!USERNAME_REGEX.matcher(args[1]).matches()) {
-            sender.sendMessage(ChatColor.RED + "'" + args[1] + "' is an invalid username.");
+        Player target = Bukkit.getPlayer(args[1]);
+        if (target == null) {
+            sender.sendMessage(ChatColor.RED + "That player is not online.");
             return true;
         }
 
@@ -74,10 +72,9 @@ public class FactionInviteArgument extends CommandArgument {
         }
 
         Set<String> invitedPlayerNames = playerFaction.getInvitedPlayerNames();
-        String name = args[1];
 
-        if (playerFaction.getMember(name) != null) {
-            sender.sendMessage(ChatColor.RED + "'" + name + "' is already in your faction.");
+        if (playerFaction.getMember(target) != null) {
+            sender.sendMessage(ChatColor.RED + "'" + target.getName() + "' is already in your faction.");
             return true;
         }
 
@@ -86,29 +83,24 @@ public class FactionInviteArgument extends CommandArgument {
             return true;
         }
 
-        if (!invitedPlayerNames.add(name)) {
-            sender.sendMessage(ChatColor.RED + name + " has already been invited.");
+        if (!invitedPlayerNames.add(target.getName())) {
+            sender.sendMessage(ChatColor.RED + target.getName() + " has already been invited.");
             return true;
         }
 
-        Player target = Bukkit.getPlayer(name);
-        if (target != null) {
-            name = target.getName(); // fix casing.
+        net.md_5.bungee.api.ChatColor enemyRelationColor = toBungee(Relation.ENEMY.toChatColour());
+        ComponentBuilder builder = new ComponentBuilder(sender.getName()).color(enemyRelationColor);
+        builder.append(" has invited you to join ", ComponentBuilder.FormatRetention.NONE).color(net.md_5.bungee.api.ChatColor.YELLOW);
+        builder.append(playerFaction.getName()).color(enemyRelationColor).append(". ", ComponentBuilder.FormatRetention.NONE).color(net.md_5.bungee.api.ChatColor.YELLOW);
+        builder.append("Click here").color(net.md_5.bungee.api.ChatColor.GREEN).
+                event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/" + label + " accept " + playerFaction.getName())).
+                event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click to join ").color(net.md_5.bungee.api.ChatColor.AQUA).
+                        append(playerFaction.getName(), ComponentBuilder.FormatRetention.NONE).color(enemyRelationColor).
+                        append(".", ComponentBuilder.FormatRetention.NONE).color(net.md_5.bungee.api.ChatColor.AQUA).create()));
+        builder.append(" to accept this invitation.", ComponentBuilder.FormatRetention.NONE).color(net.md_5.bungee.api.ChatColor.YELLOW);
+        target.spigot().sendMessage(builder.create());
+        playerFaction.broadcast(Relation.MEMBER.toChatColour() + sender.getName() + ChatColor.YELLOW + " has invited " + Relation.ENEMY.toChatColour() + target.getName() + ChatColor.YELLOW + " into the faction.");
 
-            net.md_5.bungee.api.ChatColor enemyRelationColor = toBungee(Relation.ENEMY.toChatColour());
-            ComponentBuilder builder = new ComponentBuilder(sender.getName()).color(enemyRelationColor);
-            builder.append(" has invited you to join ", ComponentBuilder.FormatRetention.NONE).color(net.md_5.bungee.api.ChatColor.YELLOW);
-            builder.append(playerFaction.getName()).color(enemyRelationColor).append(". ", ComponentBuilder.FormatRetention.NONE).color(net.md_5.bungee.api.ChatColor.YELLOW);
-            builder.append("Click here").color(net.md_5.bungee.api.ChatColor.GREEN).
-                    event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/" + label + " accept " + playerFaction.getName())).
-                    event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click to join ").color(net.md_5.bungee.api.ChatColor.AQUA).
-                            append(playerFaction.getName(), ComponentBuilder.FormatRetention.NONE).color(enemyRelationColor).
-                            append(".", ComponentBuilder.FormatRetention.NONE).color(net.md_5.bungee.api.ChatColor.AQUA).create()));
-            builder.append(" to accept this invitation.", ComponentBuilder.FormatRetention.NONE).color(net.md_5.bungee.api.ChatColor.YELLOW);
-            target.spigot().sendMessage(builder.create());
-        }
-
-        playerFaction.broadcast(Relation.MEMBER.toChatColour() + sender.getName() + ChatColor.YELLOW + " has invited " + Relation.ENEMY.toChatColour() + name + ChatColor.YELLOW + " into the faction.");
         return true;
     }
 

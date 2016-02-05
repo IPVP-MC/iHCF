@@ -27,7 +27,7 @@ public interface EventTracker {
 
     void onContest(EventFaction eventFaction, EventTimer eventTimer);
 
-    boolean onControlTake(Player player, CaptureZone captureZone);
+    boolean onControlTake(Player player, CaptureZone captureZone, EventFaction eventFaction);
 
     void onControlLoss(Player player, CaptureZone captureZone, EventFaction eventFaction);
 
