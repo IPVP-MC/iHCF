@@ -355,12 +355,12 @@ public class ProtectionListener implements Listener {
                         event.setCancelled(true);
                     } else if (attackerFaction.getAllied().contains(playerFaction.getUniqueID())) {
                         ChatColor color = plugin.getConfiguration().getRelationColourAlly();
-                        if (plugin.getConfiguration().isPreventAllyAttackDamage()) {
-                            event.setCancelled(true);
-                            attacker.sendMessage(color + hiddenAstrixedName + ChatColor.YELLOW + " is an ally.");
-                        } else {
-                            attacker.sendMessage(ChatColor.YELLOW + "Careful! " + color + hiddenAstrixedName + ChatColor.YELLOW + " is an ally.");
-                        }
+                        // if (plugin.getConfiguration().isPreventAllyAttackDamage()) {
+                        //    event.setCancelled(true);
+                        //    attacker.sendMessage(color + hiddenAstrixedName + ChatColor.YELLOW + " is an ally.");
+                        // } else {
+                        attacker.sendMessage(ChatColor.YELLOW + "Careful! " + color + hiddenAstrixedName + ChatColor.YELLOW + " is an ally.");
+                        // }
                     }
                 }
             }
