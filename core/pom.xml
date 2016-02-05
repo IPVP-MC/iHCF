@@ -52,7 +52,8 @@
             <groupId>com.gmail.xd.zwander.istaff</groupId>
             <artifactId>iStaff</artifactId>
             <version>1.0</version>
-            <scope>provided</scope>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/../libs/iStaff.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.sk89q</groupId>

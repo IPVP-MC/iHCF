@@ -2,7 +2,7 @@ name: ${project.name}
 version: ${project.version} (Build ${git.commit.id.abbrev}, ${git.commit.time})
 description: ${project.description}
 author: DoctorDark
-main: com.doctordark.hcfextra.HCFExtra
+main: org.ipvp.hcfextra.HCFExtra
 commands:
   coords:
     description: Shows co-ordinates for events.
