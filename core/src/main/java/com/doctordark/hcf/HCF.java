@@ -52,7 +52,7 @@ import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
 import com.doctordark.hcf.faction.type.RoadFaction;
 import com.doctordark.hcf.faction.type.SpawnFaction;
-import com.doctordark.hcf.listener.BookDeenchantListener;
+import com.doctordark.hcf.listener.BookDisenchantListener;
 import com.doctordark.hcf.listener.BottledExpListener;
 import com.doctordark.hcf.listener.ChatListener;
 import com.doctordark.hcf.listener.CoreListener;
@@ -303,7 +303,7 @@ public class HCF extends JavaPlugin {
         manager.registerEvents(new BlockHitFixListener(), this);
         manager.registerEvents(new BlockJumpGlitchFixListener(), this);
         manager.registerEvents(new BoatGlitchFixListener(this), this);
-        manager.registerEvents(new BookDeenchantListener(this), this);
+        manager.registerEvents(new BookDisenchantListener(this), this);
         manager.registerEvents(new BottledExpListener(this), this);
         manager.registerEvents(new ChatListener(this), this);
         manager.registerEvents(new ClaimWandListener(this), this);
