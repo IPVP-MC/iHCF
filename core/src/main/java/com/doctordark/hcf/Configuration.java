@@ -64,8 +64,8 @@ public class Configuration extends AnnotationConfig {
     @Setting("bottledExp")
     private boolean bottledExp = true;
 
-    @Setting("bookDeenchanting")
-    private boolean bookDeenchanting = true;
+    @Setting("bookDisenchanting")
+    private boolean bookDisenchanting = true;
 
     @Setting("deathSigns")
     private boolean deathSigns = true;

@@ -23,7 +23,7 @@ public class BookDisenchantListener implements Listener {
     public void disenchantBook(PlayerInteractEvent event) {
         // Do nothing if disenchanting is disabled in configuration or player
         // is not left clicking an enchantment table.
-        if (!plugin.getConfiguration().isBookDeenchanting() ||
+        if (!plugin.getConfiguration().isBookDisenchanting() ||
                 event.getAction() != Action.LEFT_CLICK_BLOCK ||
                 event.getClickedBlock().getType() != Material.ENCHANTMENT_TABLE) {
             return;
