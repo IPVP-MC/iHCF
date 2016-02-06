@@ -164,7 +164,7 @@ public class ConquestTracker implements EventTracker, Listener {
     }
 
     @Override
-    public boolean onControlTake(Player player, CaptureZone captureZone) {
+    public boolean onControlTake(Player player, CaptureZone captureZone, EventFaction eventFaction) {
         if (plugin.getFactionManager().getPlayerFaction(player.getUniqueId()) == null) {
             player.sendMessage(ChatColor.RED + "You must be in a faction to capture for Conquest.");
             return false;
