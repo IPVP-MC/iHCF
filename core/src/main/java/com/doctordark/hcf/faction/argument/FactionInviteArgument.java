@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import static com.doctordark.util.SpigotUtils.toBungee;
+import static com.doctordark.hcf.util.SpigotUtils.toBungee;
 
 /**
  * Faction argument used to invite players into {@link Faction}s.

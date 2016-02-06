@@ -3,7 +3,7 @@ package com.doctordark.hcf.eventgame.eotw;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.type.ClaimableFaction;
 import com.doctordark.hcf.faction.type.Faction;
-import com.doctordark.util.DurationFormatter;
+import com.doctordark.hcf.util.DurationFormatter;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

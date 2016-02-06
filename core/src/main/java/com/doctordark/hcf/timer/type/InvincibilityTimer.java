@@ -14,7 +14,7 @@ import com.doctordark.hcf.timer.TimerCooldown;
 import com.doctordark.hcf.timer.event.TimerClearEvent;
 import com.doctordark.hcf.visualise.VisualType;
 import com.doctordark.util.BukkitUtils;
-import com.doctordark.util.DurationFormatter;
+import com.doctordark.hcf.util.DurationFormatter;
 import net.minecraft.util.gnu.trove.map.TObjectLongMap;
 import net.minecraft.util.gnu.trove.map.hash.TObjectLongHashMap;
 import org.apache.commons.lang3.time.DurationFormatUtils;

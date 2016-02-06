@@ -3,7 +3,7 @@ package com.doctordark.hcf.command;
 import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.timer.type.InvincibilityTimer;
 import com.doctordark.util.BukkitUtils;
-import com.doctordark.util.DurationFormatter;
+import com.doctordark.hcf.util.DurationFormatter;
 import com.google.common.collect.ImmutableList;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

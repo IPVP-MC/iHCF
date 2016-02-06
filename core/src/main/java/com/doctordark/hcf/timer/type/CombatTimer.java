@@ -9,7 +9,7 @@ import com.doctordark.hcf.timer.TimerCooldown;
 import com.doctordark.hcf.timer.event.TimerStartEvent;
 import com.doctordark.hcf.visualise.VisualType;
 import com.doctordark.util.BukkitUtils;
-import com.doctordark.util.DurationFormatter;
+import com.doctordark.hcf.util.DurationFormatter;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;

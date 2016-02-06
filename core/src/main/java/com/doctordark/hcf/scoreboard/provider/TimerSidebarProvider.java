@@ -18,7 +18,7 @@ import com.doctordark.hcf.scoreboard.SidebarProvider;
 import com.doctordark.hcf.sotw.SotwTimer;
 import com.doctordark.hcf.timer.PlayerTimer;
 import com.doctordark.hcf.timer.Timer;
-import com.doctordark.util.DurationFormatter;
+import com.doctordark.hcf.util.DurationFormatter;
 import com.google.common.collect.Ordering;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

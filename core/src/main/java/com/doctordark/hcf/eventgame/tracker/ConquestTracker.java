@@ -10,7 +10,7 @@ import com.doctordark.hcf.eventgame.faction.EventFaction;
 import com.doctordark.hcf.faction.event.FactionRemoveEvent;
 import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
-import com.doctordark.util.ConcurrentValueOrderedMap;
+import com.doctordark.hcf.util.ConcurrentValueOrderedMap;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
