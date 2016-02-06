@@ -328,7 +328,7 @@ public class HCF extends JavaPlugin {
         manager.registerEvents(new SubclaimWandListener(this), this);
         manager.registerEvents(new SignSubclaimListener(this), this);
         manager.registerEvents(new ShopSignListener(this), this);
-        manager.registerEvents(new SkullListener(this), this);
+        manager.registerEvents(new SkullListener(), this);
         manager.registerEvents(new SotwListener(this), this);
         manager.registerEvents(new BeaconStrengthFixListener(this), this);
         manager.registerEvents(new VoidGlitchFixListener(), this);

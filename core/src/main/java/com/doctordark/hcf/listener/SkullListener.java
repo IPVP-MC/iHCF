@@ -1,11 +1,9 @@
 package com.doctordark.hcf.listener;
 
-import com.doctordark.hcf.HCF;
-import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
-import org.bukkit.block.BlockState;
+import org.bukkit.block.Block;
 import org.bukkit.block.Skull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,20 +17,12 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 public class SkullListener implements Listener {
 
-    private static final String KILL_BEHEAD_PERMISSION = "hcf.kill.behead";
-
-    private final HCF plugin;
-
-    public SkullListener(HCF plugin) {
-        this.plugin = plugin;
-    }
-
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-    public void onPlayerDeath(PlayerDeathEvent event) {
+    public void dropPlayerSkull(PlayerDeathEvent event) {
         Player player = event.getEntity();
         Player killer = player.getKiller();
-        if (killer != null && killer.hasPermission(KILL_BEHEAD_PERMISSION)) {
-            ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, SkullType.PLAYER.getData());
+        if (killer != null && killer.hasPermission("hcf.kill.behead")) {
+            ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (byte) 3);
             SkullMeta meta = (SkullMeta) skull.getItemMeta();
             meta.setOwner(player.getName());
             skull.setItemMeta(meta);
@@ -41,14 +31,15 @@ public class SkullListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onPlayerInteract(PlayerInteractEvent event) {
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            Player player = event.getPlayer();
-            BlockState state = event.getClickedBlock().getState();
-            if (state instanceof Skull) {
-                Skull skull = (Skull) state;
-                player.sendMessage(ChatColor.AQUA + "This is " + ChatColor.YELLOW + (skull.getSkullType() == SkullType.PLAYER && skull.hasOwner() ?
-                        skull.getOwner() : "a " + WordUtils.capitalizeFully(skull.getSkullType().name()) + " skull") + ChatColor.AQUA + '.');
+    public void showPlayerSkullInformation(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        Block block = event.getClickedBlock();
+
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK
+                && block.getState() instanceof Skull) {
+            Skull skull = (Skull) block.getState();
+            if (skull.getSkullType() == SkullType.PLAYER) {
+                player.sendMessage(ChatColor.YELLOW + "This is the skull of " + skull.getOwner());
             }
         }
     }
