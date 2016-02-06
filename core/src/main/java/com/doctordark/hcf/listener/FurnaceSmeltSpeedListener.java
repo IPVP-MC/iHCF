@@ -10,11 +10,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-public class FurnaceSmeltSpeederListener implements Listener {
+public class FurnaceSmeltSpeedListener implements Listener {
 
     private final HCF plugin;
 
-    public FurnaceSmeltSpeederListener(HCF plugin) {
+    public FurnaceSmeltSpeedListener(HCF plugin) {
         this.plugin = plugin;
     }
 
