@@ -22,7 +22,6 @@ import org.bukkit.plugin.PluginManager;
 import java.util.Collection;
 import java.util.Set;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ChatListener implements Listener {
 
@@ -83,24 +82,17 @@ public class ChatListener implements Listener {
         }
     }
 
-    private static final Pattern
-            FACTION_TAG_REPLACER = Pattern.compile("\\{FACTION}", Pattern.LITERAL),
-            CAPPER_PREFIX_REPLACER = Pattern.compile("\\{EOTWCAPPERPREFIX}", Pattern.LITERAL),
-            DISPLAY_NAME_REPLACER = Pattern.compile("\\{DISPLAYNAME}", Pattern.LITERAL),
-            MESSAGE_REPLACER = Pattern.compile("\\{MESSAGE}", Pattern.LITERAL);
-
     private String getChatFormat(Player player, PlayerFaction playerFaction, CommandSender viewer) {
         String factionTag = playerFaction == null ? ChatColor.RED + Faction.FACTIONLESS_PREFIX : playerFaction.getDisplayName(viewer);
         String capperTag = plugin.getConfiguration().getEotwLastMapCapperUuids().contains(player.getUniqueId().toString()) ? plugin.getConfiguration().getEotwChatSymbolPrefix() : "";
         String result;
         if (this.essentials != null) {
             User user = this.essentials.getUser(player);
-            result = this.essentials.getSettings().getChatFormat(user.getGroup());
-
-            result = FACTION_TAG_REPLACER.matcher(result).replaceAll(Matcher.quoteReplacement(factionTag));
-            result = CAPPER_PREFIX_REPLACER.matcher(result).replaceAll(Matcher.quoteReplacement(capperTag));
-            result = DISPLAY_NAME_REPLACER.matcher(result).replaceAll(Matcher.quoteReplacement(user.getDisplayName()));
-            result = MESSAGE_REPLACER.matcher(result).replaceAll(Matcher.quoteReplacement("%2$s"));
+            result = this.essentials.getSettings().getChatFormat(user.getGroup())
+                    .replace("{FACTION}", Matcher.quoteReplacement(factionTag))
+                    .replace("{EOTWCAPPERPREFIX}", Matcher.quoteReplacement(capperTag))
+                    .replace("{DISPLAYNAME}", Matcher.quoteReplacement(user.getDisplayName()))
+                    .replace("{MESSAGE}", Matcher.quoteReplacement("%2$s"));
         } else {
             result = ChatColor.GOLD + "[" + factionTag + ChatColor.GOLD + "] " + capperTag + "%1$s" + ChatColor.GRAY + ": " + ChatColor.WHITE + "%2$s";
         }
@@ -117,7 +109,7 @@ public class ChatListener implements Listener {
     private boolean isGlobalChannel(String input) {
         int length = input.length();
         if (length > 1 && input.startsWith("!")) {
-            for (int i = 1; i < length; i++) {
+            for (int i = 1 ; i < length ; i++) {
                 char character = input.charAt(i);
 
                 // Ignore whitespace to prevent blank messages
