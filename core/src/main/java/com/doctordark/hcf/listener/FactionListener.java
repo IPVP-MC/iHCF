@@ -171,7 +171,7 @@ public class FactionListener implements Listener {
         if (optionalPlayer.isPresent()) {
             Player player = optionalPlayer.get();
 
-            if (!plugin.getConfiguration().isKitMap() && !plugin.getEotwHandler().isEndOfTheWorld() && playerFaction.getRegenStatus() == RegenStatus.PAUSED) {
+            if (!plugin.getEotwHandler().isEndOfTheWorld() && playerFaction.getRegenStatus() == RegenStatus.PAUSED) {
                 event.setCancelled(true);
                 player.sendMessage(ChatColor.RED + "You cannot join factions that are not regenerating DTR.");
                 return;

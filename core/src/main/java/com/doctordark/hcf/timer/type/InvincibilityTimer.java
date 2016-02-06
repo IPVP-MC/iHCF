@@ -315,6 +315,6 @@ public class InvincibilityTimer extends PlayerTimer implements Listener {
     }
 
     private boolean canApply() {
-        return !plugin.getEotwHandler().isEndOfTheWorld() && !HCF.getPlugin().getConfiguration().isKitMap() && plugin.getSotwTimer().getSotwRunnable() == null;
+        return !plugin.getEotwHandler().isEndOfTheWorld() && plugin.getSotwTimer().getSotwRunnable() == null;
     }
 }

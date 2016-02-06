@@ -295,7 +295,7 @@ public class SignSubclaimListener implements Listener {
                 return;
             }
 
-            if (plugin.getEotwHandler().isEndOfTheWorld() || plugin.getConfiguration().isKitMap()) {
+            if (plugin.getEotwHandler().isEndOfTheWorld()) {
                 return;
             }
 

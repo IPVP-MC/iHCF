@@ -65,7 +65,6 @@ import com.doctordark.hcf.listener.EventSignListener;
 import com.doctordark.hcf.listener.ExpMultiplierListener;
 import com.doctordark.hcf.listener.FactionListener;
 import com.doctordark.hcf.listener.FurnaceSmeltSpeederListener;
-import com.doctordark.hcf.listener.KitMapListener;
 import com.doctordark.hcf.listener.PortalListener;
 import com.doctordark.hcf.listener.PotionLimitListener;
 import com.doctordark.hcf.listener.ProtectionListener;
@@ -322,7 +321,6 @@ public class HCF extends JavaPlugin {
         manager.registerEvents(new FurnaceSmeltSpeederListener(this), this);
         manager.registerEvents(new InfinityArrowFixListener(this), this);
         manager.registerEvents(new KeyListener(this), this);
-        manager.registerEvents(new KitMapListener(this), this);
         manager.registerEvents(new PearlGlitchListener(this), this);
         manager.registerEvents(new PortalListener(this), this);
         manager.registerEvents(new PotionLimitListener(this), this);

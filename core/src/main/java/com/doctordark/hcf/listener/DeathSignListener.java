@@ -117,7 +117,7 @@ public class DeathSignListener implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
         Player killer = player.getKiller();
-        if (killer != null && !killer.equals(player) && !plugin.getConfiguration().isKitMap()) {
+        if (killer != null && !killer.equals(player)) {
             event.getDrops().add(getDeathSign(player.getName(), killer.getName()));
         }
     }

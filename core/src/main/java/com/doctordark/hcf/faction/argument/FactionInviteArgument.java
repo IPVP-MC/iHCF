@@ -78,7 +78,7 @@ public class FactionInviteArgument extends CommandArgument {
             return true;
         }
 
-        if (!plugin.getConfiguration().isKitMap() && !plugin.getEotwHandler().isEndOfTheWorld() && playerFaction.isRaidable()) {
+        if (!plugin.getEotwHandler().isEndOfTheWorld() && playerFaction.isRaidable()) {
             sender.sendMessage(ChatColor.RED + "You may not invite players whilst your faction is raidable.");
             return true;
         }

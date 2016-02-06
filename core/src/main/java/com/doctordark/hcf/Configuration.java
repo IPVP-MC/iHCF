@@ -76,9 +76,6 @@ public class Configuration extends AnnotationConfig {
     @Setting("mapNumber")
     private int mapNumber = 1;
 
-    @Setting("kitMap")
-    private boolean kitMap = false;
-
     @Setting("preventAllyDamage")
     private boolean preventAllyAttackDamage = true;
 

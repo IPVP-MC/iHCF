@@ -38,7 +38,7 @@ public class FactionDisbandArgument extends CommandArgument {
             return true;
         }
 
-        if (playerFaction.isRaidable() && !plugin.getConfiguration().isKitMap() && !plugin.getEotwHandler().isEndOfTheWorld()) {
+        if (playerFaction.isRaidable() && !plugin.getEotwHandler().isEndOfTheWorld()) {
             sender.sendMessage(ChatColor.RED + "You cannot disband your faction while it is raidable.");
             return true;
         }

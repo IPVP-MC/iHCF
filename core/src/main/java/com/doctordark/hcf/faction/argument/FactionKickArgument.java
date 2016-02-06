@@ -52,7 +52,7 @@ public class FactionKickArgument extends CommandArgument {
             return true;
         }
 
-        if (playerFaction.isRaidable() && !plugin.getConfiguration().isKitMap() && !plugin.getEotwHandler().isEndOfTheWorld()) {
+        if (playerFaction.isRaidable() && !plugin.getEotwHandler().isEndOfTheWorld()) {
             sender.sendMessage(ChatColor.RED + "You cannot kick players whilst your faction is raidable.");
             return true;
         }

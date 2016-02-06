@@ -29,16 +29,14 @@ public class SkullListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onPlayerDeath(PlayerDeathEvent event) {
-        if (!plugin.getConfiguration().isKitMap()) {
-            Player player = event.getEntity();
-            Player killer = player.getKiller();
-            if (killer != null && killer.hasPermission(KILL_BEHEAD_PERMISSION)) {
-                ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, SkullType.PLAYER.getData());
-                SkullMeta meta = (SkullMeta) skull.getItemMeta();
-                meta.setOwner(player.getName());
-                skull.setItemMeta(meta);
-                event.getDrops().add(skull);
-            }
+        Player player = event.getEntity();
+        Player killer = player.getKiller();
+        if (killer != null && killer.hasPermission(KILL_BEHEAD_PERMISSION)) {
+            ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, SkullType.PLAYER.getData());
+            SkullMeta meta = (SkullMeta) skull.getItemMeta();
+            meta.setOwner(player.getName());
+            skull.setItemMeta(meta);
+            event.getDrops().add(skull);
         }
     }
 

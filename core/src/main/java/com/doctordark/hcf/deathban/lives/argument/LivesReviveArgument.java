@@ -70,11 +70,6 @@ public class LivesReviveArgument extends CommandArgument {
         Relation relation = Relation.ENEMY;
         if (sender instanceof Player) {
             if (!sender.hasPermission(REVIVE_BYPASS_PERMISSION)) {
-                if (plugin.getConfiguration().isKitMap()) {
-                    sender.sendMessage(ChatColor.RED + "You cannot revive players during a kit map.");
-                    return true;
-                }
-
                 if (plugin.getEotwHandler().isEndOfTheWorld()) {
                     sender.sendMessage(ChatColor.RED + "You cannot revive players during EOTW.");
                     return true;
