@@ -64,7 +64,8 @@ public class CoreListener implements Listener {
                 event.setCancelled(true);
                 player.sendMessage(ChatColor.RED + "You cannot place beds in the nether.");
             }
-        } else if (plugin.getConfiguration().isSpawnersPreventPlacingNether()) {
+        }
+        if (plugin.getConfiguration().isSpawnersPreventPlacingNether()) {
             if (player.getWorld().getEnvironment() == World.Environment.NETHER && event.getBlock().getState() instanceof CreatureSpawner &&
                     !player.hasPermission(ProtectionListener.PROTECTION_BYPASS_PERMISSION)) {
 
