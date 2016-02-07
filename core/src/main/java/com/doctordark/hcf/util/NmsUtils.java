@@ -1,6 +1,5 @@
 package com.doctordark.hcf.util;
 
-import com.doctordark.hcf.HCF;
 import net.minecraft.server.v1_7_R4.EntityPlayer;
 import net.minecraft.server.v1_7_R4.PacketPlayOutSetSlot;
 import org.bukkit.Material;
@@ -61,19 +60,15 @@ public class NmsUtils {
         net.minecraft.server.v1_7_R4.ItemStack result = null;
         if (stack != null && stack.getType() != Material.AIR) {
             CraftItemStack craftItemStack = (stack instanceof CraftItemStack ? (CraftItemStack) stack : CraftItemStack.asCraftCopy(stack));
-            if (HCF.getPlugin().isPaperPatch()) {
-                result = craftItemStack.handle;
-            } else {
-                Object object;
-                try {
-                    Field field = craftItemStack.getClass().getDeclaredField("handle");
-                    field.setAccessible(true);
-                    object = field.get(craftItemStack);
-                    if (object instanceof net.minecraft.server.v1_7_R4.ItemStack) {
-                        result = (net.minecraft.server.v1_7_R4.ItemStack) object;
-                    }
-                } catch (NoSuchFieldException | IllegalAccessException ignored) {
+            Object object;
+            try {
+                Field field = craftItemStack.getClass().getDeclaredField("handle");
+                field.setAccessible(true);
+                object = field.get(craftItemStack);
+                if (object instanceof net.minecraft.server.v1_7_R4.ItemStack) {
+                    result = (net.minecraft.server.v1_7_R4.ItemStack) object;
                 }
+            } catch (NoSuchFieldException | IllegalAccessException ignored) {
             }
         }
 

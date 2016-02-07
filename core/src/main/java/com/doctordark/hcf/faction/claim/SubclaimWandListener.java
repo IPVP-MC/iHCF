@@ -211,9 +211,10 @@ public class SubclaimWandListener implements Listener {
         HumanEntity humanEntity = event.getPlayer();
         if (humanEntity instanceof Player) {
             Player player = (Player) humanEntity;
-            if (player.getInventory().remove(ClaimHandler.SUBCLAIM_WAND)) {
+            if (player.getInventory().contains(ClaimHandler.SUBCLAIM_WAND)) {
                 plugin.getClaimHandler().clearClaimSelection(player);
             }
+            player.getInventory().remove(ClaimHandler.SUBCLAIM_WAND);
         }
     }
 

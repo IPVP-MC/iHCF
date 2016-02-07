@@ -4,29 +4,45 @@ import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.pvpclass.event.PvpClassUnequipEvent;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PotionEffectExpireEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.lang.ref.WeakReference;
 import java.util.Collection;
-import java.util.UUID;
 
 public class EffectRestorer implements Listener {
 
-    private final Table<UUID, PotionEffectType, PotionEffect> restores = HashBasedTable.create();
+    private final Table<Player, PotionEffectType, RestoreTask> restores = HashBasedTable.create();
 
     public EffectRestorer(HCF plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onPvpClassUnequip(PvpClassUnequipEvent event) {
-        restores.rowKeySet().remove(event.getPlayer().getUniqueId());
+    public void cancelRestores(PvpClassUnequipEvent event) {
+        cancelRestores(event.getPlayer());
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void cancelRestores(PlayerQuitEvent event) {
+        cancelRestores(event.getPlayer());
+    }
+
+    private void cancelRestores(Player player) {
+        restores.row(player).values().forEach(RestoreTask::cancel);
+    }
+
+    private void cancelRestore(Player player, PotionEffectType effect) {
+        RestoreTask task = restores.remove(player, effect);
+        if (task != null) {
+            task.cancel();
+        }
     }
 
     public void setRestoreEffect(Player player, PotionEffect effect) {
@@ -45,28 +61,45 @@ public class EffectRestorer implements Listener {
                 }
             }
 
-            restores.put(player.getUniqueId(), active.getType(), active);
+            restores.put(player, active.getType(), new RestoreTask(player, active));
             shouldCancel = false;
             break;
         }
 
         // Cancel the previous restore.
         player.addPotionEffect(effect, true);
-        if (shouldCancel && effect.getDuration() > BardClass.HELD_EFFECT_DURATION_TICKS && effect.getDuration() < BardClass.DEFAULT_MAX_DURATION) {
-            restores.remove(player.getUniqueId(), effect.getType());
+        if (shouldCancel && effect.getDuration() > BardClass.HELD_EFFECT_DURATION_TICKS &&
+                effect.getDuration() < BardClass.DEFAULT_MAX_DURATION) {
+            cancelRestore(player, effect.getType());
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onPotionEffectExpire(PotionEffectExpireEvent event) {
-        LivingEntity livingEntity = event.getEntity();
-        if (livingEntity instanceof Player) {
-            Player player = (Player) livingEntity;
-            PotionEffect previous = restores.remove(player.getUniqueId(), event.getEffect().getType());
-            if (previous != null) {
-                event.setCancelled(true);
-                player.addPotionEffect(previous, true);
-            }
+    private class RestoreTask implements Runnable {
+
+        private final int taskId;
+        private final WeakReference<Player> player;
+        private final PotionEffect effect;
+
+        public RestoreTask(Player player, PotionEffect effect) {
+            this.player = new WeakReference<>(player);
+            this.effect = effect;
+            taskId = Bukkit.getScheduler().runTaskLater(HCF.getPlugin(), this, effect.getDuration()).getTaskId();
         }
+
+        @Override
+        public void run() {
+            // Do nothing if player is not valid.
+            Player player = this.player.get();
+            if (player == null || !player.isOnline()) return;
+
+            // Restore players' potion effect.
+            player.addPotionEffect(effect, true);
+        }
+
+        public void cancel() {
+            Bukkit.getScheduler().cancelTask(taskId);
+        }
+
     }
+
 }
