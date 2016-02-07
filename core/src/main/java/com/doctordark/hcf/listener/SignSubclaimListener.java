@@ -4,6 +4,7 @@ import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.struct.Role;
 import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
+import com.doctordark.hcf.util.NameUtils;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
@@ -153,7 +154,7 @@ public class SignSubclaimListener implements Listener {
                 if (playerFaction == factionAt) {
                     SubclaimType subclaimType = getSubclaimType(attachedBlock, false);
                     if (subclaimType != null) {
-                        player.sendMessage(ChatColor.RED + "There is already a " + subclaimType.displayName + " subclaim sign on this " + attachedBlock.getName() + '.');
+                        player.sendMessage(ChatColor.RED + "There is already a " + subclaimType.displayName + " subclaim sign on this " + NameUtils.getPrettyName(attachedBlock.getType().name()) + '.');
                         return;
                     }
 
@@ -202,7 +203,7 @@ public class SignSubclaimListener implements Listener {
                     // Finalise the subclaim.
                     event.setLine(0, subclaimType.outputText);
                     StringBuilder builder = new StringBuilder(plugin.getConfiguration().getRelationColourTeammate() + player.getName() +
-                            ChatColor.YELLOW + " has created a subclaim on block type " + ChatColor.AQUA + attachedBlock.getName() +
+                            ChatColor.YELLOW + " has created a subclaim on block type " + ChatColor.AQUA + NameUtils.getPrettyName(attachedBlock.getType().name()) +
                             ChatColor.YELLOW + " at " + ChatColor.WHITE + '(' + attachedBlock.getX() + ", " + attachedBlock.getZ() + ')' + ChatColor.YELLOW + " for ");
 
                     if (subclaimType == SubclaimType.LEADER) {
@@ -248,7 +249,7 @@ public class SignSubclaimListener implements Listener {
 
         if (subclaimObjectBlock != null && !checkSubclaimIntegrity(player, subclaimObjectBlock)) {
             event.setCancelled(true);
-            player.sendMessage(ChatColor.RED + "You cannot break this subclaimed " + subclaimObjectBlock.getName() + '.');
+            player.sendMessage(ChatColor.RED + "You cannot break this subclaimed " + NameUtils.getPrettyName(subclaimObjectBlock.getType().name()) + '.');
         }
     }
 
@@ -302,7 +303,7 @@ public class SignSubclaimListener implements Listener {
             Block block = event.getClickedBlock();
             if (!checkSubclaimIntegrity(player, block)) {
                 event.setUseInteractedBlock(Event.Result.DENY);
-                player.sendMessage(ChatColor.RED + "You do not have access to this subclaimed " + block.getName() + '.');
+                player.sendMessage(ChatColor.RED + "You do not have access to this subclaimed " + NameUtils.getPrettyName(block.getType().name()) + '.');
             }
         }
     }

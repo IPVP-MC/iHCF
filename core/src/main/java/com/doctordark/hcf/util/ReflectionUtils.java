@@ -12,6 +12,9 @@ import java.util.Map;
 
 public final class ReflectionUtils {
 
+    private ReflectionUtils() {
+    }
+
     public static MetadataValue getPlayerMetadata(Player subject, String metadataKey, Plugin owningPlugin) {
         try {
             Method getPlayerMetadata = owningPlugin.getServer().getClass().getDeclaredMethod("getPlayerMetadata");
