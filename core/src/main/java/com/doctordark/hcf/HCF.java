@@ -58,7 +58,6 @@ import com.doctordark.hcf.listener.ChatListener;
 import com.doctordark.hcf.listener.CoreListener;
 import com.doctordark.hcf.listener.CrowbarListener;
 import com.doctordark.hcf.listener.DeathListener;
-import com.doctordark.hcf.listener.DeathSignListener;
 import com.doctordark.hcf.listener.EnchantLimitListener;
 import com.doctordark.hcf.listener.EntityLimitListener;
 import com.doctordark.hcf.listener.EventSignListener;
@@ -309,7 +308,6 @@ public class HCF extends JavaPlugin {
         manager.registerEvents(new CoreListener(this), this);
         manager.registerEvents(new CrowbarListener(this), this);
         manager.registerEvents(new DeathListener(this), this);
-        new DeathSignListener(this);
         manager.registerEvents(new DeathbanListener(this), this);
         manager.registerEvents(new EnchantLimitListener(this), this);
         manager.registerEvents(new EnderChestRemovalListener(this), this);
