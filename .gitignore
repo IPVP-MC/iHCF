@@ -1,5 +1,5 @@
 /.idea
-/IHCF/core/target
+/*/target
 /*/*.iml
 /*.iml
 /*/dependency-reduced-pom.xml
