@@ -22,6 +22,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerKickEvent;
@@ -35,6 +37,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Map;
 import java.util.UUID;
+import java.util.WeakHashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -54,6 +57,7 @@ public class ArcherClass extends PvpClass implements Listener {
     private final TObjectLongMap<UUID> archerSpeedCooldowns = new TObjectLongHashMap<>();
 
     private final Table<UUID, UUID, ArcherMark> marks = HashBasedTable.create(); // Key of the Players UUID who applied the mark, value as the Mark applied.
+    private final Map<Arrow, Float> arrowForces = new WeakHashMap<>();
     private final HCF plugin;
 
     public ArcherClass(HCF plugin) {
@@ -91,84 +95,96 @@ public class ArcherClass extends PvpClass implements Listener {
         getSentMarks(event.getPlayer()).clear();
     }
 
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void setArrowForce(EntityShootBowEvent event) {
+        // Do nothing if the entity being shot was not an arrow.
+        if (!(event.getProjectile() instanceof Arrow)) return;
+
+        // Cache the arrow force.
+        arrowForces.put((Arrow) event.getProjectile(), event.getForce());
+    }
+
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onEntityDamage(EntityDamageByEntityEvent event) {
         Entity entity = event.getEntity();
         Entity damager = event.getDamager();
-        if (!entity.equals(damager) && entity instanceof Player && damager instanceof Arrow) {
-            Arrow arrow = (Arrow) damager;
-            float force = arrow.getShotForce();
-            if (force == -1.0) {
-                return;
-            }
+        if (entity == damager || !(entity instanceof Player) || !(damager instanceof Arrow)) {
+            return;
+        }
+        Arrow arrow = (Arrow) damager;
+        float force = arrowForces.containsKey(arrow) ? arrowForces.get(arrow) : -1;
+        if (force == -1.0) {
+            return;
+        }
 
-            ProjectileSource source = arrow.getShooter();
-            if (source instanceof Player) {
-                Player shooter = (Player) source;
-                if (plugin.getPvpClassManager().hasClassEquipped(shooter, this)) {
-                    if (force <= MINIMUM_FORCE) {
-                        shooter.sendMessage(ChatColor.RED + "Mark not applied as arrow was shot with less than " + MINIMUM_FORCE + "% force.");
-                        return;
-                    }
+        ProjectileSource source = arrow.getShooter();
+        if (!(source instanceof Player)) {
+            return;
+        }
+        Player shooter = (Player) source;
+        if (!plugin.getPvpClassManager().hasClassEquipped(shooter, this)) {
+            return;
+        }
+        if (force <= MINIMUM_FORCE) {
+            shooter.sendMessage(ChatColor.RED + "Mark not applied as arrow was shot with less than " + MINIMUM_FORCE + "% force.");
+            return;
+        }
 
-                    Player attacked = (Player) entity;
-                    UUID attackedUUID = attacked.getUniqueId();
+        Player attacked = (Player) entity;
+        UUID attackedUUID = attacked.getUniqueId();
 
-                    // Get the sent Mark, or create one.
-                    Map<UUID, ArcherMark> givenMarks = getSentMarks(shooter);
-                    ArcherMark archerMark = givenMarks.get(attackedUUID);
-                    if (archerMark != null) {
-                        archerMark.decrementTask.cancel();
+        // Get the sent Mark, or create one.
+        Map<UUID, ArcherMark> givenMarks = getSentMarks(shooter);
+        ArcherMark archerMark = givenMarks.get(attackedUUID);
+        if (archerMark != null) {
+            archerMark.decrementTask.cancel();
+        } else {
+            givenMarks.put(attackedUUID, archerMark = new ArcherMark());
+        }
+
+        ChatColor enemyColour = plugin.getConfiguration().getRelationColourEnemy();
+        int newLevel = archerMark.incrementMark();
+        if (newLevel >= MARK_EXECUTION_LEVEL) {
+            event.setDamage(event.getDamage(EntityDamageEvent.DamageModifier.BASE) + MARK_EXECUTION_DAMAGE_BONUS);
+            attacked.addPotionEffect(ARCHER_CRITICAL_EFFECT);
+
+            getSentMarks(shooter).clear();
+            archerMark.reset();
+
+            // Fake the effects.
+            World world = attacked.getWorld();
+            Location location = attacked.getLocation();
+            world.playEffect(location, Effect.EXPLOSION_HUGE, 4);
+            world.playSound(location, Sound.EXPLODE, 1.0F, 1.0F);
+
+            attacked.sendMessage(ChatColor.GOLD + "Wipeout! " + enemyColour + shooter.getName() + ChatColor.GOLD + " hit you with a level " +
+                    ChatColor.WHITE + ChatColor.GOLD + newLevel + " mark.");
+            shooter.sendMessage(ChatColor.YELLOW + "Wipeout! Hit " + enemyColour + attacked.getName() + ChatColor.YELLOW + " with a level " +
+                    ChatColor.WHITE + newLevel + ChatColor.YELLOW + " mark.");
+        } else {
+            event.setDamage(event.getDamage(EntityDamageEvent.DamageModifier.BASE) + 3.0);
+            shooter.sendMessage(ChatColor.YELLOW + "Now have a level " + ChatColor.WHITE + newLevel + ChatColor.YELLOW + " mark on " +
+                    enemyColour + attacked.getName() + ChatColor.YELLOW + '.');
+
+            final ArcherMark finalMark = archerMark;
+            long ticks = MARK_TIMEOUT_SECONDS * 20L;
+            archerMark.decrementTask = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    int newLevel = finalMark.decrementMark();
+                    if (newLevel == 0) {
+                        attacked.sendMessage(enemyColour + shooter.getName() + ChatColor.YELLOW + "'s mark on you has expired.");
+                        shooter.sendMessage(ChatColor.GOLD + "No longer have a mark on " + enemyColour + attacked.getName() + ChatColor.GOLD + '.');
+                        getSentMarks(shooter).remove(attacked.getUniqueId());
+                        cancel();
                     } else {
-                        givenMarks.put(attackedUUID, archerMark = new ArcherMark());
-                    }
-
-                    ChatColor enemyColour = plugin.getConfiguration().getRelationColourEnemy();
-                    int newLevel = archerMark.incrementMark();
-                    if (newLevel >= MARK_EXECUTION_LEVEL) {
-                        event.setDamage(event.getDamage() + MARK_EXECUTION_DAMAGE_BONUS);
-                        attacked.addPotionEffect(ARCHER_CRITICAL_EFFECT);
-
-                        getSentMarks(shooter).clear();
-                        archerMark.reset();
-
-                        // Fake the effects.
-                        World world = attacked.getWorld();
-                        Location location = attacked.getLocation();
-                        world.playEffect(location, Effect.EXPLOSION_HUGE, 4);
-                        world.playSound(location, Sound.EXPLODE, 1.0F, 1.0F);
-
-                        attacked.sendMessage(ChatColor.GOLD + "Wipeout! " + enemyColour + shooter.getName() + ChatColor.GOLD + " hit you with a level " +
-                                ChatColor.WHITE + ChatColor.GOLD + newLevel + " mark.");
-                        shooter.sendMessage(ChatColor.YELLOW + "Wipeout! Hit " + enemyColour + attacked.getName() + ChatColor.YELLOW + " with a level " +
-                                ChatColor.WHITE + newLevel + ChatColor.YELLOW + " mark.");
-                    } else {
-                        event.setDamage(event.getDamage() + 3.0);
-                        shooter.sendMessage(ChatColor.YELLOW + "Now have a level " + ChatColor.WHITE + newLevel + ChatColor.YELLOW + " mark on " +
-                                enemyColour + attacked.getName() + ChatColor.YELLOW + '.');
-
-                        final ArcherMark finalMark = archerMark;
-                        long ticks = MARK_TIMEOUT_SECONDS * 20L;
-                        archerMark.decrementTask = new BukkitRunnable() {
-                            @Override
-                            public void run() {
-                                int newLevel = finalMark.decrementMark();
-                                if (newLevel == 0) {
-                                    attacked.sendMessage(enemyColour + shooter.getName() + ChatColor.YELLOW + "'s mark on you has expired.");
-                                    shooter.sendMessage(ChatColor.GOLD + "No longer have a mark on " + enemyColour + attacked.getName() + ChatColor.GOLD + '.');
-                                    getSentMarks(shooter).remove(attacked.getUniqueId());
-                                    cancel();
-                                } else {
-                                    attacked.sendMessage(enemyColour + shooter.getName() + ChatColor.GOLD + "'s mark on you has expired to level " +
-                                            ChatColor.WHITE + ChatColor.GOLD + newLevel + '.');
-                                    shooter.sendMessage(ChatColor.YELLOW + "Mark level on " + enemyColour + attacked.getName() + ChatColor.YELLOW + " is now " +
-                                            ChatColor.WHITE + ChatColor.YELLOW + newLevel + '.');
-                                }
-                            }
-                        }.runTaskTimer(plugin, ticks, ticks);
+                        attacked.sendMessage(enemyColour + shooter.getName() + ChatColor.GOLD + "'s mark on you has expired to level " +
+                                ChatColor.WHITE + ChatColor.GOLD + newLevel + '.');
+                        shooter.sendMessage(ChatColor.YELLOW + "Mark level on " + enemyColour + attacked.getName() + ChatColor.YELLOW + " is now " +
+                                ChatColor.WHITE + ChatColor.YELLOW + newLevel + '.');
                     }
                 }
-            }
+            }.runTaskTimer(plugin, ticks, ticks);
         }
     }
 
