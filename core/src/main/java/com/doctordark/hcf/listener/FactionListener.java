@@ -12,10 +12,9 @@ import com.doctordark.hcf.faction.event.PlayerJoinFactionEvent;
 import com.doctordark.hcf.faction.event.PlayerLeaveFactionEvent;
 import com.doctordark.hcf.faction.event.PlayerLeftFactionEvent;
 import com.doctordark.hcf.faction.struct.RegenStatus;
-import com.doctordark.hcf.faction.struct.Relation;
 import com.doctordark.hcf.faction.type.Faction;
 import com.doctordark.hcf.faction.type.PlayerFaction;
-import com.google.common.base.Function;
+import com.doctordark.hcf.util.ReflectionUtils;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -29,7 +28,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 
-import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -60,15 +58,8 @@ public class FactionListener implements Listener {
         Faction faction = event.getFaction();
         if (faction instanceof PlayerFaction) {
             CommandSender sender = event.getSender();
-            Bukkit.broadcastMessage(new Function<CommandSender, String>() {
-                @Nullable
-                @Override
-                public String apply(@Nullable CommandSender target) {
-                    return ChatColor.YELLOW + "Faction " + ChatColor.WHITE + (target == null ? faction.getName() : faction.getDisplayName(target)) + ChatColor.YELLOW + " has been " +
-                            ChatColor.GREEN + "created" + ChatColor.YELLOW + " by " +
-                            ChatColor.WHITE + (sender instanceof Player ? ((Player) sender).getDisplayName() : sender.getName()) + ChatColor.YELLOW + '.';
-                }
-            });
+            Bukkit.broadcastMessage(String.format("§eFaction §f%s §ehas been §acreated §eby §f%s§e.",
+                    faction.getName(), sender.getName()));
         }
     }
 
@@ -77,15 +68,8 @@ public class FactionListener implements Listener {
         Faction faction = event.getFaction();
         if (faction instanceof PlayerFaction) {
             CommandSender sender = event.getSender();
-            Bukkit.broadcastMessage(new Function<CommandSender, String>() {
-                @Nullable
-                @Override
-                public String apply(@Nullable CommandSender target) {
-                    return ChatColor.YELLOW + "Faction " + ChatColor.WHITE + (target == null ? faction.getName() : faction.getDisplayName(target)) + ChatColor.YELLOW + " has been " +
-                            ChatColor.RED + "disbanded" + ChatColor.YELLOW + " by " +
-                            ChatColor.WHITE + (sender instanceof Player ? ((Player) sender).getDisplayName() : sender.getName()) + ChatColor.YELLOW + '.';
-                }
-            });
+            Bukkit.broadcastMessage(String.format("§eFaction §f%s §ehas been §cdisbanded §eby §f%s§e.",
+                    faction.getName(), sender.getName()));
         }
     }
 
@@ -93,21 +77,14 @@ public class FactionListener implements Listener {
     public void onFactionRename(FactionRenameEvent event) {
         Faction faction = event.getFaction();
         if (faction instanceof PlayerFaction) {
-            Bukkit.broadcastMessage(new Function<CommandSender, String>() {
-                @Nullable
-                @Override
-                public String apply(@Nullable CommandSender target) {
-                    Relation relation = faction.getRelation(target);
-                    return ChatColor.YELLOW + "Faction " + relation.toChatColour() + event.getOriginalName() + ChatColor.YELLOW + " has been " +
-                            ChatColor.AQUA + "renamed" + ChatColor.YELLOW + " to " +
-                            relation.toChatColour() + event.getNewName() + ChatColor.YELLOW + '.';
-                }
-            });
+            Bukkit.broadcastMessage(String.format("§eFaction §f%s §ehas been §brenamed §eto §f%s§e.",
+                    event.getOriginalName(), event.getNewName()));
         }
     }
 
     private long getLastLandChangedMeta(Player player) {
-        MetadataValue value = player.getMetadata(LAND_CHANGED_META_KEY, plugin);
+        MetadataValue value = ReflectionUtils.getPlayerMetadata(player, LAND_CHANGED_META_KEY, plugin);
+
         long millis = System.currentTimeMillis();
         long remaining = value == null ? 0L : value.asLong() - millis;
         if (remaining <= 0L) { // update the metadata.
