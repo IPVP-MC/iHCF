@@ -1,6 +1,5 @@
 package com.doctordark.hcf.timer.type;
 
-import com.doctordark.hcf.HCF;
 import com.doctordark.hcf.faction.LandMap;
 import com.doctordark.hcf.timer.PlayerTimer;
 import com.doctordark.hcf.timer.TimerCooldown;
@@ -136,7 +135,6 @@ public class StuckTimer extends PlayerTimer implements Listener {
         if (player != null) {
             Location nearest = LandMap.getNearestSafePosition(player, player.getLocation(), NEAR_SEARCH_DISTANCE_BLOCKS);
             if (nearest == null) {
-                HCF.getPlugin().getCombatLogListener().safelyDisconnect(player, ChatColor.RED + "Unable to find a safe location, you have been safely logged out.");
                 player.sendMessage(ChatColor.RED + "No safe-location found.");
                 return;
             }
