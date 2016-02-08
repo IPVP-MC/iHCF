@@ -12,9 +12,10 @@ import com.doctordark.hcf.faction.type.RoadFaction;
 import com.doctordark.hcf.timer.PlayerTimer;
 import com.doctordark.hcf.timer.TimerCooldown;
 import com.doctordark.hcf.timer.event.TimerClearEvent;
+import com.doctordark.hcf.util.DurationFormatter;
+import com.doctordark.hcf.util.ReflectionUtils;
 import com.doctordark.hcf.visualise.VisualType;
 import com.doctordark.util.BukkitUtils;
-import com.doctordark.hcf.util.DurationFormatter;
 import net.minecraft.util.gnu.trove.map.TObjectLongMap;
 import net.minecraft.util.gnu.trove.map.hash.TObjectLongHashMap;
 import org.apache.commons.lang3.time.DurationFormatUtils;
@@ -189,7 +190,7 @@ public class InvincibilityTimer extends PlayerTimer implements Listener {
 
             // Don't let the pickup event spam the player.
             event.setCancelled(true);
-            MetadataValue value = player.getMetadata(ITEM_PICKUP_MESSAGE_META_KEY, plugin);
+            MetadataValue value = ReflectionUtils.getPlayerMetadata(player, ITEM_PICKUP_MESSAGE_META_KEY, plugin);
             if (value != null && value.asLong() - millis <= 0L) {
                 player.setMetadata(ITEM_PICKUP_MESSAGE_META_KEY, new FixedMetadataValue(plugin, millis + ITEM_PICKUP_MESSAGE_DELAY));
                 player.sendMessage(ChatColor.RED + "You cannot pick this item up for another " +
