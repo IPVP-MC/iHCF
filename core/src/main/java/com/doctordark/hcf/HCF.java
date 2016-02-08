@@ -1,10 +1,8 @@
 package com.doctordark.hcf;
 
-import com.doctordark.hcf.combatlog.CombatLogListener;
 import com.doctordark.hcf.command.AngleCommand;
 import com.doctordark.hcf.command.GoppleCommand;
 import com.doctordark.hcf.command.LocationCommand;
-import com.doctordark.hcf.command.LogoutCommand;
 import com.doctordark.hcf.command.MapKitCommand;
 import com.doctordark.hcf.command.PvpTimerCommand;
 import com.doctordark.hcf.command.RegenCommand;
@@ -121,9 +119,6 @@ public class HCF extends JavaPlugin {
 
     @Getter
     private ClaimHandler claimHandler;
-
-    @Getter
-    private CombatLogListener combatLogListener;
 
     @Getter
     private EconomyManager economyManager;
@@ -292,7 +287,6 @@ public class HCF extends JavaPlugin {
         manager.registerEvents(new BottledExpListener(this), this);
         manager.registerEvents(new ChatListener(this), this);
         manager.registerEvents(new ClaimWandListener(this), this);
-        manager.registerEvents(combatLogListener = new CombatLogListener(this), this);
         manager.registerEvents(new CoreListener(this), this);
         manager.registerEvents(new CrowbarListener(this), this);
         manager.registerEvents(new DeathListener(this), this);
@@ -331,7 +325,6 @@ public class HCF extends JavaPlugin {
         getCommand("gopple").setExecutor(new GoppleCommand(this));
         getCommand("koth").setExecutor(new KothExecutor(this));
         getCommand("location").setExecutor(new LocationCommand(this));
-        getCommand("logout").setExecutor(new LogoutCommand(this));
         getCommand("mapkit").setExecutor(new MapKitCommand(this));
         getCommand("pay").setExecutor(new PayCommand(this));
         getCommand("pvptimer").setExecutor(new PvpTimerCommand(this));

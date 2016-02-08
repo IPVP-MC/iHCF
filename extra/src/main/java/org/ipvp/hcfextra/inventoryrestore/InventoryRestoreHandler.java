@@ -1,6 +1,5 @@
 package org.ipvp.hcfextra.inventoryrestore;
 
-import com.doctordark.hcf.combatlog.event.LoggerDeathEvent;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -42,11 +41,6 @@ public class InventoryRestoreHandler implements CommandExecutor, TabCompleter, L
         public InventoryState(PlayerInventory inventory) {
             this(inventory.getContents(), inventory.getArmorContents());
         }
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onLoggerDeath(LoggerDeathEvent event) {
-        this.lastDeathLocation.put(event.getLoggerEntity().getUniqueID(), new InventoryState(event.getLoggerEntity().getBukkitEntity().getInventory()));
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
