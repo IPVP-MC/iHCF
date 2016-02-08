@@ -14,6 +14,14 @@
         <version>1.0</version>
     </parent>
 
+    <distributionManagement>
+        <repository>
+            <id>maven.sainttx.com</id>
+            <name>maven.sainttx.com-releases</name>
+            <url>http://maven.sainttx.com/artifactory/origin-mc-dev</url>
+        </repository>
+    </distributionManagement>
+
     <repositories>
         <repository>
             <id>maven.sainttx.com-origin</id>
@@ -49,17 +57,10 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.8.8-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.destroystokyo</groupId>
             <artifactId>paperspigot</artifactId>
             <version>1.7.10-R0.1-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/../libs/paperspigot-1.7.10-R0.1-SNAPSHOT.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.gmail.xd.zwander.istaff</groupId>
