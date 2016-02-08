@@ -2,7 +2,6 @@ package com.doctordark.hcf.faction.type;
 
 import com.doctordark.hcf.DateTimeFormats;
 import com.doctordark.hcf.HCF;
-import com.doctordark.hcf.deathban.Deathban;
 import com.doctordark.hcf.economy.EconomyManager;
 import com.doctordark.hcf.faction.FactionMember;
 import com.doctordark.hcf.faction.event.FactionDtrChangeEvent;
@@ -539,10 +538,7 @@ public class PlayerFaction extends ClaimableFaction implements Raidable {
             combinedKills += kills;
 
             ChatColor colour;
-            Deathban deathban = user.getDeathban();
-            if (deathban != null && deathban.isActive()) {
-                colour = ChatColor.RED;
-            } else if (target == null || (sender instanceof Player && !((Player) sender).canSee(target))) {
+            if (target == null || (sender instanceof Player && !((Player) sender).canSee(target))) {
                 colour = ChatColor.GRAY;
             } else {
                 colour = ChatColor.GREEN;
