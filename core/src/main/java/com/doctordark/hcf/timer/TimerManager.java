@@ -6,6 +6,7 @@ import com.doctordark.hcf.timer.type.CombatTimer;
 import com.doctordark.hcf.timer.type.EnderPearlTimer;
 import com.doctordark.hcf.timer.type.GappleTimer;
 import com.doctordark.hcf.timer.type.InvincibilityTimer;
+import com.doctordark.hcf.timer.type.LogoutTimer;
 import com.doctordark.hcf.timer.type.PvpClassWarmupTimer;
 import com.doctordark.hcf.timer.type.StuckTimer;
 import com.doctordark.hcf.timer.type.TeleportTimer;
@@ -23,6 +24,9 @@ public class TimerManager implements Listener {
 
     @Getter
     private final CombatTimer combatTimer;
+
+    @Getter
+    private final LogoutTimer logoutTimer;
 
     @Getter
     private final EnderPearlTimer enderPearlTimer;
@@ -55,6 +59,7 @@ public class TimerManager implements Listener {
         this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
         registerTimer(enderPearlTimer = new EnderPearlTimer(plugin));
+        registerTimer(logoutTimer = new LogoutTimer());
         registerTimer(gappleTimer = new GappleTimer(plugin));
         registerTimer(stuckTimer = new StuckTimer());
         registerTimer(invincibilityTimer = new InvincibilityTimer(plugin));
