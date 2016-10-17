@@ -29,7 +29,8 @@ public class PotionLimitListener implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onBrew(BrewEvent event) {
         if (plugin.isPaperPatch()) {
-            if (!testValidity(event.getResults())) {
+            // TODO: BROKEN: event.getContents().getContents() unknown results
+            if (!testValidity(event.getContents().getContents())) {
                 event.setCancelled(true);
                 event.getContents().getHolder().setBrewingTime(EMPTY_BREW_TIME);
             }
