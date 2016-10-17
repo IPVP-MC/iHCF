@@ -1,5 +1,8 @@
 package com.doctordark.hcf.visualise;
 
+import com.comphenix.packetwrapper.WrapperPlayServerMultiBlockChange;
+import com.comphenix.protocol.wrappers.MultiBlockChangeInfo;
+import com.comphenix.protocol.wrappers.WrappedBlockData;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
@@ -47,44 +50,16 @@ public class VisualiseUtil {
     }
 
     private static void sendBulk(Player player, org.bukkit.Chunk chunk, Map<Location, MaterialData> input) throws IOException {
-        Objects.requireNonNull(chunk, "Chunk cannot be null");
-
-        PacketPlayOutMultiBlockChange packet = new PacketPlayOutMultiBlockChange();
-        packet.chunk = ((CraftChunk) chunk).getHandle();
-
-        ChunkCoordIntPair intPair = new ChunkCoordIntPair(chunk.getX(), chunk.getZ());
-        int numberOfRecords = input.size();
-
-        packet.b = intPair;
-        packet.d = numberOfRecords;
-
-        ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream(input.size());
-        DataOutputStream dataoutputstream = new DataOutputStream(bytearrayoutputstream);
-
-        packet.ashort = new short[input.size()];
-        packet.blocks = new int[input.size()];
-
+        MultiBlockChangeInfo[] blockChangeInfo = new MultiBlockChangeInfo[input.size()];
         int i = 0;
         for (Map.Entry<Location, MaterialData> entry : input.entrySet()) {
-            Location location = entry.getKey();
-
-            int blockID = entry.getValue().getItemTypeId();
-            int data = entry.getValue().getData();
-            data = SpigotDebreakifier.getCorrectedData(blockID, data);
-
-            packet.blocks[i] = (blockID & 4095) << 4 | data & 15;
-            packet.ashort[i] = (short) ((location.getBlockX() & 15) << 12 | (location.getBlockZ() & 15) << 8 | location.getBlockY());
-
-            dataoutputstream.writeShort(packet.ashort[i]);
-            dataoutputstream.writeShort(packet.blocks[i]);
-            i++;
+            MaterialData data = entry.getValue();
+            blockChangeInfo[i++] = new MultiBlockChangeInfo(entry.getKey(), WrappedBlockData.createData(data.getItemType()));
         }
-
-        int expectedSize = input.size() * 4;
-        byte[] bulk = bytearrayoutputstream.toByteArray();
-        Preconditions.checkArgument(bulk.length == expectedSize, "Expected length: '" + expectedSize + "' doesn't match the generated length: '" + bulk.length + "'");
-
-        packet.c = bulk;
-        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+        WrapperPlayServerMultiBlockChange packet = new WrapperPlayServerMultiBlockChange();
+        packet.setChunk(new com.comphenix.protocol.wrappers.ChunkCoordIntPair(chunk.getX(), chunk.getZ()));
+        packet.setRecords(blockChangeInfo);
+        packet.sendPacket(player);
     }
+
 }
