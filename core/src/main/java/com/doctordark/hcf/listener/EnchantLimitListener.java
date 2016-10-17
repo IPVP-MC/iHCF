@@ -18,7 +18,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.inventory.PrepareAnvilRepairEvent;
+//import org.bukkit.event.inventory.PrepareAnvilRepairEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
@@ -86,6 +86,7 @@ public class EnchantLimitListener implements Listener {
         }
     }
 
+    /* TODO: BROKEN: Non existant event
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onPrepareAnvilRepair(PrepareAnvilRepairEvent event) {
         ItemStack first = event.getFirst();
@@ -119,7 +120,7 @@ public class EnchantLimitListener implements Listener {
         if (repairer instanceof Player) {
             validateIllegalEnchants(event.getResult());
         }
-    }
+    } */
 
     /**
      * Validates the {@link Enchantment}s of a {@link ItemStack}, removing any disallowed ones.
