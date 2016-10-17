@@ -238,7 +238,8 @@ public class ClaimWandListener implements Listener {
         HumanEntity humanEntity = event.getPlayer();
         if (humanEntity instanceof Player) {
             Player player = (Player) humanEntity;
-            if (player.getInventory().remove(ClaimHandler.CLAIM_WAND)) {
+            if (player.getInventory().contains(ClaimHandler.CLAIM_WAND)) {
+                player.getInventory().remove(ClaimHandler.CLAIM_WAND);
                 plugin.getClaimHandler().clearClaimSelection(player);
             }
         }
