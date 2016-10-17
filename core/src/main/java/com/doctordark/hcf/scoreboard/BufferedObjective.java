@@ -69,7 +69,11 @@ public class BufferedObjective {
             this.contents.forEachEntry(new TIntObjectProcedure<SidebarEntry>() {
                 @Override
                 public boolean execute(int i, SidebarEntry sidebarEntry) {
-                    Team team = scoreboard.getOrRegisterNewTeam(sidebarEntry.name.length() > MAX_NAME_LENGTH ? sidebarEntry.name.substring(0, MAX_NAME_LENGTH) : sidebarEntry.name);
+                    String name = sidebarEntry.name.length() > MAX_NAME_LENGTH ? sidebarEntry.name.substring(0, MAX_NAME_LENGTH) : sidebarEntry.name;
+                    Team team = scoreboard.getTeam(name);
+                    if (team == null ) {
+                        team = scoreboard.registerNewTeam(name);
+                    }
 
                     if (sidebarEntry.prefix != null) {
                         team.setPrefix(sidebarEntry.prefix.length() > MAX_PREFIX_LENGTH ? sidebarEntry.prefix.substring(0, MAX_PREFIX_LENGTH) : sidebarEntry.prefix);
