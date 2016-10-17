@@ -88,7 +88,8 @@ public class EventSignListener implements Listener {
                 }
 
                 sign.update();
-                sign.setEditible(false);
+                // TODO: BROKEN: Unknown method
+                // sign.setEditible(false);
             }
         }
     }
