@@ -29,7 +29,8 @@ public class FurnaceSmeltSpeedListener implements Listener {
             Block block = event.getClickedBlock();
             BlockState state = block.getState();
             if (state instanceof Furnace) {
-                ((Furnace) state).setCookSpeedMultiplier(plugin.getConfiguration().getFurnaceCookSpeedMultiplier());
+                // TODO: BROKEN: Method does not exist
+                // ((Furnace) state).setCookSpeedMultiplier(plugin.getConfiguration().getFurnaceCookSpeedMultiplier());
             }
         }
     }
