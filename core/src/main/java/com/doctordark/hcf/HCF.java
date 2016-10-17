@@ -201,13 +201,14 @@ public class HCF extends JavaPlugin {
         registerManagers();
         registerListeners();
 
-        paperPatch = true;
+        paperPatch = false;
+        /* TODO: BROKEN: Method does not exist
         try {
             Team team = getServer().getScoreboardManager().createNewTeam("lookup");
             team.unregister();
         } catch (NoSuchMethodError ex) {
             paperPatch = false;
-        }
+        } */
 
         //TODO: More reliable, SQL based.
         long dataSaveInterval = TimeUnit.MINUTES.toMillis(20L);
