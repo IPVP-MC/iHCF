@@ -13,6 +13,12 @@ import com.doctordark.hcf.command.SpawnCannonCommand;
 import com.doctordark.hcf.command.ToggleCapzoneEntryCommand;
 import com.doctordark.hcf.command.ToggleLightningCommand;
 import com.doctordark.hcf.command.ToggleSidebarCommand;
+import com.doctordark.hcf.deathban.Deathban;
+import com.doctordark.hcf.deathban.DeathbanListener;
+import com.doctordark.hcf.deathban.DeathbanManager;
+import com.doctordark.hcf.deathban.FlatFileDeathbanManager;
+import com.doctordark.hcf.deathban.StaffReviveCommand;
+import com.doctordark.hcf.deathban.lives.LivesExecutor;
 import com.doctordark.hcf.economy.EconomyCommand;
 import com.doctordark.hcf.economy.EconomyManager;
 import com.doctordark.hcf.economy.FlatFileEconomyManager;
@@ -126,6 +132,9 @@ public class HCF extends JavaPlugin {
     private CombatLogListener combatLogListener;
 
     @Getter
+    private DeathbanManager deathbanManager;
+
+    @Getter
     private EconomyManager economyManager;
 
     @Getter
@@ -213,6 +222,7 @@ public class HCF extends JavaPlugin {
     }
 
     private void saveData() {
+        deathbanManager.saveDeathbanData();
         economyManager.saveEconomyData();
         factionManager.saveFactionData();
         keyManager.saveKeyData();
@@ -264,8 +274,10 @@ public class HCF extends JavaPlugin {
     //TODO: More reliable, SQL based.
     private void registerSerialization() {
         ConfigurationSerialization.registerClass(CaptureZone.class);
+        ConfigurationSerialization.registerClass(Deathban.class);
         ConfigurationSerialization.registerClass(Claim.class);
         ConfigurationSerialization.registerClass(Subclaim.class);
+        ConfigurationSerialization.registerClass(Deathban.class);
         ConfigurationSerialization.registerClass(FactionUser.class);
         ConfigurationSerialization.registerClass(ClaimableFaction.class);
         ConfigurationSerialization.registerClass(ConquestFaction.class);
@@ -296,6 +308,7 @@ public class HCF extends JavaPlugin {
         manager.registerEvents(new CoreListener(this), this);
         manager.registerEvents(new CrowbarListener(this), this);
         manager.registerEvents(new DeathListener(this), this);
+        manager.registerEvents(new DeathbanListener(this), this);
         manager.registerEvents(new EnchantLimitListener(this), this);
         manager.registerEvents(new EnderChestRemovalListener(this), this);
         manager.registerEvents(new EntityLimitListener(this), this);
@@ -330,6 +343,7 @@ public class HCF extends JavaPlugin {
         getCommand("faction").setExecutor(new FactionExecutor(this));
         getCommand("gopple").setExecutor(new GoppleCommand(this));
         getCommand("koth").setExecutor(new KothExecutor(this));
+        getCommand("lives").setExecutor(new LivesExecutor(this));
         getCommand("location").setExecutor(new LocationCommand(this));
         getCommand("logout").setExecutor(new LogoutCommand(this));
         getCommand("mapkit").setExecutor(new MapKitCommand(this));
@@ -339,6 +353,7 @@ public class HCF extends JavaPlugin {
         getCommand("servertime").setExecutor(new ServerTimeCommand(this));
         getCommand("sotw").setExecutor(new SotwCommand(this));
         getCommand("spawncannon").setExecutor(new SpawnCannonCommand(this));
+        getCommand("staffrevive").setExecutor(new StaffReviveCommand(this));
         getCommand("timer").setExecutor(new TimerExecutor(this));
         getCommand("togglecapzoneentry").setExecutor(new ToggleCapzoneEntryCommand(this));
         getCommand("togglelightning").setExecutor(new ToggleLightningCommand(this));
@@ -354,6 +369,7 @@ public class HCF extends JavaPlugin {
 
     private void registerManagers() {
         claimHandler = new ClaimHandler(this);
+        deathbanManager = new FlatFileDeathbanManager(this);
         economyManager = new FlatFileEconomyManager(this);
         effectRestorer = new EffectRestorer(this);
         eotwHandler = new EotwHandler(this);

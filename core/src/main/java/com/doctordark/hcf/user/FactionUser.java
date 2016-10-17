@@ -1,5 +1,6 @@
 package com.doctordark.hcf.user;
 
+import com.doctordark.hcf.deathban.Deathban;
 import com.doctordark.util.GenericUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,6 +25,7 @@ public class FactionUser implements ConfigurationSerializable {
     private boolean capzoneEntryAlerts;
     private boolean showClaimMap;
     private boolean showLightning = true;
+    private Deathban deathban;
     private long lastFactionLeaveMillis;
     private int kills;
     private int deaths;
@@ -38,6 +40,7 @@ public class FactionUser implements ConfigurationSerializable {
         this.capzoneEntryAlerts = (Boolean) map.get("capzoneEntryAlerts");
         //this.showClaimMap = (Boolean) map.get("showClaimMap");
         this.showLightning = (Boolean) map.get("showLightning");
+        this.deathban = (Deathban) map.get("deathban");
         this.lastFactionLeaveMillis = Long.parseLong((String) map.get("lastFactionLeaveMillis"));
         this.kills = (Integer) map.get("kills");
         this.deaths = (Integer) map.get("deaths");
@@ -51,10 +54,15 @@ public class FactionUser implements ConfigurationSerializable {
         map.put("capzoneEntryAlerts", capzoneEntryAlerts);
         map.put("showClaimMap", showClaimMap);
         map.put("showLightning", showLightning);
+        map.put("deathban", deathban);
         map.put("lastFactionLeaveMillis", Long.toString(lastFactionLeaveMillis));
         map.put("kills", kills);
         map.put("deaths", deaths);
         return map;
+    }
+
+    public void removeDeathban() {
+        deathban = null;
     }
 
     public Player getPlayer() {
