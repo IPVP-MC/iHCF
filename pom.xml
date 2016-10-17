@@ -13,7 +13,7 @@
 
     <modules>
         <module>core</module>
-        <module>extra</module>
+        <!-- <module>extra</module> -->
     </modules>
 
     <properties>
