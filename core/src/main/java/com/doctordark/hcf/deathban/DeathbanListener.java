@@ -20,7 +20,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerRequestRespawnEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -136,7 +136,7 @@ public class DeathbanListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onPlayerRequestRespawn(PlayerRequestRespawnEvent event) {
+    public void onPlayerRequestRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
         FactionUser user = plugin.getUserManager().getUser(player.getUniqueId());
         Deathban deathban = user.getDeathban();
@@ -148,7 +148,7 @@ public class DeathbanListener implements Listener {
                 return;
             }
 
-            event.setCancelled(true);
+            //event.setCancelled(true);
             handleKick(player, deathban);
         }
     }
