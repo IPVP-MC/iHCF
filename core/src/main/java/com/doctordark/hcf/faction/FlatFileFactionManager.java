@@ -37,15 +37,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.spigotmc.CaseInsensitiveMap;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -60,7 +53,7 @@ public class FlatFileFactionManager implements Listener, FactionManager {
     private final Table<String, Long, Claim> claimPositionMap = HashBasedTable.create();
     private final ConcurrentMap<UUID, UUID> factionPlayerUuidMap = new ConcurrentHashMap<>();
     private final ConcurrentMap<UUID, Faction> factionUUIDMap = new ConcurrentHashMap<>();
-    private final Map<String, UUID> factionNameMap = new CaseInsensitiveMap<>();
+    private final Map<String, UUID> factionNameMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     private Config config;
     private final HCF plugin;

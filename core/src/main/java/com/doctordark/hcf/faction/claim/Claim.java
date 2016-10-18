@@ -9,13 +9,8 @@ import com.doctordark.util.cuboid.NamedCuboid;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.spigotmc.CaseInsensitiveMap;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * An implementation of a {@link NamedCuboid} that represents land for a {@link Faction} can own.
@@ -24,7 +19,7 @@ public class Claim extends NamedCuboid implements Cloneable, ConfigurationSerial
 
     private static final Random RANDOM = new Random();
 
-    private final Map<String, Subclaim> subclaims = new CaseInsensitiveMap<>();
+    private final Map<String, Subclaim> subclaims = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final UUID claimUniqueID;
     private final UUID factionUUID;
 
