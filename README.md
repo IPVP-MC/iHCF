@@ -10,7 +10,7 @@ the challenge of the game.</p>
  are present in the current build.</p>
  
 # Compilation #
-Compilation requires the following tasks be fulfilled: 
+Compilation requires the following be fulfilled: 
 
 * [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 * [Maven 3](http://maven.apache.org/download.html)
