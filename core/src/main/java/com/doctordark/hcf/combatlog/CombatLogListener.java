@@ -17,8 +17,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.ipvp.istaff.IStaff;
-import org.ipvp.istaff.data.PlayerHackerMode;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -45,13 +43,13 @@ public class CombatLogListener implements Listener {
 
     private final Set<UUID> safelyDisconnected = new HashSet<>();
     private final Map<UUID, LoggerEntity> loggers = new HashMap<>();
-    private boolean containsStaffPlugin;
+    // private boolean containsStaffPlugin;
 
     private final HCF plugin;
 
     public CombatLogListener(HCF plugin) {
         this.plugin = plugin;
-        containsStaffPlugin = plugin.getServer().getPluginManager().getPlugin("iStaff") != null;
+        // containsStaffPlugin = plugin.getServer().getPluginManager().getPlugin("iStaff") != null;
     }
 
     /**
@@ -129,6 +127,8 @@ public class CombatLogListener implements Listener {
             if (!calledEvent.isCancelled()) {
                 loggers.put(player.getUniqueId(), loggerEntity);
 
+                /*
+                TODO: BROKEN: iStaff sucks
                 boolean hackerMode = containsStaffPlugin;
                 if (hackerMode) {
                     Future<Boolean> future = executor.submit(new Callable<Boolean>() {
@@ -143,16 +143,16 @@ public class CombatLogListener implements Listener {
                         hackerMode = future.get();
                     } catch (InterruptedException | ExecutionException ignored) {
                     }
-                }
+                } */
 
                 // Call a tick later allowing for the NBT to save, the reason why
                 // it is saved after the PlayerQuitEvent is so the plugins can modify
                 // the inventory during this event.
-                final boolean finalHackerMode = hackerMode;
+                // TODO: BROKEN: final boolean finalHackerMode = hackerMode;
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        if (!player.isOnline() && !finalHackerMode) { // just in-case
+                        if (!player.isOnline()) { // just in-case
                             loggerEntity.postSpawn(plugin);
                         }
                     }

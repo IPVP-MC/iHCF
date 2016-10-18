@@ -57,12 +57,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.gmail.xd.zwander.istaff</groupId>
-            <artifactId>iStaff</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.sk89q</groupId>
             <artifactId>worldedit</artifactId>
             <version>5.7-SNAPSHOT</version>
