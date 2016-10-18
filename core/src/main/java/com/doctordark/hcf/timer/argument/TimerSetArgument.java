@@ -5,9 +5,6 @@ import com.doctordark.hcf.timer.PlayerTimer;
 import com.doctordark.hcf.timer.Timer;
 import com.doctordark.util.JavaUtils;
 import com.doctordark.util.command.CommandArgument;
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import compat.com.google.common.collect.FluentIterableCompat;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -16,11 +13,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class TimerSetArgument extends CommandArgument {
 
@@ -90,18 +87,10 @@ public class TimerSetArgument extends CommandArgument {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 2) {
-            return FluentIterableCompat.from(plugin.getTimerManager().getTimers()).filter(new Predicate<Timer>() {
-                @Override
-                public boolean apply(Timer timer) {
-                    return timer instanceof PlayerTimer;
-                }
-            }).transform(new Function<Timer, String>() {
-                @Nullable
-                @Override
-                public String apply(Timer timer) {
-                    return WHITESPACE_TRIMMER.matcher(timer.getName()).replaceAll("");
-                }
-            }).toList();
+            return plugin.getTimerManager().getTimers().stream()
+                    .filter(timer -> timer instanceof PlayerTimer)
+                    .map(timer -> timer.getName().replaceAll("\\s", ""))
+                    .collect(Collectors.toList());
         } else if (args.length == 3) {
             List<String> list = new ArrayList<>();
             list.add("ALL");
