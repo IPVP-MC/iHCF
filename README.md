@@ -17,5 +17,6 @@ Compilation requires the following be fulfilled:
 * You will need to verify that the following resources have been installed:
     * [IPVP PaperSpigot 1.7.10](https://github.com/IPVP-MC/Paper-1.7)
     * [iBase](https://github.com/IPVP-MC/iBase)
+    * Newbies: Installation instructions provided at the links above
 
 Once these tasks have been taken care of, compilation via `mvn clean install` will result in `core/target/iHCF.jar` being created.
