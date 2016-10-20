@@ -9,7 +9,7 @@ the challenge of the game.</p>
  reporting issues are always welcome as it allows the community to see what bugs 
  are present in the current build.</p>
  
-# Compilation #
+## Compilation ##
 Compilation requires the following be fulfilled: 
 
 * [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
@@ -20,3 +20,8 @@ Compilation requires the following be fulfilled:
     * Newbies: Installation instructions provided at the links above
 
 Once these tasks have been taken care of, compilation via `mvn clean install` will result in `core/target/iHCF.jar` being created.
+
+## License ##
+This software is available under the following licenses:
+
+* MIT

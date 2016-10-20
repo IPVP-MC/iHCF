@@ -35,6 +35,14 @@
                     <include>**/*.yml</include>
                 </includes>
             </resource>
+            <resource>
+                <targetPath>.</targetPath>
+                <filtering>true</filtering>
+                <directory>..</directory>
+                <includes>
+                    <include>LICENSE.txt</include>
+                </includes>
+            </resource>
         </resources>
 
         <plugins>

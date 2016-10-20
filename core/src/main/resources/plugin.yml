@@ -5,6 +5,7 @@ author: DoctorDark
 main: com.doctordark.hcf.HCF
 softdepend: [Essentials, ProtocolLib, WorldEdit]
 depend: [iBase]
+license: MIT
 commands:
   angle:
     description: Check your yaw and pitch position.
