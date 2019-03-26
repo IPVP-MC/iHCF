@@ -25,3 +25,14 @@ Once these tasks have been taken care of, compilation via `mvn clean install` wi
 This software is available under the following licenses:
 
 * MIT
+
+## Notes ##
+To whom it may concern,
+
+As the owner of the former HCF server "IPVP" previously available at IPVP.org, of which the iHCF software was created/modified/given to/for as witnessed in the original stub commit by DoctorDark [here](https://github.com/IPVP-MC/iHCF/commit/dcab2972de84481ea88ee2fbefdcd5be9eb9aaea), please heed the following.
+
+As per the [MIT license that this plugin is under](/LICENSE.txt), this software is available for any person to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software. Please consider this note as my giving explicit permission to any persons for the aforementioned claims as defined by the license.
+
+This note may also be considered as giving explicit permissions for redistribution/modification/sublicensing as specified in rules 5.4 (`"Do not offer or sell anything you do not own or have the right to redistribute."`) and 6.6 (`"Do not attempt to sell/leak or otherwise redistribute content which is not both unique and owned by you"`) of the MCM Rules as seen [here](https://www.mc-market.org/wiki/rules/). Additionally, this note may also be considered as granting any applicable rights (as defined by the license) for the software which may be required by MCM staff as per the MCM Redistribution Rights requirements (see [here](https://www.mc-market.org/wiki/redistribution-rights/)).
+
+Saint
